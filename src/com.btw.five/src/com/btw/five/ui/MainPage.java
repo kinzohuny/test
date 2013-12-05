@@ -1,6 +1,7 @@
 package com.btw.five.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -109,6 +110,7 @@ public class MainPage {
 		table.setRowHeight(30);
 		table.setSize(size*30, size*30);
 		table.setEnabled(false);
+		table.setBackground(Color.white);
 		sPane = new JScrollPane(table);
 		baseFrame.add(table);
 		sPane.setVisible(true);
@@ -122,8 +124,8 @@ public class MainPage {
 	}
 	
 	public static void putChess(ChessItem item){
-		ImageIcon black = new ImageIcon("resource/black.gif");
-		ImageIcon white = new ImageIcon("resource/white.gif");
+		ImageIcon black = new ImageIcon("resource/black.png");
+		ImageIcon white = new ImageIcon("resource/white.png");
 		
         JPanel panel=new JPanel(new BorderLayout()); 
         JLabel label = null;
