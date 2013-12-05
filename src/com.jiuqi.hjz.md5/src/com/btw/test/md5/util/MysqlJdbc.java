@@ -1,4 +1,4 @@
-package com.jiuqi.hjz.md5.util;
+package com.btw.test.md5.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

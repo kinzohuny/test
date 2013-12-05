@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Md5
-Bundle-SymbolicName: com.jiuqi.hjz.md5
+Bundle-SymbolicName: com.btw.test
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: JIUQI
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

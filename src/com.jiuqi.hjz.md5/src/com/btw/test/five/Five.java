@@ -1,4 +1,4 @@
-package com.jiuqi.hjz.five;
+package com.btw.test.five;
 
 import java.util.Arrays;
 import java.util.Scanner;

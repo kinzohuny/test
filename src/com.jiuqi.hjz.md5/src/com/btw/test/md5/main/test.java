@@ -1,4 +1,4 @@
-package com.jiuqi.hjz.md5.main;
+package com.btw.test.md5.main;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.util.Date;
 
 import com.btw.jdbc.mysql.MysqlDriver;
-import com.jiuqi.hjz.md5.util.MD5Util;
+import com.btw.test.md5.util.MD5Util;
 
 public class test {
 	public static void main(String[] args) {

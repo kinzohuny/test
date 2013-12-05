@@ -1,4 +1,4 @@
-package com.jiuqi.hjz.md5.main;
+package com.btw.test.md5.main;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
