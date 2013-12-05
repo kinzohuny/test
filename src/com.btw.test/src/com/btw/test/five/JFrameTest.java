@@ -13,9 +13,15 @@ import javax.swing.JOptionPane;
 public class JFrameTest {
 
 	public static void main(String[] args) {
-		init();
-		initListener();
-		show();
+		
+				JFrame f = new PaintovalFrame();
+				f.show();
+
+
+
+//		init();
+//		initListener();
+//		show();
 		
 	}
 	
