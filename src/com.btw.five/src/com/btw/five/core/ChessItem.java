@@ -2,9 +2,9 @@ package com.btw.five.core;
 
 public class ChessItem {
 
-	int x;
-	int y;
-	ChessColor color;
+	private int x;
+	private int y;
+	private ChessColor color;
 	
 	public ChessItem(int x, int y, ChessColor color) {
 		this.x = x;

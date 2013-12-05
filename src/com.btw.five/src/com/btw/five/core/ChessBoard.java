@@ -2,8 +2,8 @@ package com.btw.five.core;
 
 public class ChessBoard {
 
-	static int size;
-	static ChessItem[][] chessBoard;
+	private static int size;
+	private static ChessItem[][] chessBoard;
 
 	public ChessBoard() {
 		size = 9;
@@ -28,6 +28,9 @@ public class ChessBoard {
 	}
 	
 	public ChessItem getChess(int x, int y){
+		if(x<0||y<0||x>=size||y>=size){
+			return null;
+		}
 		return chessBoard[x][y];
 	}
 	
