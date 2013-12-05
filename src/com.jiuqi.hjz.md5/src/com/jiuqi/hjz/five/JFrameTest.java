@@ -1,9 +1,14 @@
 package com.jiuqi.hjz.five;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class JFrameTest {
 
@@ -22,6 +27,18 @@ public class JFrameTest {
 	}
 
 	private static void initListener() {
+		
+		btn_1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+//				JOptionPane.showMessageDialog(null, "点什么点！");
+//				JOptionPane.showMessageDialog(null, "不想混了是不？", "想混 不", 3);
+				JOptionPane.showConfirmDialog(null, "点什么点！");
+				
+			}
+		});
+		
 		j.setSize(800, 600);
 		j.addMouseListener(new MouseListener() {
 			
