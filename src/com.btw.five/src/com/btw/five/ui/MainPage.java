@@ -1,9 +1,13 @@
 package com.btw.five.ui;
 
-import java.awt.Container;
+import java.awt.BorderLayout;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -22,7 +26,8 @@ public class MainPage {
 	public static void main(String[] args) {
 		initWindow();
 		initListener();
-		putChess(15, 30);
+		putChess(new ChessItem(1, 3, ChessColor.BLACK));
+		putChess(new ChessItem(10, 1, ChessColor.WHITE));
 	}
 
 	private static void initListener() {
@@ -66,11 +71,23 @@ public class MainPage {
 		sPane.setVisible(true);
 	}
 	
-	public static void putChess(int x,int y){
-		ChessItem item = new ChessItem(x, y, ChessColor.BLACK);
-		Container contentPane = baseFrame.getContentPane();
-		contentPane.add(new ChessItemUI());
-		contentPane.show();
+	public static void putChess(ChessItem item){
+		ImageIcon black = new ImageIcon("resource/black.gif");
+		ImageIcon white = new ImageIcon("resource/white.gif");
+		
+        JPanel panel=new JPanel(new BorderLayout()); 
+        JLabel label = null;
+        if(item.getColor().equals(ChessColor.BLACK)){
+        	label=new JLabel(black); 
+        }else{
+        	label=new JLabel(white); 
+        }
+        panel.add(label,BorderLayout.CENTER); 
+        panel.setSize(20, 20);
+        panel.setLocation(item.getY()*30+10, item.getX()*30+40);
+        panel.setVisible(true);
+        baseFrame.add(panel);
+        baseFrame.setVisible(true);  
 	}
 
 }

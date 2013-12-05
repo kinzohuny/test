@@ -1,8 +1,12 @@
 package com.btw.five.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.net.URL;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.btw.five.core.ChessItem;
@@ -15,9 +19,10 @@ public class ChessItemUI extends JPanel {
 	Color color;
 	
 	public ChessItemUI(){
-		this.x = 20;
-		this.y = 20;
-		this.color = Color.black;
+		JPanel panel=new JPanel(new BorderLayout()); 
+		URL url=getClass().getResource("/resource/black.gif"); 
+		JLabel label=new JLabel(new ImageIcon(url)); 
+		panel.add(label,BorderLayout.CENTER);
 	}
 	
 	public ChessItemUI(ChessItem item){
