@@ -10,7 +10,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 
+@SuppressWarnings("serial")
 public class PaintovalPane extends JPanel {
+	
+	@SuppressWarnings("deprecation")
+	public static void main(String[] args) {
+		JFrame f = new PaintovalFrame();
+		f.show();
+	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -20,11 +27,13 @@ public class PaintovalPane extends JPanel {
 	}
 }
 
+@SuppressWarnings("serial")
 class PaintovalFrame extends JFrame {
 	public PaintovalFrame() {
 		setTitle("lamp");
 		setSize(500, 500);
 		addWindowListener(new WindowAdapter() {
+			@SuppressWarnings("unused")
 			public void WindowClosing(WindowEvent e) {
 				System.exit(0);
 			}

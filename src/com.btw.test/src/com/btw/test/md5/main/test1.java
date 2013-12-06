@@ -26,7 +26,6 @@ public class test1 {
 			System.out.println(result[i]);
 		}
 		
-		int number[] = {0,0,0,0,0,0,0,0};
 		int hex = 0xFFFFFF00;
 		for(int i = 0;i<200;i++){
 			System.out.println(String.format("%X", hex));
