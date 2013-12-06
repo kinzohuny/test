@@ -114,6 +114,7 @@ public class MainPage {
 		sPane = new JScrollPane(table);
 		baseFrame.add(table);
 		sPane.setVisible(true);
+		table.setVisible(true);
 		//×´Ì¬À¸
 		lbl_state = new JLabel();
 		baseFrame.add(lbl_state);
