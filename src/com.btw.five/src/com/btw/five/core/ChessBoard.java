@@ -37,5 +37,4 @@ public class ChessBoard {
 	public void putChess(ChessItem chessItem){
 		chessBoard[chessItem.getX()][chessItem.getY()] = chessItem;
 	}
-	
 }

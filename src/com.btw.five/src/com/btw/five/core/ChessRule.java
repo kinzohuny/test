@@ -12,7 +12,20 @@ public class ChessRule{
 	}
 	
 	public static int getUDNum(ChessItem chessItem, ChessBoard chessBoard){
-		return 0;
+		int i=0,j=0;
+		for(;i<5;i++){
+			ChessItem ci = getU(chessItem, chessBoard);
+			if(ci==null||(!chessItem.getColor().equals(ci.getColor()))){
+				break;
+			}
+		}
+		for(;j<5;j++){
+			ChessItem ci = getD(chessItem, chessBoard);
+			if(ci==null||(!chessItem.getColor().equals(ci.getColor()))){
+				break;
+			}
+		}
+		return i+j;
 	}
 	
 	public static int getLRNum(ChessItem chessItem, ChessBoard chessBoard){
@@ -42,35 +55,35 @@ public class ChessRule{
 		return winner;
 	}
 	
-	public ChessItem getU(ChessItem chessItem, ChessBoard chessBoard){
+	public static ChessItem getU(ChessItem chessItem, ChessBoard chessBoard){
 		return chessBoard.getChess(chessItem.getX(), chessItem.getY()-1);
 	}
 	
-	public ChessItem getLU(ChessItem chessItem, ChessBoard chessBoard){
+	public static ChessItem getLU(ChessItem chessItem, ChessBoard chessBoard){
 		return chessBoard.getChess(chessItem.getX()-1, chessItem.getY()-1);
 	}
 	
-	public ChessItem getL(ChessItem chessItem, ChessBoard chessBoard){
+	public static ChessItem getL(ChessItem chessItem, ChessBoard chessBoard){
 		return chessBoard.getChess(chessItem.getX()-1, chessItem.getY());
 	}
 	
-	public ChessItem getLD(ChessItem chessItem, ChessBoard chessBoard){
+	public static ChessItem getLD(ChessItem chessItem, ChessBoard chessBoard){
 		return chessBoard.getChess(chessItem.getX()-1, chessItem.getY()+1);
 	}
 	
-	public ChessItem getD(ChessItem chessItem, ChessBoard chessBoard){
+	public static ChessItem getD(ChessItem chessItem, ChessBoard chessBoard){
 		return chessBoard.getChess(chessItem.getX(), chessItem.getY()+1);
 	}
 	
-	public ChessItem getRD(ChessItem chessItem, ChessBoard chessBoard){
+	public static ChessItem getRD(ChessItem chessItem, ChessBoard chessBoard){
 		return chessBoard.getChess(chessItem.getX()+1, chessItem.getY()+1);
 	}
 	
-	public ChessItem getR(ChessItem chessItem, ChessBoard chessBoard){
+	public static ChessItem getR(ChessItem chessItem, ChessBoard chessBoard){
 		return chessBoard.getChess(chessItem.getX()+1, chessItem.getY());
 	}
 	
-	public ChessItem getRU(ChessItem chessItem, ChessBoard chessBoard){
+	public static ChessItem getRU(ChessItem chessItem, ChessBoard chessBoard){
 		return chessBoard.getChess(chessItem.getX()+1, chessItem.getY()-1);
 	}
 }

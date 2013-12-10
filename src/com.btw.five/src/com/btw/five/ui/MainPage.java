@@ -89,7 +89,6 @@ public class MainPage {
 		baseFrame.setLayout(null);
 		baseFrame.setResizable(false);
 		baseFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		baseFrame.setVisible(true);
 		//菜单
 		menuBar = new JMenuBar();
 		baseFrame.add(menuBar);
@@ -100,6 +99,7 @@ public class MainPage {
 		menuBar.add(btn_start);
 		menuBar.add(btn_end);
 		menuBar.add(btn_setup);
+		menuBar.setVisible(true);
 		//棋盘
 		table = new JTable(size, size);
 		baseFrame.add(table);
@@ -122,6 +122,8 @@ public class MainPage {
 		lbl_state.setSize(size*30, 30);;
 		lbl_state.setText("游戏未开始！");
 		lbl_state.setVisible(true);
+		
+		baseFrame.setVisible(true);
 	}
 	
 	public static void putChess(ChessItem item){
