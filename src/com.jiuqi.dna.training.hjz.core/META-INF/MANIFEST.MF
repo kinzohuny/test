@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core
+Bundle-SymbolicName: com.jiuqi.dna.training.hjz.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: JIUQI
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: com.jiuqi.dna.core;bundle-version="3.3.0"
+Export-Package: com.jiuqi.dna.training.hjz.core.intf,
+ com.jiuqi.dna.training.hjz.core.task

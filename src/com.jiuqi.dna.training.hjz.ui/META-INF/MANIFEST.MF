@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Ui
+Bundle-SymbolicName: com.jiuqi.dna.training.hjz.ui
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: JIUQI
+Require-Bundle: com.jiuqi.dna.ui.wt,
+ com.jiuqi.dna.ui.common,
+ com.jiuqi.dna.ui.lightweight,
+ com.jiuqi.dna.ui.custom,
+ com.jiuqi.dna.ui.engine,
+ com.jiuqi.dna.bap.common;bundle-version="1.0.0",
+ com.jiuqi.dna.ui.portal.core;bundle-version="1.0.0",
+ com.jiuqi.dna.bap.common.paginate;bundle-version="1.0.0",
+ com.jiuqi.dna.training.hjz.service;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
