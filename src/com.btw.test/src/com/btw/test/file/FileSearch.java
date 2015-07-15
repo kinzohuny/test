@@ -11,6 +11,8 @@ import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * 在文件夹下，查找包含指定关键字的文件
  * @author Kinzo
@@ -34,6 +36,10 @@ public class FileSearch {
 	List<String> fileList = new ArrayList<String>();
 
 	public void search(String key) {
+		
+		if(StringUtils.isEmpty(key)){
+			return;
+		}
 
 		Charset charset = Charset.forName("UTF8");
 		CharsetDecoder decoder = charset.newDecoder();
