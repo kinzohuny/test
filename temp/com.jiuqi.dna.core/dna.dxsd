@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<define xmlns="www.jiuqi.com.cn" version="1.0">
+  <elements xmlns="">
+    <element name="publish" minOccurs="0" maxOccurs="" path="dna" description="" title="publish" unbounded="true" author="core">
+      <attributes />
+    </element>
+    <element name="services" minOccurs="0" maxOccurs="" path="dna/publish" description="" title="services" unbounded="true" author="core">
+      <attributes />
+    </element>
+    <element name="service" minOccurs="0" maxOccurs="" path="dna/publish/services" description="" title="service" unbounded="true" author="core">
+      <attributes>
+        <attribute name="space" type="String" unique="" description="" nullable="true" title="space" translatable="false" regex="" default="" />
+        <attribute name="class" type="Class" unique="" description="" nullable="false" title="class" translatable="true" extends="com.jiuqi.dna.core.service.Service" implements="" />
+      </attributes>
+    </element>
+    <element name="orms" minOccurs="0" maxOccurs="" path="dna/publish" description="" title="orms" unbounded="true" author="core">
+      <attributes />
+    </element>
+    <element name="orm" minOccurs="0" maxOccurs="" path="dna/publish/orms" description="" title="orm" unbounded="true" author="core">
+      <attributes>
+        <attribute name="space" type="String" unique="" description="" nullable="true" title="space" translatable="false" regex="" default="" />
+        <attribute name="class" type="Class" unique="" description="" nullable="false" title="class" translatable="true" extends="com.jiuqi.dna.core.def.query.ORMDeclarator" implements="" />
+      </attributes>
+    </element>
+    <element name="commands" minOccurs="0" maxOccurs="" path="dna/publish" description="" title="commands" unbounded="true" author="core">
+      <attributes />
+    </element>
+    <element name="command" minOccurs="0" maxOccurs="" path="dna/publish/commands" description="" title="command" unbounded="true" author="core">
+      <attributes>
+        <attribute name="space" type="String" unique="" description="" nullable="true" title="space" translatable="false" regex="" default="" />
+        <attribute name="class" type="Class" unique="" description="" nullable="false" title="class" translatable="true" extends="" implements="" />
+      </attributes>
+    </element>
+    <element name="querys" minOccurs="0" maxOccurs="" path="dna/publish" description="" title="querys" unbounded="true" author="core">
+      <attributes />
+    </element>
+    <element name="query" minOccurs="0" maxOccurs="" path="dna/publish/querys" description="" title="query" unbounded="true" author="core">
+      <attributes>
+        <attribute name="space" type="String" unique="" description="" nullable="true" title="space" translatable="false" regex="" default="" />
+        <attribute name="class" type="String" unique="" description="" nullable="false" title="class" translatable="true" regex="" default="" />
+      </attributes>
+    </element>
+    <element name="tables" minOccurs="0" maxOccurs="" path="dna/publish" description="" title="tables" unbounded="true" author="core">
+      <attributes />
+    </element>
+    <element name="table" minOccurs="0" maxOccurs="" path="dna/publish/tables" description="" title="table" unbounded="true" author="core">
+      <attributes>
+        <attribute name="space" type="String" unique="" description="" nullable="true" title="space" translatable="false" regex="" default="" />
+        <attribute name="class" type="Class" unique="" description="" nullable="false" title="class" translatable="true" extends="com.jiuqi.dna.core.def.table.TableDeclarator" implements="" />
+      </attributes>
+    </element>
+    <element name="gathering" minOccurs="0" maxOccurs="" path="dna" description="" title="gathering" unbounded="true" author="core">
+      <attributes />
+    </element>
+    <element name="gatherer" minOccurs="0" maxOccurs="" path="dna/gathering" description="" title="gatherer" unbounded="true" author="core">
+      <attributes>
+        <attribute name="group" type="String" unique="" description="" nullable="false" title="group" translatable="true" regex="" default="" />
+        <attribute name="element" type="String" unique="" description="" nullable="false" title="element" translatable="false" regex="" default="" />
+        <attribute name="class" type="Class" unique="" description="" nullable="false" title="class" translatable="false" extends="com.jiuqi.dna.core.spi.publish.NamedFactory" implements="" />
+      </attributes>
+    </element>
+    <element name="servlets" minOccurs="0" maxOccurs="" path="dna" description="" title="servlets" unbounded="true" author="core">
+      <attributes />
+    </element>
+    <element name="servlet" minOccurs="0" maxOccurs="" path="dna/servlets" description="" title="servlet" unbounded="true" author="core">
+      <attributes>
+        <attribute name="space" type="String" unique="" description="" nullable="true" title="space" translatable="false" regex="" default="" />
+        <attribute name="path" type="String" unique="global" description="" nullable="false" title="path" translatable="true" regex="" default="" />
+        <attribute name="class" type="Class" unique="" description="" nullable="false" title="class" translatable="false" extends="javax.servlet.http.HttpServlet" implements="" />
+      </attributes>
+    </element>
+    <element name="info-groups" minOccurs="0" maxOccurs="" path="dna/publish" description="" title="info-groups" unbounded="true" author="core">
+      <attributes />
+    </element>
+    <element name="info-group" minOccurs="0" maxOccurs="" path="dna/publish/info-groups" description="" title="info-group" unbounded="true" author="core">
+      <attributes>
+        <attribute name="class" type="Class" unique="" description="" nullable="false" title="class" translatable="true" extends="com.jiuqi.dna.core.def.info.InfoGroupDeclarator" implements="" />
+        <attribute name="space" type="String" unique="" description="" nullable="false" title="space" translatable="false" regex="" default="" />
+      </attributes>
+    </element>
+    <element name="info-groups-localization" minOccurs="0" maxOccurs="" path="dna/publish" description="" title="info-groups-localization" unbounded="true" author="core">
+      <attributes>
+        <attribute name="language" type="String" unique="" description="" nullable="false" title="language" translatable="false" regex="" default="" />
+      </attributes>
+    </element>
+    <element name="info-group" minOccurs="0" maxOccurs="" path="dna/publish/info-groups-localization" description="" title="info-group" unbounded="true" author="core">
+      <attributes>
+        <attribute name="space" type="String" unique="" description="" nullable="false" title="space" translatable="false" regex="" default="" />
+        <attribute name="path" type="Resource" unique="" description="" nullable="false" title="path" translatable="true">
+          <resource>
+            <resource_param>lg</resource_param>
+          </resource>
+        </attribute>
+      </attributes>
+    </element>
+  </elements>
+</define>
+

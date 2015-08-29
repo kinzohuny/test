@@ -1,0 +1,116 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<dna>
+	<servlets>
+		<servlet class="com.jiuqi.dna.core.impl.ObfuscateServlet" path="/dna_core/obf"/>
+		<servlet class="com.jiuqi.dna.core.impl.ObfuscateServlet" path="/dna_core/unobf"/>
+		<servlet class="com.jiuqi.dna.core.impl.NetConnectionListener" path="/dna_core/ncl"/>
+		<servlet class="com.jiuqi.dna.core.impl.DBBackupServlet" path="/dna_core/db"/>
+		<servlet class="com.jiuqi.dna.core.impl.CtrlServlet" path="/dna_core/ctrl"/>
+		<servlet class="com.jiuqi.dna.core.impl.ReliableRSIServlet" path="/dna_core/rrsi"/>
+		<!-- <servlet class="com.jiuqi.dna.core.impl.CXFWSServlet" path="/dna_ws/*" init-order="0"/> -->
+		<servlet class="org.eclipse.equinox.http.servlet.HttpServiceServlet" path="/*" init-order="0"/>
+	</servlets>
+	<gathering>
+		<gatherer class="com.jiuqi.dna.core.impl.PublishedServiceGatherer" element="service" group="services"/>
+		<gatherer class="com.jiuqi.dna.core.impl.PublishedDeclaratorGatherer" element="table" group="tables"/>
+		<gatherer class="com.jiuqi.dna.core.impl.PublishedDeclaratorGatherer" element="orm" group="orms"/>
+		<gatherer class="com.jiuqi.dna.core.impl.PublishedDeclaratorGatherer" element="query" group="querys"/>
+		<gatherer class="com.jiuqi.dna.core.impl.MalformedPublishedCommandGather" element="command" group="commands"/>
+		<gatherer class="com.jiuqi.dna.core.impl.PublishedDeclaratorGatherer" element="user-function" group="user-functions"/>
+		<gatherer class="com.jiuqi.dna.core.impl.PublishedDeclaratorGatherer" element="procedure" group="procedures"/>
+		<gatherer class="com.jiuqi.dna.core.impl.PublishedDeclaratorGatherer" element="model" group="models"/>
+		<gatherer class="com.jiuqi.dna.core.impl.PublishedModelScriptEngineGetherer" element="engine" group="model-script-engines"/>
+		<gatherer class="com.jiuqi.dna.core.impl.PublishedDeclaratorGatherer" element="info-group" group="info-groups"/>
+		<gatherer class="com.jiuqi.dna.core.impl.PublishedInfoGroupLGatherer" element="info-group" group="info-groups-localization"/>
+		<gatherer class="com.jiuqi.dna.core.impl.PublishedDeclareScriptGatherer" element="script" group="declare-scripts"/>
+		<gatherer class="com.jiuqi.dna.core.impl.RebootStrategyGatherer" element="strategy" group="reboot-strategies"/>
+		<gatherer class="com.jiuqi.dna.core.impl.AuthorityRuleGather" element="auth-rule" group="auth-rules"/>
+		<gatherer class="com.jiuqi.dna.core.impl.DistCacheFilterFactoryGatherer" element="dist-cache-filter" group="dist-cache-filters"/>
+		<gatherer class="com.jiuqi.dna.core.impl.DistCacheBarrierGatherer" element="dist-cache-barrier" group="dist-cache-barriers"/>
+	</gathering>
+	<types>
+		<type class="java.lang.StackTraceElement" struct="force"/>
+		<type class="java.net.InetAddress" struct="force"/>
+		<type class="java.net.Inet4Address" struct="force"/>
+		<type class="java.net.NetworkInterface" struct="force"/>
+		<type class="java.net.Inet6Address" struct="force"/>
+		<type class="com.jiuqi.dna.core.impl.NetTaskRequestImpl$RemoteTaskData" struct="true"/>
+		<type class="com.jiuqi.dna.core.impl.NetQueryRequestImpl$RemoteQueryData" struct="true"/>
+		<type class="com.jiuqi.dna.core.impl.NetNodeImpl$RemoteTypeQuery" struct="true"/>
+		<type class="com.jiuqi.dna.core.impl.NetNodeImpl$RemoteTypeQueryResult" struct="true"/>
+		<type class="com.jiuqi.dna.core.impl.RemoteQueryDataEx" struct="true"/>
+		<type class="com.jiuqi.dna.core.impl.RemoteTaskDataEx" struct="true"/>
+		<type class="com.jiuqi.dna.core.impl.SerializationEnumInfo" struct="true"/>
+		<type class="com.jiuqi.dna.core.impl.SerializationStructInfo" struct="true"/>
+		<type class="com.jiuqi.dna.core.impl.DOT_TreeNodeImpl$Mark" struct="false"/>
+		<type class="java.util.ArrayList" struct="false" translator="com.jiuqi.dna.core.impl.DOT_ArrayList"/>
+		<type class="java.util.Date" struct="false" translator="com.jiuqi.dna.core.impl.DOT_Date"/>
+		<type class="com.jiuqi.dna.core.impl.DnaArrayList" struct="false" translator="com.jiuqi.dna.core.impl.DOT_DnaArrayList"/>
+		<type class="java.util.HashMap" struct="false" translator="com.jiuqi.dna.core.impl.DOT_HashMap"/>
+		<type class="java.util.HashSet" struct="false" translator="com.jiuqi.dna.core.impl.DOT_HashSet"/>
+		<type class="java.util.Hashtable" struct="false" translator="com.jiuqi.dna.core.impl.DOT_Hashtable"/>
+		<type class="java.util.LinkedList" struct="false" translator="com.jiuqi.dna.core.impl.DOT_LinkedList"/>
+		<type class="com.jiuqi.dna.core.impl.NamedDefineContainerImpl" struct="false" translator="com.jiuqi.dna.core.impl.DOT_NamedDefineContainerImpl"/>
+		<type class="java.lang.Object" struct="false" translator="com.jiuqi.dna.core.impl.DOT_Object"/>
+		<type class="com.jiuqi.dna.core.misc.SafeItrList" struct="false" translator="com.jiuqi.dna.core.impl.DOT_SafeItrList"/>
+		<type class="java.sql.Date" struct="false" translator="com.jiuqi.dna.core.impl.DOT_SqlDate"/>
+		<type class="java.util.Stack" struct="false" translator="com.jiuqi.dna.core.impl.DOT_Stack"/>
+		<type class="java.util.TreeMap" struct="false" translator="com.jiuqi.dna.core.impl.DOT_TreeMap"/>
+		<type class="java.util.TreeSet" struct="false" translator="com.jiuqi.dna.core.impl.DOT_TreeSet"/>
+		<type class="java.util.Vector" struct="false" translator="com.jiuqi.dna.core.impl.DOT_Vector"/>
+		<type class="com.jiuqi.dna.core.impl.TreeNodeImpl" struct="false" translator="com.jiuqi.dna.core.impl.DOT_TreeNodeImpl"/>
+		<type class="com.jiuqi.dna.core.misc.SXElement" struct="false" translator="com.jiuqi.dna.core.impl.DOT_SXElement"/>
+		<type class="java.math.BigInteger" struct="false" translator="com.jiuqi.dna.core.impl.DOT_BigInteger"/>
+		<type class="java.math.BigDecimal" struct="false" translator="com.jiuqi.dna.core.impl.DOT_BigDecimal"/>
+		<type class="java.lang.StringBuffer" struct="false" translator="com.jiuqi.dna.core.impl.DOT_StringBuffer"/>
+		<type class="java.lang.StringBuilder" struct="false" translator="com.jiuqi.dna.core.impl.DOT_StringBuilder"/>
+	</types>    
+	<publish>
+		<model-script-engines><engine class="com.jiuqi.dna.core.impl.ModelJavaScriptEngine"/></model-script-engines>
+		<services>
+			<service class="com.jiuqi.dna.core.impl.SystemService" space="dna/core"/>
+			<service class="com.jiuqi.dna.core.impl.ClusterService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.CacheClusterService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.CacheAccessControlService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.UserResourceService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.RoleResourceService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.IdentifyResourceService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.AuthorityDataBaseService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.SystemPrivilegeResource" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.TableDefineBrokerService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.ClusterLockResourceService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.RebootService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.LDAPSerivce" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.internal.db.monitor.VariationMonitorService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.internal.db.monitor.VariationMonitorCreatingLockService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.AuthorityRuleService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.DistCacheFilterResourceService" space="dna/core"/>
+		    <service class="com.jiuqi.dna.core.impl.ManagementService" space="dna/core"/>
+		</services>
+		<tables>
+		    <table class="com.jiuqi.dna.core.impl.TD_CoreMetaData" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.impl.TD_CoreMetaDataH" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.impl.TD_CoreSiteInfo" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.impl.TD_CoreAuthACL" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.impl.TD_CoreAuthAuthACL" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.impl.TD_CoreAuthRA" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.impl.TD_CoreAuthUOM" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.impl.TD_CoreAuthRole" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.impl.TD_CoreAuthUser" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.impl.TD_CoreClusterData" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.impl.TD_CoreResourceLog" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.impl.TD_CoreAuthRule" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.internal.db.monitor.VariationMonitorTB" space="dna/core"/>
+		    <table class="com.jiuqi.dna.core.impl.CoreMetadataMerge" space="dna/core"/>
+		</tables>
+		<reboot-strategies>
+		    <strategy class="com.jiuqi.dna.core.impl.DayRebootStrategy" space="dna/core" name="daystrategy"/>
+		    <strategy class="com.jiuqi.dna.core.impl.WeekRebootStrategy" space="dna/core" name="weekstrategy"/>
+		</reboot-strategies>
+		<orms>
+			<orm class="com.jiuqi.dna.core.impl.ORM_CoreClusterData" space="dna/core"/>
+			<orm class="com.jiuqi.dna.core.impl.ORM_CoreResourceLog" space="dna/core"/>
+			<orm class="com.jiuqi.dna.core.internal.db.monitor.VariationMonitorORM" space="dna/core"/>
+		</orms>
+	</publish>
+</dna>

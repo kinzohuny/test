@@ -1,0 +1,15 @@
+sqlserver_dropfunc.sql
+sqlserver_isleapday.sql
+sqlserver_isleapmonth.sql
+sqlserver_isleapyear.sql
+sqlserver_truncyear.sql
+sqlserver_truncquarter.sql
+sqlserver_truncmonth.sql
+sqlserver_truncweek.sql
+sqlserver_truncday.sql
+sqlserver_current_time_millis.sql
+sqlserver_length.sql
+sqlserver_lpad.sql
+sqlserver_rpad.sql
+sqlserver_datestr.sql
+sqlserver_hexstr.sql

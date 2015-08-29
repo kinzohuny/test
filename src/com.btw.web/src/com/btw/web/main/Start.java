@@ -10,7 +10,7 @@ import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import com.btw.web.core.servlet.IndexServlet;
-import com.btw.web.core.servlet.DefaultServlet;
+import com.btw.web.core.servlet.TestServlet;
 import com.btw.web.utils.ServerUtils;
 
 public class Start {
@@ -18,7 +18,7 @@ public class Start {
 	static Logger logger = Logger.getLogger(Start.class);
 
 	public static String IP = "";
-	public static int PORT = 30001;
+	public static int PORT = 80;
 	public static int TIME_OUT_S = 1800;
 
 	public static void main(String[] args) throws Exception {
@@ -27,7 +27,8 @@ public class Start {
 		ServletContextHandler servletContextHandler = new ServletContextHandler(server, "/");
 		
 		//设置servlet
-		servletContextHandler.addServlet(IndexServlet.class, "/");
+		servletContextHandler.addServlet(TestServlet.class, "/test");
+		servletContextHandler.addServlet(IndexServlet.class, "/*");
 		
 		//设置session管理
 		HashSessionManager hashSessionManager = new HashSessionManager();

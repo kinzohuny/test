@@ -17,11 +17,15 @@ public class IndexServlet extends HttpServlet {
 
 		resp.setContentType("text/html;charset=utf-8");
 		resp.setStatus(HttpServletResponse.SC_OK);
+		resp.getWriter().println("<title>Index</title>");
 		resp.getWriter().println("<h1>Hello World</h1>");
 		HttpSession s = req.getSession();
 		resp.getWriter().println("<h1>Session is:" + s.getId() + "</h1>");
 		resp.getWriter().println("<h1>Method is:" + req.getMethod() + "</h1>");
-		resp.getWriter().println("<h1>Path is:" + req.getPathInfo() + "</h1>");
+		//不存在指定路径时，该值才有输出
+		resp.getWriter().println("<h1>PathInfo is:" + req.getPathInfo() + "</h1>");
+		//存在指定路径时，该值才有输出
+		resp.getWriter().println("<h1>ServletPath is:" + req.getServletPath() + "</h1>");
 		for(Object key : req.getParameterMap().keySet()){
 			resp.getWriter().print("<br/>" + key + "=" + toString(req.getParameterMap().get(key)));
 		}

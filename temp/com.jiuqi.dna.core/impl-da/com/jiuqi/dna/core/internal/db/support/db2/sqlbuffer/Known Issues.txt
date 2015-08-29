@@ -1,0 +1,5 @@
+查询直接输出二进制常量时异常.
+SQL Reference Vol.1, Page 452,关于结果列的规格说明:
+When the expression is a hexadecimal constant representing n bytes. 
+The data type of the result column is VARCHAR(n);the code page is the database code page.
+
