@@ -9,6 +9,7 @@ import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
+import com.btw.web.core.servlet.DefaultServlet;
 import com.btw.web.core.servlet.IndexServlet;
 import com.btw.web.core.servlet.TestServlet;
 import com.btw.web.utils.ServerUtils;
@@ -27,8 +28,10 @@ public class Start {
 		ServletContextHandler servletContextHandler = new ServletContextHandler(server, "/");
 		
 		//设置servlet
+
+		servletContextHandler.addServlet(IndexServlet.class, "/");
 		servletContextHandler.addServlet(TestServlet.class, "/test");
-		servletContextHandler.addServlet(IndexServlet.class, "/*");
+		servletContextHandler.addServlet(DefaultServlet.class, "/*");
 		
 		//设置session管理
 		HashSessionManager hashSessionManager = new HashSessionManager();
