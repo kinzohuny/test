@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import manage.Constants;
+
 /**
  * 随机码生成
  */
@@ -57,12 +59,7 @@ public class RandomCodeServlet extends HttpServlet {
 		bos.close();
 		out.close();
 
-		if (null != request.getParameter("reg")
-				&& "ok".equals(request.getParameter("reg"))) {
-			session.setAttribute("cz_regRandom", new String(rands));
-		} else
-			session.setAttribute("cz_loginRandom", new String(rands));
-
+		session.setAttribute(Constants.SESSION_RANDOM, new String(rands));
 	}
 
 	/**

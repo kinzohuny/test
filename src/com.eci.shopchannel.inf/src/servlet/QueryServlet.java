@@ -27,15 +27,18 @@ public class QueryServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		String category_code = null;
-		for(Object key : req.getParameterMap().keySet()){
-			if("category".equalsIgnoreCase(String.valueOf(key))){
-				category_code = ((String[])req.getParameterMap().get(key))[0];
-				break;
+		String result = null;
+		
+		if(StringUtils.isNotEmpty(req.getParameter("category"))){
+			String category_code = req.getParameter("category");
+			if(CacheManage.getCategoryCodeSet().contains(category_code)){
+				result = query(category_code);
 			}
 		}
 		
-		String result = query(category_code);
+		if(StringUtils.isEmpty(result)){
+			result = "";
+		}
 
 		resp.setStatus(HttpServletResponse.SC_OK);
 		resp.setCharacterEncoding("UTF-8");  
@@ -47,15 +50,12 @@ public class QueryServlet extends HttpServlet {
 	}
 	
 	private String query(String category_code){
-		String result = "";
 		
-		if(StringUtils.isNotEmpty(category_code)&&CacheManage.getCategoryCodeSet().contains(category_code)){
-			result = CacheManage.getItemListJson(category_code);
-			if(StringUtils.isEmpty(result)){
-				result = queryFromDb(category_code);
-				if(StringUtils.isNotEmpty(result)){
-					CacheManage.setItemListJson(category_code, result);
-				}
+		String result = CacheManage.getItemListJson(category_code);
+		if(StringUtils.isEmpty(result)){
+			result = queryFromDb(category_code);
+			if(StringUtils.isNotEmpty(result)){
+				CacheManage.setItemListJson(category_code, result);
 			}
 		}
 
