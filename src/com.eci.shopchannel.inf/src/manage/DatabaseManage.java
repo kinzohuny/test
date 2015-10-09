@@ -6,20 +6,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
+import utils.StringUtils;
+
 public class DatabaseManage {
 	
+	private final static Logger logger = Logger.getLogger(DatabaseManage.class);
+	
 	private static Connection connect;
-	private final static String url = "jdbc:mysql://localhost:3306/test";
-	private final static String user = "test";
-	private final static String password = "test";
+	private final static String url = "jdbc:mysql://"+PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_IP)+":"+PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_PORT)+"/"+PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_DATABASE);
+	private final static String user = PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_USERNAME);
+	private final static String password = PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_PASSWORD);
 	
 	public synchronized static ResultSet executeQuery(String sql,Object... paras) throws SQLException, ClassNotFoundException{
 		PreparedStatement pstmt = getPreparedStatement(sql, paras);
+		logger.debug(sql);
+		logger.debug(StringUtils.toSting(paras));
 		return pstmt.executeQuery();
 	}
 	
 	public synchronized static int executeUpdate(String sql,Object... paras) throws SQLException, ClassNotFoundException{
 		PreparedStatement pstmt = getPreparedStatement(sql, paras);
+		logger.debug(sql);
+		logger.debug(StringUtils.toSting(paras));
 		return pstmt.executeUpdate();
 	}
 	
@@ -39,4 +49,5 @@ public class DatabaseManage {
 		} 
 		return connect;
 	}
+	
 }

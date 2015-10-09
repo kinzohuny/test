@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import utils.StringUtils;
 import manage.DatabaseManage;
 import model.ItemModel;
 
@@ -22,17 +23,22 @@ public class ItemDao {
 	
 	public static String SQL_DELETE = "delete from shopchannel_item where id in ";
 	
-	public int delete(List<ItemModel> list) throws SQLException, ClassNotFoundException{
-		StringBuffer buffer = new StringBuffer();;
-		if(list!=null&&!list.isEmpty()){
-			buffer.append("(");
-			for(ItemModel item : list){
-				buffer.append(item.getId()).append(",");
-			}
-			buffer.append(")");
-			return DatabaseManage.executeUpdate(SQL_DELETE+buffer.toString());
+	public int delete(String ids) throws SQLException, ClassNotFoundException{
+		if(StringUtils.isNotEmpty(ids)){
+			Object[] paras = ids.split(",");
+			return DatabaseManage.executeUpdate(SQL_DELETE+getInSql(paras.length), paras);
 		}
 		return 0;
+	}
+	
+	private String getInSql(int num){
+		StringBuffer buffer = new StringBuffer("(");
+		for(int i = 0; i < num; i++){
+			buffer.append("?,");
+		}
+		buffer.setLength(buffer.length()-1);
+		buffer.append(")");
+		return buffer.toString();
 	}
 	
 	public int insert(List<ItemModel> list) throws SQLException, ClassNotFoundException{
@@ -43,7 +49,7 @@ public class ItemDao {
 				buffer.append("'").append(item.getLong_title()).append("',");
 				buffer.append(item.getIdentify()).append(",");
 				buffer.append("'").append(item.getUrl()).append("',");
-				buffer.append("'").append(item.getWap_url()).append("',");
+				buffer.append("'").append(item.getWapurl()).append("',");
 				buffer.append("'").append(item.getImg_url()).append("',");
 				buffer.append(item.getPrice()).append(",");
 				buffer.append(item.getCheap()).append(",");
@@ -75,7 +81,7 @@ public class ItemDao {
 					buffer.append(" and sc.category_code=?");
 					paraList.add(map.get(key));
 				}
-				if("tag_id".equalsIgnoreCase(key)){
+				if("tagid".equalsIgnoreCase(key)){
 					buffer.append(" and sc.tag_id=?");
 					paraList.add(map.get(key));
 				}
@@ -90,7 +96,7 @@ public class ItemDao {
 			item.setLong_title(result.getString("long_title"));
 			item.setIdentify(result.getLong("identify"));
 			item.setUrl(result.getString("url"));
-			item.setWap_url(result.getString("wap_url"));
+			item.setWapurl(result.getString("wap_url"));
 			item.setImg_url(result.getString("img_url"));
 			item.setPrice(result.getBigDecimal("price"));
 			item.setCheap(result.getBigDecimal("cheap"));
@@ -121,7 +127,7 @@ public class ItemDao {
 						item.getLong_title()+"|"+
 						item.getIdentify()+"|"+
 						item.getUrl()+"|"+
-						item.getWap_url()+"|"+
+						item.getWapurl()+"|"+
 						item.getImg_url()+"|"+
 						item.getPrice()+"|"+
 						item.getCheap()+"|"+

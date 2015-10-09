@@ -9,7 +9,7 @@ public class ItemModel {
 	private String long_title;
 	private Long identify;
 	private String url;
-	private String wap_url;
+	private String wapurl;
 	private String img_url;
 	private BigDecimal price;
 	private BigDecimal cheap;
@@ -48,11 +48,11 @@ public class ItemModel {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public String getWap_url() {
-		return wap_url;
+	public String getWapurl() {
+		return wapurl;
 	}
-	public void setWap_url(String wap_url) {
-		this.wap_url = wap_url;
+	public void setWapurl(String wapurl) {
+		this.wapurl = wapurl;
 	}
 	public String getImg_url() {
 		return img_url;

@@ -7,6 +7,7 @@ import model.ItemModel;
 import org.eclipse.jetty.util.security.Credential.MD5;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 
 public class StringUtils {
@@ -32,22 +33,23 @@ public class StringUtils {
 	}
 	
 	public static String toJSON(List<ItemModel> list){
-		SimplePropertyPreFilter filter = new SimplePropertyPreFilter(ItemModel.class, "long_title","identify","url","wap_url","img_url","price","cheap","site","site_url","tagid","tag","post");
-		return JSON.toJSONString(list,filter);
+		SimplePropertyPreFilter filter = new SimplePropertyPreFilter(ItemModel.class, "long_title","identify","url","wapurl","img_url","price","cheap","site","site_url","tagid","tag","post");
+		return JSON.toJSONString(list,filter,SerializerFeature.WriteMapNullValue,SerializerFeature.WriteNullStringAsEmpty,SerializerFeature.WriteNullNumberAsZero,SerializerFeature.BrowserCompatible);
 	}
 	
-	/**
-	 * 字符串转换unicode，仅转换非ACSII字符
-	 */
-	public static String string2Unicode(String string) {
-	 
-	    StringBuffer unicode = new StringBuffer();
-	    for (int i = 0; i < string.length(); i++) {
-	        // 取出每一个字符
-	        char c = string.charAt(i);
-	        // 转换为unicode
-        	unicode.append(c>127?"\\u" + Integer.toHexString(c):c);
-	    }
-	    return unicode.toString();
+	public static String toSting(Object[] objectArray){
+		if(objectArray==null){
+			return null;
+		}
+		if(objectArray.length==0){
+			return "[]";
+		}
+		StringBuffer buffer = new StringBuffer("[");
+		for(Object object : objectArray){
+			buffer.append(object==null?"":String.valueOf(object)).append(",");
+		}
+		buffer.setLength(buffer.length()-1);
+		buffer.append("]");
+		return buffer.toString();
 	}
 }

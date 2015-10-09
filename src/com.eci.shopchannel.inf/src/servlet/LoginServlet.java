@@ -45,15 +45,16 @@ public class LoginServlet extends HttpServlet {
 			resp.setContentType("text/html;charset=utf-8");
 			resp.setStatus(HttpServletResponse.SC_OK);
 			resp.getWriter().println("<title>Login</title>");
+			resp.getWriter().println("<link href=\"/resource/main.css\" rel=\"stylesheet\" type=\"text/css\"></link>");
 			//body
 			resp.getWriter().println("<form id=\"login\" method=\"post\">");
 			resp.getWriter().println("<span>账　号：</span><input name=\"name\"></input><br>");
-			resp.getWriter().println("<span>密　码：</span><input name=\"password\"></input><br>");
+			resp.getWriter().println("<span>密　码：</span><input type=\"password\" name=\"password\"></input><br>");
 			resp.getWriter().println("<span>验证码：</span><input name=\"random\"></input><br>");
 			resp.getWriter().println("<img src=\"/randomcode\" onclick=\"this.src='/randomcode?temp='+Math.random();\" />");
 			resp.getWriter().println("<input type=\"submit\" value=\"登录\" />");
 			resp.getWriter().println("</form>");
-			resp.getWriter().println("<em style=\"color:red;font-size:20px;\">"+msg+"</em>");
+			resp.getWriter().println("<em class=\"error\">"+msg+"</em>");
 			
 			resp.getWriter().flush();
 			resp.getWriter().close();

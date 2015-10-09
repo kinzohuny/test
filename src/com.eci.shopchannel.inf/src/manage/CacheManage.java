@@ -5,15 +5,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import dao.CategoryDao;
 import model.CategoryModel;
+import dao.CategoryDao;
 
 public class CacheManage {
 	
-	private static final String CATEGORY_CODE_SET="category_code_set";
+	private static final String CATEGORY_CODE_SET="CATEGORY_CODE_SET";
+	private static final String TAG_ID_SET="TAG_ID_SET";
 
 	public static void initCache() throws SQLException, ClassNotFoundException{
-		setCategoryCodeSet();
+		initCategoryCodeSet();
 	}
 	
 	public static void refreshCache() throws SQLException, ClassNotFoundException{
@@ -42,16 +43,28 @@ public class CacheManage {
 		return new HashSet<String>();
 	}
 	
-	private static void setCategoryCodeSet() throws SQLException, ClassNotFoundException{
-		Set<String> set = new HashSet<String>();
+	@SuppressWarnings("unchecked")
+	public static Set<String> getTagIdSet(){
+		Object obj = CachePool.getInstance().get(TAG_ID_SET);
+		if(obj!=null&&obj instanceof Set){
+			return (Set<String>)obj;
+		}
+		return new HashSet<String>();
+	}
+	
+	private static void initCategoryCodeSet() throws SQLException, ClassNotFoundException{
+		Set<String> category_set = new HashSet<String>();
+		Set<String> tag_set = new HashSet<String>();
 		List<CategoryModel> list = new CategoryDao().queryForList(null);
 		if(list!=null && !list.isEmpty()){
-			set.add("all");
+			category_set.add("all");
 			for(CategoryModel category : list){
-				set.add(category.getCategory_code());
+				category_set.add(category.getCategory_code());
+				tag_set.add(String.valueOf(category.getTagid()));
 			}
 		}
-		CachePool.getInstance().add(CATEGORY_CODE_SET, set);
+		CachePool.getInstance().add(CATEGORY_CODE_SET, category_set);
+		CachePool.getInstance().add(TAG_ID_SET, tag_set);
 	}
 	
 }

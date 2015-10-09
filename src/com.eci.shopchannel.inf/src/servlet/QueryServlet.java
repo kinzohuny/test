@@ -28,11 +28,15 @@ public class QueryServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		String result = null;
-		
-		if(StringUtils.isNotEmpty(req.getParameter("category"))){
+		if(StringUtils.isNotEmpty(req.getParameter("tagid"))){
+			String tagid = req.getParameter("tagid");
+			if(CacheManage.getTagIdSet().contains(tagid)){
+				result = queryByTag(tagid);
+			}
+		} else if (StringUtils.isNotEmpty(req.getParameter("category"))){
 			String category_code = req.getParameter("category");
 			if(CacheManage.getCategoryCodeSet().contains(category_code)){
-				result = query(category_code);
+				result = queryByCategory(category_code);
 			}
 		}
 		
@@ -49,34 +53,51 @@ public class QueryServlet extends HttpServlet {
 		resp.getWriter().close();
 	}
 	
-	private String query(String category_code){
+	String tag_prefix = "tag_";
+	private String queryByTag(String tagid){
 		
-		String result = CacheManage.getItemListJson(category_code);
+		String result = CacheManage.getItemListJson(tag_prefix+tagid);
 		if(StringUtils.isEmpty(result)){
-			result = queryFromDb(category_code);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tagid", tagid);
+			result = queryFromDb(map);
 			if(StringUtils.isNotEmpty(result)){
-				CacheManage.setItemListJson(category_code, result);
+				CacheManage.setItemListJson(tag_prefix+tagid, result);
 			}
 		}
 
 		return result;
 	}
 	
-	private String queryFromDb(String category_code) {
-		String result = "";
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("status", true);
-		if(!"all".equals(category_code)){
+	String category_prefix = "category_";
+	private String queryByCategory(String category_code){
+		
+		String result = CacheManage.getItemListJson(category_prefix+category_code);
+		if(StringUtils.isEmpty(result)){
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("category_code", category_code);
+			result = queryFromDb(map);
+			if(StringUtils.isNotEmpty(result)){
+				CacheManage.setItemListJson(category_prefix+category_code, result);
+			}
+		}
+
+		return result;
+	}
+	
+	private String queryFromDb(Map<String, Object> map) {
+		String result = "";
+		map.put("status", true);
+		if("all".equals(map.get("category_code"))){
+			map.remove("category_code");
 		}
 		try {
 			List<ItemModel> list = new ItemDao().queryForList(map);
-			logger.info("::::query from db!category_code="+category_code);
 			if(list!=null&&!list.isEmpty()){
-				result = StringUtils.string2Unicode(StringUtils.toJSON(list));
+				result = StringUtils.toJSON(list);
 			}
 		} catch (Exception e) {
-			logger.error("query item list from db error! category_code="+category_code, e);
+			logger.error("query item list from db error! ", e);
 		}
 		return result;
 	}
