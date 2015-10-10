@@ -204,8 +204,8 @@ public class ManageServlet extends HttpServlet {
 				}
 				ItemModel item = new ItemModel();
 				
-				String tagId = getCellValue(row.getCell(0));
-				if(StringUtils.isEmpty(tagId)||!CacheManage.getTagIdSet().contains(tagId)){
+				Long tagId = StringUtils.toLong(getCellValue(row.getCell(0)));
+				if(tagId!=null||!CacheManage.getTagIdSet().contains(tagId)){
 					errorInfo.append("请检查单元格["+(i+1)+",A]的值：（tagid）为空||不在tagId范围内。").append("\r\n");
 				}else{
 					item.setTagid(tagId);
@@ -384,8 +384,8 @@ public class ManageServlet extends HttpServlet {
 		buffer.append("<tr><td class=\"right notNull\">*tag_id：</td>");
 		buffer.append("<td><select class=\"w300\" name=\"tagid\">");
 		List<CategoryModel> cateList = CacheManage.getCategoryList();
-		String defaultTagig = "1";
-		if(StringUtils.isNotEmpty(item.getTagid())){
+		Long defaultTagig = 1L;
+		if(item.getTagid()!=null){
 			defaultTagig = item.getTagid();
 		}
 		for(CategoryModel cate : cateList){

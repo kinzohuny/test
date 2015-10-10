@@ -15,7 +15,7 @@ public class ItemModel {
 	private BigDecimal cheap;
 	private String site;
 	private String site_url;
-	private String tagid;
+	private Long tagid;
 	private String tag;
 	private Integer post;
 	private Integer status;
@@ -84,10 +84,10 @@ public class ItemModel {
 	public void setSite_url(String site_url) {
 		this.site_url = site_url;
 	}
-	public String getTagid() {
+	public Long getTagid() {
 		return tagid;
 	}
-	public void setTagid(String tagid) {
+	public void setTagid(Long tagid) {
 		this.tagid = tagid;
 	}
 	public String getTag() {

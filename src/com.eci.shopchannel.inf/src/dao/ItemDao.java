@@ -128,7 +128,7 @@ public class ItemDao {
 			item.setCheap(result.getBigDecimal("cheap"));
 			item.setSite(result.getString("site"));
 			item.setSite_url(result.getString("site_url"));
-			item.setTagid(result.getString("tag_id"));
+			item.setTagid(result.getLong("tag_id"));
 			item.setTag(result.getString("tag_name"));
 			item.setPost(result.getInt("post"));
 			item.setStatus(result.getInt("status"));
