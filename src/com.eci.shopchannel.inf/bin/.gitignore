@@ -1,10 +1,2 @@
-/dao/
-/download/
-/log4j.properties
-/main/
-/manage/
-/model/
 /resource/
-/server.properties
 /servlet/
-/utils/

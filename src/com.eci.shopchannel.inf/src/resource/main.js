@@ -17,7 +17,7 @@ function getSelectedIds() {
 			ids += obj[i].id + ',';
 		}
 	}
-	return ids;
+	return ids==''?'':ids.substring(0,ids.length-1);;
 }
 
 function getSelectedNum() {
@@ -37,7 +37,7 @@ function deleteSelected() {
 	if (num > 0) {
 		var ids = getSelectedIds();
 		if (confirm('确定要删除选中的' + getSelectedNum() + '条纪录吗?\r\n注意：此操作不可恢复！')) {
-			window.location.replace("/manage?delete=" + ids);
+			location.href="/manage?delete=" + ids;
 		}
 	} else {
 		alert('请勾选要删除的记录！');
@@ -75,7 +75,7 @@ function clearFile(){
 
 function cleanCache(){
 	if (confirm('确定要清空缓存吗?')) {
-		window.location.replace("/manage?cleanCache=true");
+		location.href="/manage?cleanCache=true";
 	}
 }
 
@@ -85,9 +85,30 @@ function setStatus(i) {
 	if (num > 0) {
 		var ids = getSelectedIds();
 		if (confirm('确定要' + str + '选中的' + num + '条纪录吗?')) {
-			window.location.replace("/manage?status=" + (i==1?1:0) + "&ids=" + ids);
+			location.href="/manage?status=" + (i==1?1:0) + "&ids=" + ids;
 		}
 	} else {
 		alert("请勾选要" + str + "的记录！");
 	}
+}
+
+function editItem(){
+	var num = getSelectedNum();
+	if(num<1){
+		alert("请勾选要修改的记录！");
+	}else if(num>1){
+		alert("只能修改1条记录，目前勾选了"+num+"条！");
+	}else{
+		location.href="/manage?edit=true&id="+getSelectedIds();
+	}
+}
+
+function saveItem(){
+	if(checkItem()){
+		document.getElementById('saveItem').submit();
+	}
+}
+
+function checkItem(){
+	
 }

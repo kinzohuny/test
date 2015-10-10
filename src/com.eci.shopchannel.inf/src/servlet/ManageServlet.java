@@ -120,8 +120,13 @@ public class ManageServlet extends HttpServlet {
 
 	private String saveHandle(HttpServletRequest req) {
 		StringBuffer buffer = new StringBuffer();
-		
 		// TODO Auto-generated method stub
+		//post提交、参数转对象入库、后台校验、js校验
+		System.out.println(req.getParameter("save"));
+		System.out.println(req.getParameter("isNew"));
+		System.out.println(req.getParameter("id"));
+		System.out.println(req.getParameter("tagid"));
+		System.out.println(req.getParameter("long_title"));
 		return buffer.toString();
 	}
 
@@ -173,7 +178,7 @@ public class ManageServlet extends HttpServlet {
 	private String defaultHandle(HttpServletRequest req) throws SQLException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<ItemModel> list = new ItemDao().queryForList(map);
-		return getButtonPage()+getListPage(list);
+		return getButtonPage()+getListPage(list)+getHiddenPage();
 	}
 
 	private int doImport(HttpServletRequest req) throws FileUploadException, IOException, SQLException {
@@ -356,21 +361,32 @@ public class ManageServlet extends HttpServlet {
 		}
 		return null;
 	}
+
+	private String getHiddenPage() {
+		StringBuffer buffer = new StringBuffer();
+		//删除操作表单
+		
+		//清空缓存表单
+		
+		//更新状态表单
+		
+		return buffer.toString();
+	}
 	
 	private String getButtonPage(){
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("<table class=\"menutable\"><tr>");
-		buffer.append("<td><input type=\"button\" value=\"全选\" onclick=\"selectAll();\"></input></td>");
-		buffer.append("<td><input type=\"button\" value=\"全清\" onclick=\"selectNone();\"></input></td>");
-		buffer.append("<td><input type=\"button\" value=\"启用\" onclick=\"setStatus(1);\"></input></td>");
-		buffer.append("<td><input type=\"button\" value=\"停用\" onclick=\"setStatus(0);\"></input></td>");
-		buffer.append("<td><input type=\"button\" value=\"新增\" onclick=\"location.href='/manage?edit=false'\"></input></td>");
-		buffer.append("<td><input type=\"button\" value=\"修改\"></input></td>");
-		buffer.append("<td><input type=\"button\" value=\"删除\" onclick=\"deleteSelected();\"></input></td>");
-		buffer.append("<td><input type=\"button\" value=\"清空缓存\" onclick=\"cleanCache();\"></input></td>");
-		buffer.append("<td><input type=\"button\" value=\"下载导入模板\" onclick=\"location.href='/download/import_demo.xls'\"></input></td>");
+		buffer.append("<td><input type=\"button\" value=\"全选\" onclick=\"selectAll();\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"全清\" onclick=\"selectNone();\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"启用\" onclick=\"setStatus(1);\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"停用\" onclick=\"setStatus(0);\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"新增\" onclick=\"location.href='/manage?edit=false'\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"修改\" onclick=\"editItem();\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"删除\" onclick=\"deleteSelected();\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"清空缓存\" onclick=\"cleanCache();\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"下载导入模板\" onclick=\"location.href='/download/import_demo.xls'\"></td>");
 		buffer.append("<form action=\"/manage?import=1\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"return checkFile()\"><td><input type=\"submit\" value=\"导入\"></td><td><input id=\"file_select\" type=\"file\" name=\"file\"></td></form>");
-		//buffer.append("<td><input type=\"button\" value=\"清空文件\" onclick=\"clearFile();\"></input></td>");
+		//buffer.append("<td><input type=\"button\" value=\"清空文件\" onclick=\"clearFile();\"></td>");
 		buffer.append("</tr></table>");
 		
 		return buffer.toString();
@@ -380,7 +396,9 @@ public class ManageServlet extends HttpServlet {
 
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("<table class=\"edittable\">");
+		buffer.append("<form id=\"saveItem\" action=\"/manage?save=true\" method=\"post\" onsubmit=\"return checkItem()\">");
 		buffer.append("<tr><th colspan=\"3\">").append(isNew?"新增商品":"修改商品").append("</th></tr>");
+		buffer.append("<tr><td>ID：</td><td><input class=\"w300\" name=\"id\" readonly=\"readonly\" value=\"").append(item.getId()==null?"":item.getId()).append("\"></td><td class=\"left\"><input type=\"hidden\" name=\"isNew\" value=\"").append(isNew).append("\"></td></tr>");
 		buffer.append("<tr><td class=\"right notNull\">*tag_id：</td>");
 		buffer.append("<td><select class=\"w300\" name=\"tagid\">");
 		List<CategoryModel> cateList = CacheManage.getCategoryList();
@@ -393,25 +411,26 @@ public class ManageServlet extends HttpServlet {
 		}
 		buffer.append("</select></td>");
 		buffer.append("<td class=\"left\">固定的分类编号。</td></tr>");
-		buffer.append("<tr><td class=\"right notNull\">*商品标题：</td><td><input class=\"w300\" name=\"long_title\">").append(item.getLong_title()==null?"":item.getLong_title()).append("</input></td><td class=\"left\">40个字符以内。</td></tr>");
-		buffer.append("<tr><td class=\"right notNull\">*商品id：</td><td><input class=\"w300\" name=\"identify\">").append(item.getIdentify()==null?"":item.getIdentify()).append("</input></td><td class=\"left\">商品ID不能重复。</td></tr>");
-		buffer.append("<tr><td class=\"right notNull\">*现价：</td><td><input class=\"w300\" name=\"price\">").append(item.getPrice()==null?"":item.getPrice()).append("</input></td><td class=\"left\"></td></tr>");
-		buffer.append("<tr><td class=\"right\">优惠卷金额：</td><td><input class=\"w300\" name=\"cheap\">").append(item.getCheap()==null?"":item.getCheap()).append("</input></td><td class=\"left\"></td></tr>");
+		buffer.append("<tr><td class=\"right notNull\">*商品标题：</td><td><input class=\"w300\" name=\"long_title\" value=\"").append(item.getLong_title()==null?"":item.getLong_title()).append("\"></td><td class=\"left\">40个字符以内。</td></tr>");
+		buffer.append("<tr><td class=\"right notNull\">*商品id：</td><td><input class=\"w300\" name=\"identify\" value=\"").append(item.getIdentify()==null?"":item.getIdentify()).append("\"></td><td class=\"left\">商品ID不能重复。</td></tr>");
+		buffer.append("<tr><td class=\"right notNull\">*现价：</td><td><input class=\"w300\" name=\"price\" value=\"").append(item.getPrice()==null?"":item.getPrice()).append("\"></td><td class=\"left\"></td></tr>");
+		buffer.append("<tr><td class=\"right\">优惠卷金额：</td><td><input class=\"w300\" name=\"cheap\" value=\"").append(item.getCheap()==null?"":item.getCheap()).append("\"></td><td class=\"left\"></td></tr>");
 		buffer.append("<tr><td class=\"right notNull\">*包邮：</td><td><select class=\"w300\" name=\"post\">")
 			.append(item.getPost()!=null&&item.getPost()==1?"<option value=\"0\"> 0 否</option><option value=\"1\" selected=\"selected\">1 是</option>":"<option value=\"0\" selected=\"selected\"> 0 否</option><option value=\"1\">1 是</option>")
 			.append("</select></td><td class=\"left\">是否包邮</td></tr>");
 		buffer.append("<tr><td class=\"right notNull\">*启用：</td><td><select class=\"w300\" name=\"status\">")
 			.append(item.getStatus()!=null&&item.getStatus()==1?"<option value=\"0\"> 0 否</option><option value=\"1\" selected=\"selected\">1 是</option>":"<option value=\"0\" selected=\"selected\"> 0 否</option><option value=\"1\">1 是</option>")
 			.append("</select></td><td class=\"left\">是否启用</td></tr>");
-		buffer.append("<tr><td class=\"right notNull\">*商铺名称：</td><td><input class=\"w300\" name=\"site\">").append(item.getSite()==null?"":item.getSite()).append("</input></td><td class=\"left\">40个字符以内。</td></tr>");
-		buffer.append("<tr><td class=\"right notNull\">*商铺url：</td><td><input class=\"w300\" name=\"site_url\">").append(item.getSite_url()==null?"":item.getSite_url()).append("</input></td><td class=\"left\"></td></tr>");
-		buffer.append("<tr><td class=\"right notNull\">*商品详情url：</td><td><input class=\"w300\" name=\"url\">").append(item.getUrl()==null?"":item.getUrl()).append("</input></td><td class=\"left\"></td></tr>");
-		buffer.append("<tr><td class=\"right\">商品详情wap_url：</td><td><input class=\"w300\" name=\"wap_url\">").append(item.getWapurl()==null?"":item.getWapurl()).append("</input></td><td class=\"left\"></td></tr>");
-		buffer.append("<tr><td class=\"right notNull\">*商品图片url：</td><td><input class=\"w300\" name=\"img_url\">").append(item.getImg_url()==null?"":item.getImg_url()).append("</input></td><td class=\"left\"></td></tr>");
+		buffer.append("<tr><td class=\"right notNull\">*商铺名称：</td><td><input class=\"w300\" name=\"site\" value=\"").append(item.getSite()==null?"":item.getSite()).append("\"></td><td class=\"left\">40个字符以内。</td></tr>");
+		buffer.append("<tr><td class=\"right notNull\">*商铺url：</td><td><input class=\"w300\" name=\"site_url\" value=\"").append(item.getSite_url()==null?"":item.getSite_url()).append("\"></td><td class=\"left\"></td></tr>");
+		buffer.append("<tr><td class=\"right notNull\">*商品详情url：</td><td><input class=\"w300\" name=\"url\" value=\"").append(item.getUrl()==null?"":item.getUrl()).append("\"></td><td class=\"left\"></td></tr>");
+		buffer.append("<tr><td class=\"right\">商品详情wap_url：</td><td><input class=\"w300\" name=\"wap_url\" value=\"").append(item.getWapurl()==null?"":item.getWapurl()).append("\"></td><td class=\"left\"></td></tr>");
+		buffer.append("<tr><td class=\"right notNull\">*商品图片url：</td><td><input class=\"w300\" name=\"img_url\" value=\"").append(item.getImg_url()==null?"":item.getImg_url()).append("\"></td><td class=\"left\"></td></tr>");
 		buffer.append("<tr>");
-		buffer.append("<td class=\"empty\"><input type=\"button\" class=\"w100\" value=\"保存并新增\"></td>");
-		buffer.append("<td class=\"empty\"><input type=\"button\" class=\"w100\" value=\"保存\"></td>");
-		buffer.append("<td class=\"empty\"><input type=\"button\" class=\"w100\" value=\"返回\"></td></tr>");
+		buffer.append("<td class=\"empty\">").append(isNew?"<input type=\"submit\" class=\"w100\" value=\"保存并新增\">":"").append("</td>");
+		buffer.append("<td class=\"empty\"><input type=\"submit\" class=\"w100\" value=\"保存\"></td>");
+		buffer.append("<td class=\"empty\"><input type=\"button\" class=\"w100\" value=\"返回\" onclick=\"location.href='/manage'\"></td></tr>");
+		buffer.append("</form>");
 		buffer.append("</table>");
 		
 		return buffer.toString();
@@ -443,7 +462,7 @@ public class ManageServlet extends HttpServlet {
 
 		for(ItemModel model : list){
 			buffer.append("<tr>");
-			buffer.append("<td><input id="+model.getId()+" name=\"checkbox\" type=\"checkbox\">").append(model.getId()).append("</input></td>");
+			buffer.append("<td><input id="+model.getId()+" name=\"checkbox\" type=\"checkbox\">").append(model.getId()).append("</td>");
 			buffer.append("<td>").append(model.getCategory_code()).append("</td>");
 			buffer.append("<td>").append(model.getCategory_name()).append("</td>");
 			buffer.append("<td>").append(model.getTagid()).append("</td>");

@@ -29,8 +29,8 @@ public class QueryServlet extends HttpServlet {
 		
 		String result = null;
 		if(StringUtils.isNotEmpty(req.getParameter("tagid"))){
-			String tagid = req.getParameter("tagid");
-			if(CacheManage.getTagIdSet().contains(tagid)){
+			Long tagid = StringUtils.toLong(req.getParameter("tagid"));
+			if(tagid!=null&&CacheManage.getTagIdSet().contains(tagid)){
 				result = queryByTag(tagid);
 			}
 		} else if (StringUtils.isNotEmpty(req.getParameter("category"))){
@@ -54,7 +54,7 @@ public class QueryServlet extends HttpServlet {
 	}
 	
 	String tag_prefix = "tag_";
-	private String queryByTag(String tagid){
+	private String queryByTag(Long tagid){
 		
 		String result = CacheManage.getItemListJson(tag_prefix+tagid);
 		if(StringUtils.isEmpty(result)){

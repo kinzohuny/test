@@ -46,12 +46,12 @@ public class CacheManage {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static Set<String> getTagIdSet(){
+	public static Set<Long> getTagIdSet(){
 		Object obj = CachePool.getInstance().get(TAG_ID_SET);
 		if(obj!=null&&obj instanceof Set){
-			return (Set<String>)obj;
+			return (Set<Long>)obj;
 		}
-		return new HashSet<String>();
+		return new HashSet<Long>();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -65,13 +65,13 @@ public class CacheManage {
 	
 	private static void initCategoryCodeSet() throws SQLException{
 		Set<String> category_set = new HashSet<String>();
-		Set<String> tag_set = new HashSet<String>();
+		Set<Long> tag_set = new HashSet<Long>();
 		List<CategoryModel> list = new CategoryDao().queryForList(null);
 		if(list!=null && !list.isEmpty()){
 			category_set.add("all");
 			for(CategoryModel category : list){
 				category_set.add(category.getCategory_code());
-				tag_set.add(String.valueOf(category.getTagid()));
+				tag_set.add(category.getTagid());
 			}
 		}
 		CachePool.getInstance().add(CATEGORY_CODE_SET, category_set);
