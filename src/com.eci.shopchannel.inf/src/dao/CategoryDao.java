@@ -14,7 +14,7 @@ public class CategoryDao {
 	public static String SQL_QUERY = "select tag_id,tag_name,category_code,category_name,created,updated"
 			+ " from shopchannel_category";
 	
-	public List<CategoryModel> queryForList(Map<String, Object> map) throws SQLException, ClassNotFoundException{
+	public List<CategoryModel> queryForList(Map<String, Object> map) throws SQLException{
 
 		ResultSet result = DatabaseManage.executeQuery(SQL_QUERY);
 		List<CategoryModel> list = new ArrayList<CategoryModel>();
@@ -45,9 +45,6 @@ public class CategoryDao {
 						category.getUpdated());
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

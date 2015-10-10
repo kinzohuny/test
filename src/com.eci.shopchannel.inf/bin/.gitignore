@@ -1,8 +1,10 @@
-/servlet/
-/download/
-/main/
-/model/
 /dao/
-/utils/
-/resource/
+/download/
+/log4j.properties
+/main/
 /manage/
+/model/
+/resource/
+/server.properties
+/servlet/
+/utils/

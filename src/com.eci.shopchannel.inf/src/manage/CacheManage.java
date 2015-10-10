@@ -1,6 +1,7 @@
 package manage;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,12 +13,13 @@ public class CacheManage {
 	
 	private static final String CATEGORY_CODE_SET="CATEGORY_CODE_SET";
 	private static final String TAG_ID_SET="TAG_ID_SET";
+	private static final String CATEGORY_LIST="CATEGORY_LIST";
 
-	public static void initCache() throws SQLException, ClassNotFoundException{
+	public static void initCache() throws SQLException{
 		initCategoryCodeSet();
 	}
 	
-	public static void refreshCache() throws SQLException, ClassNotFoundException{
+	public static void refreshCache() throws SQLException{
 		CachePool.getInstance().ReLoadCache();
 		initCache();
 	}
@@ -52,7 +54,16 @@ public class CacheManage {
 		return new HashSet<String>();
 	}
 	
-	private static void initCategoryCodeSet() throws SQLException, ClassNotFoundException{
+	@SuppressWarnings("unchecked")
+	public static List<CategoryModel> getCategoryList(){
+		Object obj = CachePool.getInstance().get(CATEGORY_LIST);
+		if(obj!=null&&obj instanceof List){
+			return (List<CategoryModel>)obj;
+		}
+		return new ArrayList<CategoryModel>();
+	}
+	
+	private static void initCategoryCodeSet() throws SQLException{
 		Set<String> category_set = new HashSet<String>();
 		Set<String> tag_set = new HashSet<String>();
 		List<CategoryModel> list = new CategoryDao().queryForList(null);
@@ -65,6 +76,7 @@ public class CacheManage {
 		}
 		CachePool.getInstance().add(CATEGORY_CODE_SET, category_set);
 		CachePool.getInstance().add(TAG_ID_SET, tag_set);
+		CachePool.getInstance().add(CATEGORY_LIST, list);
 	}
 	
 }

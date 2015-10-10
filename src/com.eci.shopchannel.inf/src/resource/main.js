@@ -17,9 +17,6 @@ function getSelectedIds() {
 			ids += obj[i].id + ',';
 		}
 	}
-	if (ids.Length > 0) {
-		ids = ids.Substring(0, ids.Length - 1);
-	}
 	return ids;
 }
 
@@ -43,7 +40,7 @@ function deleteSelected() {
 			window.location.replace("/manage?delete=" + ids);
 		}
 	} else {
-		alert("请勾选要删除的记录！");
+		alert('请勾选要删除的记录！');
 	}
 }
 
@@ -62,8 +59,8 @@ function countDown(secs, surl) {
 //文件上传校验
 function checkFile(){
     var val = document.getElementById("file_select").value;
-    if(val == ""){
-        alert("请先选择要导入的文件！");
+    if(val == ''){
+        alert('请先选择要导入的文件！');
         return false;
     }
     else{
@@ -78,6 +75,19 @@ function clearFile(){
 
 function cleanCache(){
 	if (confirm('确定要清空缓存吗?')) {
-		window.location.replace("/manage?clean=true");
+		window.location.replace("/manage?cleanCache=true");
+	}
+}
+
+function setStatus(i) {
+	var num = getSelectedNum();
+	var str = i == 1 ? '启用' : '停用';
+	if (num > 0) {
+		var ids = getSelectedIds();
+		if (confirm('确定要' + str + '选中的' + num + '条纪录吗?')) {
+			window.location.replace("/manage?status=" + (i==1?1:0) + "&ids=" + ids);
+		}
+	} else {
+		alert("请勾选要" + str + "的记录！");
 	}
 }

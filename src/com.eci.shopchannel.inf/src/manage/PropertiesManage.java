@@ -31,8 +31,9 @@ public class PropertiesManage {
 		setProperties(props, Constants.PROPERTIES_MYSQL_DATABASE);
 		setProperties(props, Constants.PROPERTIES_MYSQL_USERNAME);
 		setProperties(props, Constants.PROPERTIES_MYSQL_PASSWORD);
-
-		
+		setProperties(props, Constants.PROPERTIES_MYSQL_INIT_CONNECTIONS);
+		setProperties(props, Constants.PROPERTIES_MYSQL_INC_CONNECTIONS);
+		setProperties(props, Constants.PROPERTIES_MYSQL_MAX_CONNECTIONS);
 	}
 	
 	public static String getProperties(String key){

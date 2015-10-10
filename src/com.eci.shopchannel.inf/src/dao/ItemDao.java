@@ -23,10 +23,21 @@ public class ItemDao {
 	
 	public static String SQL_DELETE = "delete from shopchannel_item where id in ";
 	
-	public int delete(String ids) throws SQLException, ClassNotFoundException{
+	public static String SQL_UPDATE_STATUS = "update shopchannel_item set status=? where id in ";
+	
+	public int delete(String ids) throws SQLException{
 		if(StringUtils.isNotEmpty(ids)){
 			Object[] paras = ids.split(",");
 			return DatabaseManage.executeUpdate(SQL_DELETE+getInSql(paras.length), paras);
+		}
+		return 0;
+	}
+	
+	public int updateStatus(String ids, int status) throws SQLException{
+		if(StringUtils.isNotEmpty(ids)){
+			Object[] idArr = ids.split(",");
+			Object[] paras = (status+","+ids).split(",");
+			return DatabaseManage.executeUpdate(SQL_UPDATE_STATUS+getInSql(idArr.length), paras);
 		}
 		return 0;
 	}
@@ -41,7 +52,7 @@ public class ItemDao {
 		return buffer.toString();
 	}
 	
-	public int insert(List<ItemModel> list) throws SQLException, ClassNotFoundException{
+	public int insert(List<ItemModel> list) throws SQLException{
 		if(list!=null&&!list.isEmpty()){
 			StringBuffer buffer = new StringBuffer();;
 			for(ItemModel item : list){
@@ -68,7 +79,18 @@ public class ItemDao {
 		return 0;
 	}
 	
-	public List<ItemModel> queryForList(Map<String, Object> map) throws SQLException, ClassNotFoundException{
+	public ItemModel queryById(String id) throws SQLException {
+		ItemModel item  = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		List<ItemModel> list = new ItemDao().queryForList(map);
+		if(!list.isEmpty()){
+			item = list.get(0);
+		}
+		return item;
+	}
+	
+	public List<ItemModel> queryForList(Map<String, Object> map) throws SQLException{
 		StringBuffer buffer = new StringBuffer();
 		List<Object> paraList = new ArrayList<Object>();
 		if(map!=null&&map.size()>0){
@@ -83,6 +105,10 @@ public class ItemDao {
 				}
 				if("tagid".equalsIgnoreCase(key)){
 					buffer.append(" and sc.tag_id=?");
+					paraList.add(map.get(key));
+				}
+				if("id".equalsIgnoreCase(key)){
+					buffer.append(" and si.id=?");
 					paraList.add(map.get(key));
 				}
 			}
@@ -142,9 +168,6 @@ public class ItemDao {
 						item.getUpdated());
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

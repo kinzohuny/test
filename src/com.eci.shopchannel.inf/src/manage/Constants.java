@@ -10,6 +10,10 @@ public class Constants {
 	public static final String PROPERTIES_MYSQL_DATABASE = "MYSQL_DATABASE";
 	public static final String PROPERTIES_MYSQL_USERNAME = "MYSQL_USERNAME";
 	public static final String PROPERTIES_MYSQL_PASSWORD = "MYSQL_PASSWORD";
+	public static final String PROPERTIES_MYSQL_INIT_CONNECTIONS = "MYSQL_INIT_CONNECTIONS";
+	public static final String PROPERTIES_MYSQL_INC_CONNECTIONS = "MYSQL_INC_CONNECTIONS";
+	public static final String PROPERTIES_MYSQL_MAX_CONNECTIONS = "MYSQL_MAX_CONNECTIONS";
+	
 
 	public static final String PROPERTIES_SERVER_PORT = "SERVER_PORT";
 	public static final String PROPERTIES_SERVER_TIME_OUT_S = "SERVER_TIME_OUT_S";
