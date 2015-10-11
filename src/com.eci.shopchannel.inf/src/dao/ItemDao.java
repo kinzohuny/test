@@ -25,6 +25,10 @@ public class ItemDao {
 	
 	public static String SQL_UPDATE_STATUS = "update shopchannel_item set status=? where id in ";
 	
+	public static String SQL_UPDATE = "update shopchannel_item"
+			+ " set long_title=?,identify=?,url=?,wap_url=?,img_url=?,price=?,cheap=?,site=?,site_url=?,tag_id=?,post=?,status=?,updated=now()"
+			+ " where id=?";
+	
 	public int delete(String ids) throws SQLException{
 		if(StringUtils.isNotEmpty(ids)){
 			Object[] paras = ids.split(",");
@@ -38,6 +42,27 @@ public class ItemDao {
 			Object[] idArr = ids.split(",");
 			Object[] paras = (status+","+ids).split(",");
 			return DatabaseManage.executeUpdate(SQL_UPDATE_STATUS+getInSql(idArr.length), paras);
+		}
+		return 0;
+	}
+	
+	public int update(ItemModel item) throws SQLException{
+		if(item!=null){
+			Object[] paras = new Object[13];
+			paras[0] = item.getLong_title();
+			paras[1] = item.getIdentify();
+			paras[2] = item.getUrl();
+			paras[3] = item.getWapurl();
+			paras[4] = item.getImg_url();
+			paras[5] = item.getPrice();
+			paras[6] = item.getCheap();
+			paras[7] = item.getSite();
+			paras[8] = item.getSite_url();
+			paras[9] = item.getTagid();
+			paras[10] = item.getPost();
+			paras[11] = item.getStatus();
+			paras[12] = item.getId();
+			return DatabaseManage.executeUpdate(SQL_UPDATE, paras);
 		}
 		return 0;
 	}
@@ -111,9 +136,13 @@ public class ItemDao {
 					buffer.append(" and si.id=?");
 					paraList.add(map.get(key));
 				}
+				if("exceptId".equalsIgnoreCase(key)){
+					buffer.append(" and si.id!=?");
+					paraList.add(map.get(key));
+				}
 			}
 		}
-		buffer.append(" order by si.status desc,si.tag_id,si.site,si.updated desc");
+		buffer.append(" order by si.status desc,si.tag_id,si.site,si.id desc");
 		ResultSet result = DatabaseManage.executeQuery(SQL_QUERY+buffer.toString(), paraList.toArray());
 		List<ItemModel> list = new ArrayList<ItemModel>();
 		while(result.next()){

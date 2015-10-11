@@ -118,15 +118,36 @@ public class ManageServlet extends HttpServlet {
 		return buffer.toString();
 	}
 
-	private String saveHandle(HttpServletRequest req) {
+	private String saveHandle(HttpServletRequest req) throws SQLException {
 		StringBuffer buffer = new StringBuffer();
-		// TODO Auto-generated method stub
-		//post提交、参数转对象入库、后台校验、js校验
-		System.out.println(req.getParameter("save"));
-		System.out.println(req.getParameter("isNew"));
-		System.out.println(req.getParameter("id"));
-		System.out.println(req.getParameter("tagid"));
-		System.out.println(req.getParameter("long_title"));
+		boolean isNew = "true".equals(req.getParameter("isNew"))?true:false;
+		msg = "";
+		ItemModel item = getItemFromReq(req, isNew);
+		if(StringUtils.isNotEmpty(msg)){
+			buffer.append(getEditPage(item, isNew));
+			msg = "保存失败！\r\n"+msg;
+			buffer.append(getErrorReasonPage());
+		}else{
+			if(isNew){
+				List<ItemModel> list = new ArrayList<ItemModel>();
+				list.add(item);
+				int i = new ItemDao().insert(list);
+				if(StringUtils.isNotEmpty(req.getParameter("saveType"))){
+					buffer.append(getEditPage(new ItemModel(), isNew));
+					msg = ""+i+"件商品[title="+item.getLong_title()+"]新增成功！";
+					buffer.append(getErrorReasonPage());
+				}else{
+					buffer.append(i).append("件商品[title=").append(item.getLong_title()).append("]新增成功。<br>");
+					buffer.append("<span id=\"jumpTo\">3</span>秒后自动跳转到查询界面...");
+					buffer.append("<script type=\"text/javascript\">countDown(3,'/manage');</script>");
+				}
+			}else{
+				int i = new ItemDao().update(item);
+				buffer.append(i).append("件商品[id=").append(item.getId()).append("&title=").append(item.getLong_title()).append("]修改成功。<br>");
+				buffer.append("<span id=\"jumpTo\">3</span>秒后自动跳转到查询界面...");
+				buffer.append("<script type=\"text/javascript\">countDown(3,'/manage');</script>");
+			}
+		}
 		return buffer.toString();
 	}
 
@@ -161,7 +182,7 @@ public class ManageServlet extends HttpServlet {
 			buffer.append("<script type=\"text/javascript\">countDown(3,'/manage');</script>");
 		}else{
 			buffer.append("导入失败，请检查导入文件。<br>失败原因：<br>");
-			buffer.append("<textarea cols=\"100\" rows=\"20\" readonly=\"readonly\">"+msg+"</textarea>");
+			buffer.append(getErrorReasonPage());
 		}
 		return buffer.toString();
 	}
@@ -180,9 +201,110 @@ public class ManageServlet extends HttpServlet {
 		List<ItemModel> list = new ItemDao().queryForList(map);
 		return getButtonPage()+getListPage(list)+getHiddenPage();
 	}
+	
+	private ItemModel getItemFromReq(HttpServletRequest req,Boolean isNew) throws SQLException{
+		StringBuffer errorInfo = new StringBuffer();
+		ItemModel item = new ItemModel();
+		
+		Long id = StringUtils.toLong(req.getParameter("id"));
+		item.setId(id);
+		if(!isNew&&id==null){
+			errorInfo.append("【ID】修改商品时，ID值不应为空，请联系管理员。").append("\r\n");
+		}
+		
+		Long tagId = StringUtils.toLong(req.getParameter("tagid"));
+		item.setTagid(tagId);
+		if(StringUtils.isEmpty(req.getParameter("tagid"))){
+			errorInfo.append("【*tagid】不可为空。").append("\r\n");
+		}else if(tagId==null){
+			errorInfo.append("【*tagid】格式不正确。[").append(req.getParameter("tagid")).append("]\r\n");
+		}else if(!CacheManage.getTagIdSet().contains(tagId)){
+			errorInfo.append("【*tagid】不在有效范围内。[").append(req.getParameter("tagid")).append("]\r\n");
+		}
+		
+		String long_title = req.getParameter("long_title")==null?null:req.getParameter("long_title").trim();
+		item.setLong_title(long_title);
+		if(StringUtils.isEmpty(long_title)){
+			errorInfo.append("【*商品标题】不可为空。").append("\r\n");
+		}else if(long_title.length()>40){
+			errorInfo.append("【*商品标题】最长40个字符。[").append(long_title).append("]\r\n");
+		}
+		
+		Long identify = StringUtils.toLong(req.getParameter("identify"));
+		item.setIdentify(identify);
+		if(StringUtils.isEmpty(req.getParameter("identify"))){
+			errorInfo.append("【*商品id】不可为空。").append("\r\n");
+		}else if(identify==null){
+			errorInfo.append("【*商品id】格式不正确。[").append(req.getParameter("identify")).append("]\r\n");
+		}else if(getDbIdentifySet(item.getId()==null?0:item.getId()).contains(identify)){
+			errorInfo.append("【*商品id】与数据库记录有重复。[").append(req.getParameter("identify")).append("]\r\n");
+		}
+		
+		BigDecimal price = StringUtils.toBigDecimal(req.getParameter("price"));
+		item.setPrice(price);
+		if(StringUtils.isEmpty(req.getParameter("price"))){
+			errorInfo.append("【*现价】不可为空。").append("\r\n");
+		}else if(price==null){
+			errorInfo.append("【*现价】格式不正确。[").append(req.getParameter("price")).append("]\r\n");
+		}
+		
+		BigDecimal cheap = StringUtils.toBigDecimal(req.getParameter("cheap"));
+		item.setCheap(cheap);
+		if(StringUtils.isNotEmpty(req.getParameter("cheap"))&&cheap==null){
+			errorInfo.append("【优惠卷金额】格式不正确。[").append(req.getParameter("cheap")).append("]\r\n");
+		}
+		
+		Integer post = StringUtils.toInteger(req.getParameter("post"));
+		item.setPost(post==1?1:0);
+		if(StringUtils.isEmpty(req.getParameter("post"))){
+			errorInfo.append("【*包邮】不可为空。").append("\r\n");
+		}
+		
+		Integer status = StringUtils.toInteger(req.getParameter("status"));
+		item.setStatus(status==1?1:0);
+		if(StringUtils.isEmpty(req.getParameter("status"))){
+			errorInfo.append("【*启用】不可为空。").append("\r\n");
+		}
+		
+		String site = req.getParameter("site")==null?null:req.getParameter("site").trim();
+		item.setSite(site);
+		if(StringUtils.isEmpty(site)){
+			errorInfo.append("【*商铺名称】不可为空。").append("\r\n");
+		}else if(site.length()>40){
+			errorInfo.append("【*商铺名称】最长40个字符。[").append(site).append("]\r\n");
+		}
+		
+		String site_url = req.getParameter("site_url")==null?null:req.getParameter("site_url").trim();
+		item.setSite_url(site_url);
+		if(StringUtils.isEmpty(site_url)){
+			errorInfo.append("【*商铺url】不可为空。").append("\r\n");
+		}
+
+		String url = req.getParameter("url")==null?null:req.getParameter("url").trim();
+		item.setUrl(url);
+		if(StringUtils.isEmpty(url)){
+			errorInfo.append("【*商品详情url】不可为空。").append("\r\n");
+		}
+		
+		String wapurl = req.getParameter("wap_url")==null?null:req.getParameter("wap_url").trim();
+		item.setWapurl(wapurl);
+		
+		String img_url = req.getParameter("img_url")==null?null:req.getParameter("img_url").trim();
+		item.setImg_url(img_url);
+		if(StringUtils.isEmpty(img_url)){
+			errorInfo.append("【*商品图片url】不可为空。").append("\r\n");
+		}
+		
+		msg = errorInfo.toString();
+		return item;
+	}
+
+	private Object getErrorReasonPage() {
+		return "<textarea cols=\"100\" rows=\"20\" readonly=\"readonly\">"+msg+"</textarea>";
+	}
 
 	private int doImport(HttpServletRequest req) throws FileUploadException, IOException, SQLException {
-		FileItem file = getFile(req);
+		FileItem file = getFileFromReq(req);
 		if(checkFile(file)){
 			List<ItemModel> itemList = parseFile(file);
 			if(itemList!=null&&!itemList.isEmpty()){
@@ -200,7 +322,7 @@ public class ManageServlet extends HttpServlet {
 		if(sheet!=null){
 			
 			Set<Long> fileIdentifySet = new HashSet<Long>();
-			Set<Long> dbIdentifySet = getDbIdentifySet();
+			Set<Long> dbIdentifySet = getDbIdentifySet(null);
 			
 			for(int i=1;i<=sheet.getLastRowNum();i++){
 				Row row = sheet.getRow(i);
@@ -330,9 +452,14 @@ public class ManageServlet extends HttpServlet {
 		return value;
 	}
 
-	private Set<Long> getDbIdentifySet() throws SQLException {
+	private Set<Long> getDbIdentifySet(Long exceptId) throws SQLException {
 		Set<Long> dbIdentifySet = new HashSet<Long>();
-		List<ItemModel> list = new ItemDao().queryForList(null);
+		Map<String, Object> map = null;
+		if(exceptId!=null){
+			map = new HashMap<String, Object>();
+			map.put("exceptId", exceptId);
+		}
+		List<ItemModel> list = new ItemDao().queryForList(map);
 		for(ItemModel item : list){
 			dbIdentifySet.add(item.getIdentify());
 		}
@@ -352,7 +479,7 @@ public class ManageServlet extends HttpServlet {
 		return true;
 	}
 	
-	private FileItem getFile(HttpServletRequest req) throws FileUploadException, IOException{
+	private FileItem getFileFromReq(HttpServletRequest req) throws FileUploadException, IOException{
 		DiskFileItemFactory diskFileItemFactory = new DiskFileItemFactory();
 		ServletFileUpload servletFileUpload = new ServletFileUpload(diskFileItemFactory);
 		List<FileItem> fileList = servletFileUpload.parseRequest(req);
@@ -398,8 +525,8 @@ public class ManageServlet extends HttpServlet {
 		buffer.append("<table class=\"edittable\">");
 		buffer.append("<form id=\"saveItem\" action=\"/manage?save=true\" method=\"post\" onsubmit=\"return checkItem()\">");
 		buffer.append("<tr><th colspan=\"3\">").append(isNew?"新增商品":"修改商品").append("</th></tr>");
-		buffer.append("<tr><td>ID：</td><td><input class=\"w300\" name=\"id\" readonly=\"readonly\" value=\"").append(item.getId()==null?"":item.getId()).append("\"></td><td class=\"left\"><input type=\"hidden\" name=\"isNew\" value=\"").append(isNew).append("\"></td></tr>");
-		buffer.append("<tr><td class=\"right notNull\">*tag_id：</td>");
+		buffer.append("<tr><td class=\"right\">ID：</td><td><input class=\"disabled w300\" name=\"id\" readonly=\"readonly\" value=\"").append(item.getId()==null?"":item.getId()).append("\"></td><td class=\"left\"><input type=\"hidden\" name=\"isNew\" value=\"").append(isNew).append("\"></td></tr>");
+		buffer.append("<tr><td class=\"right notNull\">*tagid：</td>");
 		buffer.append("<td><select class=\"w300\" name=\"tagid\">");
 		List<CategoryModel> cateList = CacheManage.getCategoryList();
 		Long defaultTagig = 1L;
@@ -427,9 +554,10 @@ public class ManageServlet extends HttpServlet {
 		buffer.append("<tr><td class=\"right\">商品详情wap_url：</td><td><input class=\"w300\" name=\"wap_url\" value=\"").append(item.getWapurl()==null?"":item.getWapurl()).append("\"></td><td class=\"left\"></td></tr>");
 		buffer.append("<tr><td class=\"right notNull\">*商品图片url：</td><td><input class=\"w300\" name=\"img_url\" value=\"").append(item.getImg_url()==null?"":item.getImg_url()).append("\"></td><td class=\"left\"></td></tr>");
 		buffer.append("<tr>");
-		buffer.append("<td class=\"empty\">").append(isNew?"<input type=\"submit\" class=\"w100\" value=\"保存并新增\">":"").append("</td>");
+		buffer.append("<td class=\"empty\">").append(isNew?"<input type=\"submit\" class=\"w100\" value=\"保存并新增\" onclick=\"setSaveType(true);\">":"").append("</td>");
 		buffer.append("<td class=\"empty\"><input type=\"submit\" class=\"w100\" value=\"保存\"></td>");
 		buffer.append("<td class=\"empty\"><input type=\"button\" class=\"w100\" value=\"返回\" onclick=\"location.href='/manage'\"></td></tr>");
+		buffer.append("<input type=\"hidden\" id=\"saveType\" name=\"saveType\">");
 		buffer.append("</form>");
 		buffer.append("</table>");
 		

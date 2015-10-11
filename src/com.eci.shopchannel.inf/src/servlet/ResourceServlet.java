@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,8 +26,7 @@ public class ResourceServlet extends HttpServlet {
 			if(inputStream!=null){
 				resp.setStatus(HttpServletResponse.SC_OK);
 				resp.setCharacterEncoding("UTF-8");
-				//resp.setContentType("application/javascript; charset=utf-8"); 
-				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
 				String line = null;
 		        while((line = reader.readLine())!= null){ 
 		    		resp.getWriter().println(line);

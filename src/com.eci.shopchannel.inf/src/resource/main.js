@@ -103,12 +103,11 @@ function editItem(){
 	}
 }
 
-function saveItem(){
-	if(checkItem()){
-		document.getElementById('saveItem').submit();
-	}
+function setSaveType(value){
+	document.getElementById("saveType").value=value;
 }
 
 function checkItem(){
+
 	
 }

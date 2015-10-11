@@ -64,6 +64,12 @@ table.edittable td.left {
 	text-align: left;
 }
 
+input.disabled{
+	border:1px solid #DDD;
+	background-color:#F5F5F5;
+	color:#ACA899;
+}
+
 .w50 {
 	width: 50px;
 }
