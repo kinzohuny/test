@@ -332,8 +332,12 @@ public class ManageServlet extends HttpServlet {
 				ItemModel item = new ItemModel();
 				
 				Long tagId = StringUtils.toLong(getCellValue(row.getCell(0)));
-				if(tagId!=null||!CacheManage.getTagIdSet().contains(tagId)){
-					errorInfo.append("请检查单元格["+(i+1)+",A]的值：（tagid）为空||不在tagId范围内。").append("\r\n");
+				if(StringUtils.isEmpty(getCellValue(row.getCell(0)))){
+					errorInfo.append("请检查单元格["+(i+1)+",A]的值：（tagid）为空。").append("\r\n");
+				}else if(tagId==null){
+					errorInfo.append("请检查单元格["+(i+1)+",A]的值：（tagid）格式不正确。").append("\r\n");
+				}else if(!CacheManage.getTagIdSet().contains(tagId)){
+					errorInfo.append("请检查单元格["+(i+1)+",A]的值：（tagid）不在tagId范围内。").append("\r\n");
 				}else{
 					item.setTagid(tagId);
 				}
@@ -346,8 +350,10 @@ public class ManageServlet extends HttpServlet {
 				}
 				
 				Long identify = StringUtils.toLong(getCellValue(row.getCell(2)));
-				if(identify==null){
-					errorInfo.append("请检查单元格["+(i+1)+",C]的值：（商品id）为空||格式不正确。").append("\r\n");
+				if(StringUtils.isEmpty(getCellValue(row.getCell(2)))){
+					errorInfo.append("请检查单元格["+(i+1)+",C]的值：（商品id）为空。").append("\r\n");
+				}else if(identify==null){
+					errorInfo.append("请检查单元格["+(i+1)+",C]的值：（商品id）格式不正确。").append("\r\n");
 				}else if(fileIdentifySet.contains(identify)){
 					errorInfo.append("请检查单元格["+(i+1)+",C]的值：（商品id）与文件内记录有重复。").append("\r\n");
 				}else if(dbIdentifySet.contains(identify)){
@@ -358,8 +364,10 @@ public class ManageServlet extends HttpServlet {
 				}
 				
 				BigDecimal price = StringUtils.toBigDecimal(getCellValue(row.getCell(3)));
-				if(price==null){
-					errorInfo.append("请检查单元格["+(i+1)+",D]的值：（现价）为空||格式不正确。").append("\r\n");
+				if(StringUtils.isEmpty(getCellValue(row.getCell(3)))){
+					errorInfo.append("请检查单元格["+(i+1)+",D]的值：（现价）为空。").append("\r\n");
+				}else if(price==null){
+					errorInfo.append("请检查单元格["+(i+1)+",D]的值：（现价）格式不正确。").append("\r\n");
 				}else{
 					item.setPrice(price);
 				}
@@ -372,8 +380,10 @@ public class ManageServlet extends HttpServlet {
 				}
 				
 				Integer post = StringUtils.toInteger(getCellValue(row.getCell(5)));
-				if(post==null){
-					errorInfo.append("请检查单元格["+(i+1)+",F]的值：（包邮）为空||格式不正确。").append("\r\n");
+				if(StringUtils.isEmpty(getCellValue(row.getCell(5)))){
+					errorInfo.append("请检查单元格["+(i+1)+",F]的值：（包邮）为空。").append("\r\n");
+				}else if(post==null){
+					errorInfo.append("请检查单元格["+(i+1)+",F]的值：（包邮）格式不正确。").append("\r\n");
 				}else if(post==1){
 					item.setPost(1);
 				}else{
@@ -381,8 +391,10 @@ public class ManageServlet extends HttpServlet {
 				}
 				
 				Integer status = StringUtils.toInteger(getCellValue(row.getCell(6)));
-				if(status==null){
-					errorInfo.append("请检查单元格["+(i+1)+",G]的值：（启用）为空||格式不正确。").append("\r\n");
+				if(StringUtils.isEmpty(getCellValue(row.getCell(6)))){
+					errorInfo.append("请检查单元格["+(i+1)+",G]的值：（启用）为空。").append("\r\n");
+				}else if(status==null){
+					errorInfo.append("请检查单元格["+(i+1)+",G]的值：（启用）格式不正确。").append("\r\n");
 				}else if(status==1){
 					item.setStatus(1);
 				}else{
