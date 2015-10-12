@@ -85,7 +85,7 @@ function setStatus(i) {
 	if (num > 0) {
 		var ids = getSelectedIds();
 		if (confirm('确定要' + str + '选中的' + num + '条纪录吗?')) {
-			location.href="/manage?status=" + (i==1?1:0) + "&ids=" + ids;
+			location.href="/manage?changeStatus=" + (i==1?1:0) + "&ids=" + ids;
 		}
 	} else {
 		alert("请勾选要" + str + "的记录！");
@@ -107,7 +107,6 @@ function setSaveType(value){
 	document.getElementById("saveType").value=value;
 }
 
-function checkItem(){
-
-	
+function clearFilter(){
+	$("input.val").prop("value", "");
 }

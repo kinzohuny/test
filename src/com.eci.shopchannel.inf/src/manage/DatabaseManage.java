@@ -31,8 +31,7 @@ public class DatabaseManage {
 			for(int i = 0;i<paras.length;i++){
 				pstmt.setObject(i+1, paras[i]);
 			}
-			logger.debug(sql);
-			logger.debug(StringUtils.arrayToSting(paras));
+			logger.debug(pstmt.toString());
 			result = pstmt.executeQuery();
 			returnConnect(connection);
 		} catch (SQLException e) {
@@ -50,8 +49,7 @@ public class DatabaseManage {
 			for(int i = 0;i<paras.length;i++){
 				pstmt.setObject(i+1, paras[i]);
 			}
-			logger.debug(sql);
-			logger.debug(StringUtils.arrayToSting(paras));
+			logger.debug(pstmt.toString());
 			result = pstmt.executeUpdate();
 			returnConnect(connection);
 		} catch (SQLException e) {

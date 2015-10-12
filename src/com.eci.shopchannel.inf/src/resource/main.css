@@ -64,6 +64,10 @@ table.edittable td.left {
 	text-align: left;
 }
 
+table.menutable td {
+	font-size: 14px;
+}
+
 input.disabled{
 	border:1px solid #DDD;
 	background-color:#F5F5F5;

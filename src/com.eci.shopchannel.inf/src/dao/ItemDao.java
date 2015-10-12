@@ -140,6 +140,18 @@ public class ItemDao {
 					buffer.append(" and si.id!=?");
 					paraList.add(map.get(key));
 				}
+				if("identify".equalsIgnoreCase(key)){
+					buffer.append(" and si.identify=?");
+					paraList.add(map.get(key));
+				}
+				if("site".equalsIgnoreCase(key)){
+					buffer.append(" and si.site like ?");
+					paraList.add(map.get(key));
+				}
+				if("long_title".equalsIgnoreCase(key)){
+					buffer.append(" and si.long_title like ?");
+					paraList.add(map.get(key));
+				}
 			}
 		}
 		buffer.append(" order by si.status desc,si.tag_id,si.site,si.id desc");
