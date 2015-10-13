@@ -46,10 +46,12 @@ public class LoginServlet extends HttpServlet {
 			resp.setStatus(HttpServletResponse.SC_OK);
 			resp.getWriter().println("<title>Login</title>");
 			resp.getWriter().println("<link href=\"/resource/main.css\" rel=\"stylesheet\" type=\"text/css\"></link>");
+			resp.getWriter().println("<script src=\"/resource/md5.js\" type=\"text/javascript\"></script>");
+			resp.getWriter().println("<script src=\"/resource/jquery-1.11.1.js\" type=\"text/javascript\"></script>");
 			//body
-			resp.getWriter().println("<form id=\"login\" method=\"post\">");
+			resp.getWriter().println("<form id=\"login\" method=\"post\" onsubmit=\"document.getElementById('password').value=hex_md5(document.getElementById('password').value);\">");
 			resp.getWriter().println("<span>账　号：</span><input name=\"name\"></input><br>");
-			resp.getWriter().println("<span>密　码：</span><input type=\"password\" name=\"password\"></input><br>");
+			resp.getWriter().println("<span>密　码：</span><input id=\"password\" type=\"password\" name=\"password\"></input><br>");
 			resp.getWriter().println("<span>验证码：</span><input name=\"random\"></input><br>");
 			resp.getWriter().println("<img src=\"/randomcode\" onclick=\"this.src='/randomcode?temp='+Math.random();\" />");
 			resp.getWriter().println("<input type=\"submit\" value=\"登录\" />");

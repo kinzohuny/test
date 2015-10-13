@@ -9,7 +9,7 @@ import manage.DatabaseManage;
 public class ManagerDao {
 
 	//private final static String SQL_INSERT = "insert into shopchannel_manager(name,password,status) values (?,md5(?),1)";
-	private final static String SQL_VERIFY = "select count(0) from shopchannel_manager where status=1 and name=? and password=md5(?)";
+	private final static String SQL_VERIFY = "select count(0) from shopchannel_manager where status=1 and name=? and password=?";
 	private final static String SQL_UPDATE = "update shopchannel_manager set last_login=?,last_ip=? where name=?";
 	
 	public int verify(String name, String password) throws SQLException{

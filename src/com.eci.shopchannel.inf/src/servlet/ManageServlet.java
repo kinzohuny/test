@@ -50,6 +50,9 @@ public class ManageServlet extends HttpServlet {
 		HttpSession session = req.getSession();
 		if(session.getAttribute(Constants.SESSION_IS_LOGIN)==null){
 			resp.sendRedirect("/login");
+		}else if(StringUtils.isNotEmpty(req.getParameter("logout"))){
+			session.setAttribute(Constants.SESSION_IS_LOGIN, null);
+			resp.sendRedirect("/login");
 		}else{
 			try {
 				if(StringUtils.isNotEmpty(req.getParameter("edit"))){
@@ -551,6 +554,7 @@ public class ManageServlet extends HttpServlet {
 		buffer.append("<td><input type=\"button\" value=\"下载导入模板\" onclick=\"location.href='/download/import_demo.xls'\"></td>");
 		buffer.append("<form action=\"/manage?import=1\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"return checkFile()\"><td><input type=\"submit\" value=\"导入\"></td><td><input id=\"file_select\" type=\"file\" name=\"file\"></td></form>");
 		//buffer.append("<td><input type=\"button\" value=\"清空文件\" onclick=\"clearFile();\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"退出\" onclick=\"location.href='/manage?logout=true'\"></td>");
 		buffer.append("</tr></table>");
 		
 		return buffer.toString();
