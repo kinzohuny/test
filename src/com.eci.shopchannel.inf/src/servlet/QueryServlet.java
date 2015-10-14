@@ -95,6 +95,8 @@ public class QueryServlet extends HttpServlet {
 			List<ItemModel> list = new ItemDao().queryForList(map);
 			if(list!=null&&!list.isEmpty()){
 				result = StringUtils.toJSON(list);
+			}else{
+				result = "[]";
 			}
 		} catch (Exception e) {
 			logger.error("query item list from db error! ", e);
