@@ -330,6 +330,8 @@ public class ManageServlet extends HttpServlet {
 		item.setImg_url(img_url);
 		if(StringUtils.isEmpty(img_url)){
 			errorInfo.append("【*商品图片url】不可为空。").append("\r\n");
+		}else if(img_url.indexOf("cdn.hao.ad.intf.ecinsight.cn")>=0){
+			errorInfo.append("【*商品图片url】不应使用cdn地址。").append("\r\n");
 		}
 		
 		msg = errorInfo.toString();
@@ -381,7 +383,7 @@ public class ManageServlet extends HttpServlet {
 					item.setTagid(tagId);
 				}
 				
-				String long_title = getCellValue(row.getCell(1));
+				String long_title = getCellValue(row.getCell(1))==null?null:getCellValue(row.getCell(1)).trim();
 				if(StringUtils.isEmpty(long_title)){
 					errorInfo.append("请检查单元格["+(i+1)+",B]的值：（商品标题）为空。").append("\r\n");
 				}else{
@@ -440,33 +442,35 @@ public class ManageServlet extends HttpServlet {
 					item.setStatus(0);
 				}
 				
-				String site = getCellValue(row.getCell(7));
+				String site = getCellValue(row.getCell(7))==null?null:getCellValue(row.getCell(7)).trim().trim();
 				if(StringUtils.isEmpty(site)){
 					errorInfo.append("请检查单元格["+(i+1)+",H]的值：（商铺名称）为空。").append("\r\n");
 				}else{
 					item.setSite(site);
 				}
 				
-				String site_url = getCellValue(row.getCell(8));
+				String site_url = getCellValue(row.getCell(8))==null?null:getCellValue(row.getCell(8)).trim();
 				if(StringUtils.isEmpty(site_url)){
 					errorInfo.append("请检查单元格["+(i+1)+",I]的值：（商铺URL）为空。").append("\r\n");
 				}else{
 					item.setSite_url(site_url);
 				}
 				
-				String url = getCellValue(row.getCell(9));
+				String url = getCellValue(row.getCell(9))==null?null:getCellValue(row.getCell(9)).trim();
 				if(StringUtils.isEmpty(url)){
 					errorInfo.append("请检查单元格["+(i+1)+",J]的值：（商品详情URL）为空。").append("\r\n");
 				}else{
 					item.setUrl(url);
 				}
 				
-				String wapurl = getCellValue(row.getCell(10));
+				String wapurl = getCellValue(row.getCell(10))==null?null:getCellValue(row.getCell(10)).trim();
 				item.setWapurl(StringUtils.isEmpty(wapurl)?"":wapurl);
 				
-				String img_url = getCellValue(row.getCell(11));
+				String img_url = getCellValue(row.getCell(11))==null?null:getCellValue(row.getCell(11)).trim();
 				if(StringUtils.isEmpty(img_url)){
 					errorInfo.append("请检查单元格["+(i+1)+",L]的值：（商品图片URL）为空。").append("\r\n");
+				}else if(img_url.indexOf("cdn.hao.ad.intf.ecinsight.cn")>=0){
+					errorInfo.append("请检查单元格["+(i+1)+",L]的值：（商品图片URL）不应使用cdn地址。").append("\r\n");
 				}else{
 					item.setImg_url(img_url);
 				}
