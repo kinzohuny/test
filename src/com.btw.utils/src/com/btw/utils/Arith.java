@@ -1,4 +1,4 @@
-package com.btw.utils.math;
+package com.btw.utils;
 import java.math.BigDecimal;
 
 /**
