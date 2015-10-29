@@ -285,6 +285,12 @@ public class ManageServlet extends HttpServlet {
 			errorInfo.append("【*现价】格式不正确。[").append(req.getParameter("price")).append("]\r\n");
 		}
 		
+		BigDecimal price_new = StringUtils.toBigDecimal(req.getParameter("price_new"));
+		item.setPrice_new(price_new);
+		if(StringUtils.isNotEmpty(req.getParameter("price_new"))&&price_new==null){
+			errorInfo.append("【活动价】格式不正确。[").append(req.getParameter("price_new")).append("]\r\n");
+		}
+		
 		BigDecimal cheap = StringUtils.toBigDecimal(req.getParameter("cheap"));
 		item.setCheap(cheap);
 		if(StringUtils.isNotEmpty(req.getParameter("cheap"))&&cheap==null){
@@ -413,64 +419,71 @@ public class ManageServlet extends HttpServlet {
 					item.setPrice(price);
 				}
 				
-				BigDecimal cheap = StringUtils.toBigDecimal(getCellValue(row.getCell(4)));
-				if(StringUtils.isNotEmpty(getCellValue(row.getCell(4)))&&cheap==null){
+				BigDecimal price_new = StringUtils.toBigDecimal(getCellValue(row.getCell(4)));
+				if(StringUtils.isNotEmpty(getCellValue(row.getCell(4)))&&price_new==null){
 					errorInfo.append("请检查单元格["+(i+1)+",E]的值：（优惠券金额）格式不正确。").append("\r\n");
+				}else{
+					item.setPrice_new(price_new);
+				}
+				
+				BigDecimal cheap = StringUtils.toBigDecimal(getCellValue(row.getCell(5)));
+				if(StringUtils.isNotEmpty(getCellValue(row.getCell(5)))&&cheap==null){
+					errorInfo.append("请检查单元格["+(i+1)+",F]的值：（优惠券金额）格式不正确。").append("\r\n");
 				}else{
 					item.setCheap(cheap);
 				}
 				
-				Integer post = StringUtils.toInteger(getCellValue(row.getCell(5)));
-				if(StringUtils.isEmpty(getCellValue(row.getCell(5)))){
-					errorInfo.append("请检查单元格["+(i+1)+",F]的值：（包邮）为空。").append("\r\n");
+				Integer post = StringUtils.toInteger(getCellValue(row.getCell(6)));
+				if(StringUtils.isEmpty(getCellValue(row.getCell(6)))){
+					errorInfo.append("请检查单元格["+(i+1)+",G]的值：（包邮）为空。").append("\r\n");
 				}else if(post==null){
-					errorInfo.append("请检查单元格["+(i+1)+",F]的值：（包邮）格式不正确。").append("\r\n");
+					errorInfo.append("请检查单元格["+(i+1)+",G]的值：（包邮）格式不正确。").append("\r\n");
 				}else if(post==1){
 					item.setPost(1);
 				}else{
 					item.setPost(0);
 				}
 				
-				Integer status = StringUtils.toInteger(getCellValue(row.getCell(6)));
-				if(StringUtils.isEmpty(getCellValue(row.getCell(6)))){
-					errorInfo.append("请检查单元格["+(i+1)+",G]的值：（启用）为空。").append("\r\n");
+				Integer status = StringUtils.toInteger(getCellValue(row.getCell(7)));
+				if(StringUtils.isEmpty(getCellValue(row.getCell(7)))){
+					errorInfo.append("请检查单元格["+(i+1)+",H]的值：（启用）为空。").append("\r\n");
 				}else if(status==null){
-					errorInfo.append("请检查单元格["+(i+1)+",G]的值：（启用）格式不正确。").append("\r\n");
+					errorInfo.append("请检查单元格["+(i+1)+",H]的值：（启用）格式不正确。").append("\r\n");
 				}else if(status==1){
 					item.setStatus(1);
 				}else{
 					item.setStatus(0);
 				}
 				
-				String site = getCellValue(row.getCell(7))==null?null:getCellValue(row.getCell(7)).trim().trim();
+				String site = getCellValue(row.getCell(8))==null?null:getCellValue(row.getCell(8)).trim().trim();
 				if(StringUtils.isEmpty(site)){
-					errorInfo.append("请检查单元格["+(i+1)+",H]的值：（商铺名称）为空。").append("\r\n");
+					errorInfo.append("请检查单元格["+(i+1)+",I]的值：（商铺名称）为空。").append("\r\n");
 				}else{
 					item.setSite(site);
 				}
 				
-				String site_url = getCellValue(row.getCell(8))==null?null:getCellValue(row.getCell(8)).trim();
+				String site_url = getCellValue(row.getCell(9))==null?null:getCellValue(row.getCell(9)).trim();
 				if(StringUtils.isEmpty(site_url)){
-					errorInfo.append("请检查单元格["+(i+1)+",I]的值：（商铺URL）为空。").append("\r\n");
+					errorInfo.append("请检查单元格["+(i+1)+",J]的值：（商铺URL）为空。").append("\r\n");
 				}else{
 					item.setSite_url(site_url);
 				}
 				
-				String url = getCellValue(row.getCell(9))==null?null:getCellValue(row.getCell(9)).trim();
+				String url = getCellValue(row.getCell(10))==null?null:getCellValue(row.getCell(10)).trim();
 				if(StringUtils.isEmpty(url)){
-					errorInfo.append("请检查单元格["+(i+1)+",J]的值：（商品详情URL）为空。").append("\r\n");
+					errorInfo.append("请检查单元格["+(i+1)+",K]的值：（商品详情URL）为空。").append("\r\n");
 				}else{
 					item.setUrl(url);
 				}
 				
-				String wapurl = getCellValue(row.getCell(10))==null?null:getCellValue(row.getCell(10)).trim();
+				String wapurl = getCellValue(row.getCell(11))==null?null:getCellValue(row.getCell(11)).trim();
 				item.setWapurl(StringUtils.isEmpty(wapurl)?"":wapurl);
 				
-				String img_url = getCellValue(row.getCell(11))==null?null:getCellValue(row.getCell(11)).trim();
+				String img_url = getCellValue(row.getCell(12))==null?null:getCellValue(row.getCell(12)).trim();
 				if(StringUtils.isEmpty(img_url)){
-					errorInfo.append("请检查单元格["+(i+1)+",L]的值：（商品图片URL）为空。").append("\r\n");
+					errorInfo.append("请检查单元格["+(i+1)+",M]的值：（商品图片URL）为空。").append("\r\n");
 				}else if(img_url.indexOf("cdn.hao.ad.intf.ecinsight.cn")>=0){
-					errorInfo.append("请检查单元格["+(i+1)+",L]的值：（商品图片URL）不应使用cdn地址。").append("\r\n");
+					errorInfo.append("请检查单元格["+(i+1)+",M]的值：（商品图片URL）不应使用cdn地址。").append("\r\n");
 				}else{
 					item.setImg_url(img_url);
 				}
@@ -604,6 +617,7 @@ public class ManageServlet extends HttpServlet {
 		buffer.append("</select></td>");
 		buffer.append("<td class=\"left\">固定的分类编号。</td></tr>");
 		buffer.append("<tr><td class=\"right notNull\">*现价：</td><td><input class=\"w300\" name=\"price\" value=\"").append(item.getPrice()==null?"":item.getPrice()).append("\"></td><td class=\"left\"></td></tr>");
+		buffer.append("<tr><td class=\"right\">活动价：</td><td><input class=\"w300\" name=\"price_new\" value=\"").append(item.getPrice_new()==null?"":item.getPrice_new()).append("\"></td><td class=\"left\"></td></tr>");
 		buffer.append("<tr><td class=\"right\">优惠卷金额：</td><td><input class=\"w300\" name=\"cheap\" value=\"").append(item.getCheap()==null?"":item.getCheap()).append("\"></td><td class=\"left\"></td></tr>");
 		buffer.append("<tr><td class=\"right notNull\">*包邮：</td><td><select class=\"w300\" name=\"post\">")
 			.append(item.getPost()!=null&&item.getPost()==1?"<option value=\"0\"> 0 否</option><option value=\"1\" selected=\"selected\">1 是</option>":"<option value=\"0\" selected=\"selected\"> 0 否</option><option value=\"1\">1 是</option>")
@@ -640,6 +654,7 @@ public class ManageServlet extends HttpServlet {
 			.append("<th>tag</th>")
 			.append("<th>标题</th>")
 			.append("<th>现价</th>")
+			.append("<th>活动价</th>")
 			.append("<th>优惠</th>")
 			.append("<th>包邮</th>")
 			.append("<th>启用</th>")
@@ -661,6 +676,7 @@ public class ManageServlet extends HttpServlet {
 			buffer.append("<td>").append(model.getTag()).append("</td>");
 			buffer.append("<td>").append(model.getLong_title()).append("</td>");
 			buffer.append("<td>").append(model.getPrice()).append("</td>");
+			buffer.append("<td>").append(model.getPrice_new()==null?0:model.getPrice_new()).append("</td>");
 			buffer.append("<td>").append(model.getCheap()==null?0:model.getCheap()).append("</td>");
 			buffer.append("<td>").append(model.getPost()).append("</td>");
 			buffer.append("<td>").append(model.getStatus()).append("</td>");

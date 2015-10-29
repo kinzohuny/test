@@ -31,7 +31,7 @@ public class StringUtils {
 	}
 	
 	public static String toJSON(List<ItemModel> list){
-		SimplePropertyPreFilter filter = new SimplePropertyPreFilter(ItemModel.class, "long_title","identify","url","wapurl","img_url","price","cheap","site","site_url","tagid","tag","post");
+		SimplePropertyPreFilter filter = new SimplePropertyPreFilter(ItemModel.class, "long_title","identify","url","wapurl","img_url","price","price_new","cheap","site","site_url","tagid","tag","post");
 		return JSON.toJSONString(list,filter,SerializerFeature.WriteMapNullValue,SerializerFeature.WriteNullStringAsEmpty,SerializerFeature.WriteNullNumberAsZero,SerializerFeature.BrowserCompatible);
 	}
 	

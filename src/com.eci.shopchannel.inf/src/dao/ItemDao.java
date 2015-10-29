@@ -15,18 +15,18 @@ import model.ItemModel;
 
 public class ItemDao {
 	
-	public static String SQL_QUERY = "select si.id,si.long_title,si.identify,si.url,si.wap_url,si.img_url,si.price,si.cheap,si.site,si.site_url,si.tag_id,sc.tag_name,si.post,si.status,sc.category_code,sc.category_name,si.created,si.updated"
+	public static String SQL_QUERY = "select si.id,si.long_title,si.identify,si.url,si.wap_url,si.img_url,si.price,si.price_new,si.cheap,si.site,si.site_url,si.tag_id,sc.tag_name,si.post,si.status,sc.category_code,sc.category_name,si.created,si.updated"
 			+ " from shopchannel_item si,shopchannel_category sc"
 			+ " where si.tag_id=sc.tag_id";
 
-	public static String SQL_INSERT = "insert into shopchannel_item (long_title,identify,url,wap_url,img_url,price,cheap,site,site_url,tag_id,post,status,created,updated) values";
+	public static String SQL_INSERT = "insert into shopchannel_item (long_title,identify,url,wap_url,img_url,price,price_new,cheap,site,site_url,tag_id,post,status,created,updated) values";
 	
 	public static String SQL_DELETE = "delete from shopchannel_item where id in ";
 	
 	public static String SQL_UPDATE_STATUS = "update shopchannel_item set status=? where id in ";
 	
 	public static String SQL_UPDATE = "update shopchannel_item"
-			+ " set long_title=?,identify=?,url=?,wap_url=?,img_url=?,price=?,cheap=?,site=?,site_url=?,tag_id=?,post=?,status=?,updated=now()"
+			+ " set long_title=?,identify=?,url=?,wap_url=?,img_url=?,price=?,price_new=?,cheap=?,site=?,site_url=?,tag_id=?,post=?,status=?,updated=now()"
 			+ " where id=?";
 	
 	public int delete(String ids) throws SQLException{
@@ -48,20 +48,21 @@ public class ItemDao {
 	
 	public int update(ItemModel item) throws SQLException{
 		if(item!=null){
-			Object[] paras = new Object[13];
+			Object[] paras = new Object[14];
 			paras[0] = item.getLong_title();
 			paras[1] = item.getIdentify();
 			paras[2] = item.getUrl();
 			paras[3] = item.getWapurl();
 			paras[4] = item.getImg_url();
 			paras[5] = item.getPrice();
-			paras[6] = item.getCheap();
-			paras[7] = item.getSite();
-			paras[8] = item.getSite_url();
-			paras[9] = item.getTagid();
-			paras[10] = item.getPost();
-			paras[11] = item.getStatus();
-			paras[12] = item.getId();
+			paras[6] = item.getPrice_new();
+			paras[7] = item.getCheap();
+			paras[8] = item.getSite();
+			paras[9] = item.getSite_url();
+			paras[10] = item.getTagid();
+			paras[11] = item.getPost();
+			paras[12] = item.getStatus();
+			paras[13] = item.getId();
 			return DatabaseManage.executeUpdate(SQL_UPDATE, paras);
 		}
 		return 0;
@@ -88,6 +89,7 @@ public class ItemDao {
 				buffer.append("'").append(item.getWapurl()).append("',");
 				buffer.append("'").append(item.getImg_url()).append("',");
 				buffer.append(item.getPrice()).append(",");
+				buffer.append(item.getPrice_new()).append(",");
 				buffer.append(item.getCheap()).append(",");
 				buffer.append("'").append(item.getSite()).append("',");
 				buffer.append("'").append(item.getSite_url()).append("',");
@@ -166,6 +168,7 @@ public class ItemDao {
 			item.setWapurl(result.getString("wap_url"));
 			item.setImg_url(result.getString("img_url"));
 			item.setPrice(result.getBigDecimal("price"));
+			item.setPrice_new(result.getBigDecimal("price_new"));
 			item.setCheap(result.getBigDecimal("cheap"));
 			item.setSite(result.getString("site"));
 			item.setSite_url(result.getString("site_url"));
@@ -197,6 +200,7 @@ public class ItemDao {
 						item.getWapurl()+"|"+
 						item.getImg_url()+"|"+
 						item.getPrice()+"|"+
+						item.getPrice_new()+"|"+
 						item.getCheap()+"|"+
 						item.getSite()+"|"+
 						item.getSite_url()+"|"+

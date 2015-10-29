@@ -12,6 +12,7 @@ public class ItemModel {
 	private String wapurl;
 	private String img_url;
 	private BigDecimal price;
+	private BigDecimal price_new;
 	private BigDecimal cheap;
 	private String site;
 	private String site_url;
@@ -65,6 +66,12 @@ public class ItemModel {
 	}
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+	public BigDecimal getPrice_new() {
+		return price_new;
+	}
+	public void setPrice_new(BigDecimal price_new) {
+		this.price_new = price_new;
 	}
 	public BigDecimal getCheap() {
 		return cheap;
