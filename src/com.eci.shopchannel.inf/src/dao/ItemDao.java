@@ -15,18 +15,18 @@ import model.ItemModel;
 
 public class ItemDao {
 	
-	public static String SQL_QUERY = "select si.id,si.long_title,si.identify,si.url,si.wap_url,si.img_url,si.price,si.price_new,si.cheap,si.site,si.site_url,si.tag_id,sc.tag_name,si.post,si.status,sc.category_code,sc.category_name,si.created,si.updated"
+	public static String SQL_QUERY = "select si.id,si.long_title,si.identify,si.url,si.wap_url,si.img_url,si.price,si.price_new,si.cheap,si.site,si.site_url,si.tag_id,sc.tag_name,si.post,si.status,sc.category_code,sc.category_name,si.created,si.updated,si.sort"
 			+ " from shopchannel_item si,shopchannel_category sc"
 			+ " where si.tag_id=sc.tag_id";
 
-	public static String SQL_INSERT = "insert into shopchannel_item (long_title,identify,url,wap_url,img_url,price,price_new,cheap,site,site_url,tag_id,post,status,created,updated) values";
+	public static String SQL_INSERT = "insert into shopchannel_item (long_title,identify,url,wap_url,img_url,price,price_new,cheap,site,site_url,tag_id,post,status,created,updated,sort) values";
 	
 	public static String SQL_DELETE = "delete from shopchannel_item where id in ";
 	
 	public static String SQL_UPDATE_STATUS = "update shopchannel_item set status=? where id in ";
 	
 	public static String SQL_UPDATE = "update shopchannel_item"
-			+ " set long_title=?,identify=?,url=?,wap_url=?,img_url=?,price=?,price_new=?,cheap=?,site=?,site_url=?,tag_id=?,post=?,status=?,updated=now()"
+			+ " set long_title=?,identify=?,url=?,wap_url=?,img_url=?,price=?,price_new=?,cheap=?,site=?,site_url=?,tag_id=?,post=?,status=?,updated=now(),sort=?"
 			+ " where id=?";
 	
 	public int delete(String ids) throws SQLException{
@@ -48,7 +48,7 @@ public class ItemDao {
 	
 	public int update(ItemModel item) throws SQLException{
 		if(item!=null){
-			Object[] paras = new Object[14];
+			Object[] paras = new Object[15];
 			paras[0] = item.getLong_title();
 			paras[1] = item.getIdentify();
 			paras[2] = item.getUrl();
@@ -62,7 +62,8 @@ public class ItemDao {
 			paras[10] = item.getTagid();
 			paras[11] = item.getPost();
 			paras[12] = item.getStatus();
-			paras[13] = item.getId();
+			paras[13] = item.getSort();
+			paras[14] = item.getId();
 			return DatabaseManage.executeUpdate(SQL_UPDATE, paras);
 		}
 		return 0;
@@ -97,7 +98,8 @@ public class ItemDao {
 				buffer.append(item.getPost()).append(",");
 				buffer.append(item.getStatus()).append(",");
 				buffer.append("now(),");
-				buffer.append("now()");
+				buffer.append("now(),");
+				buffer.append(item.getSort());
 				buffer.append("),");
 			}
 			buffer.setLength(buffer.length()-1);
@@ -156,7 +158,7 @@ public class ItemDao {
 				}
 			}
 		}
-		buffer.append(" order by si.status desc,si.tag_id,si.site,si.id desc");
+		buffer.append(" order by si.status desc,si.sort");
 		ResultSet result = DatabaseManage.executeQuery(SQL_QUERY+buffer.toString(), paraList.toArray());
 		List<ItemModel> list = new ArrayList<ItemModel>();
 		while(result.next()){
@@ -180,6 +182,7 @@ public class ItemDao {
 			item.setCategory_name(result.getString("category_name"));
 			item.setCreated(result.getTimestamp("created"));
 			item.setUpdated(result.getTimestamp("updated"));
+			item.setSort(result.getLong("sort"));
 			list.add(item);
 		}
 		return list;

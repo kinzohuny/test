@@ -24,6 +24,7 @@ public class ItemModel {
 	private String category_name;
 	private Timestamp created;
 	private Timestamp updated;
+	private Long sort;
 	
 	public Long getId() {
 		return id;
@@ -138,5 +139,11 @@ public class ItemModel {
 	}
 	public void setUpdated(Timestamp updated) {
 		this.updated = updated;
+	}
+	public Long getSort() {
+		return sort;
+	}
+	public void setSort(Long sort) {
+		this.sort = sort;
 	}
 }

@@ -78,6 +78,9 @@ public class ManageServlet extends HttpServlet {
 				}else if(StringUtils.isNotEmpty(req.getParameter("cleanCache"))){
 					title = "Clean Cache Result";
 					page = cleanHandle(req);
+				}else if(StringUtils.isNotEmpty(req.getParameter("changeSort"))){
+					title = "Change Sort Result";
+					page = changeSortHandle(req);
 				}else{
 					title = "Item List";
 					page = defaultHandle(req);
@@ -102,6 +105,25 @@ public class ManageServlet extends HttpServlet {
 			resp.getWriter().flush();
 			resp.getWriter().close();
 		}
+	}
+
+	private String changeSortHandle(HttpServletRequest req) throws SQLException {
+		StringBuffer buffer = new StringBuffer();
+		String ids = req.getParameter("ids");
+		String[] idArr = ids.split(",");
+		ItemModel model1 = itemDao.queryById(idArr[0]);
+		ItemModel model2 = itemDao.queryById(idArr[1]);
+		Long temp = model1.getSort();
+		model1.setSort(model2.getSort());
+		model2.setSort(temp);
+		itemDao.update(model1);
+		itemDao.update(model2);
+		
+		refreshCache();
+		buffer.append("交换顺序成功，[").append(model1.getLong_title()).append("]与[").append(model2.getLong_title()).append("]的记录顺序已经交换。<br>");
+		buffer.append("<span id=\"jumpTo\">3</span>秒后自动跳转到查询界面...");
+		buffer.append("<script type=\"text/javascript\">countDown(3,'/manage');</script>");
+		return buffer.toString();
 	}
 
 	private String editHandle(HttpServletRequest req, boolean isNew) throws SQLException {
@@ -340,6 +362,14 @@ public class ManageServlet extends HttpServlet {
 			errorInfo.append("【*商品图片url】不应使用cdn地址。").append("\r\n");
 		}
 		
+		Long sort = StringUtils.toLong(req.getParameter("sort"));
+		item.setSort(sort);
+		if(StringUtils.isEmpty(req.getParameter("sort"))){
+			errorInfo.append("【*排序字段】不可为空。").append("\r\n");
+		}else if(identify==null){
+			errorInfo.append("【*排序字段】格式不正确。[").append(req.getParameter("sort")).append("]\r\n");
+		}
+		
 		msg = errorInfo.toString();
 		return item;
 	}
@@ -487,6 +517,15 @@ public class ManageServlet extends HttpServlet {
 				}else{
 					item.setImg_url(img_url);
 				}
+				
+				Long sort = StringUtils.toLong(getCellValue(row.getCell(13)));
+				if(StringUtils.isEmpty(getCellValue(row.getCell(13)))){
+					errorInfo.append("请检查单元格["+(i+1)+",N]的值：（排序字段）为空。").append("\r\n");
+				}else if(sort==null){
+					errorInfo.append("请检查单元格["+(i+1)+",N]的值：（排序字段）只能为整数。").append("\r\n");
+				}else{
+					item.setSort(sort);
+				}
 				list.add(item);
 			}
 		}
@@ -564,10 +603,11 @@ public class ManageServlet extends HttpServlet {
 		buffer.append("<td><input type=\"button\" value=\"全清\" onclick=\"selectNone();\"></td>");
 		buffer.append("<td><input type=\"button\" value=\"启用\" onclick=\"setStatus(1);\"></td>");
 		buffer.append("<td><input type=\"button\" value=\"停用\" onclick=\"setStatus(0);\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"交换顺序\" onclick=\"changeSort();\"></td>");
 		buffer.append("<td><input type=\"button\" value=\"新增\" onclick=\"location.href='/manage?edit=false'\"></td>");
 		buffer.append("<td><input type=\"button\" value=\"修改\" onclick=\"editItem();\"></td>");
 		buffer.append("<td><input type=\"button\" value=\"删除\" onclick=\"deleteSelected();\"></td>");
-		buffer.append("<td><input type=\"button\" value=\"清空缓存\" onclick=\"cleanCache();\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"重建缓存\" onclick=\"cleanCache();\"></td>");
 		buffer.append("<td><input type=\"button\" value=\"下载导入模板\" onclick=\"location.href='/download/import_demo.xls'\"></td>");
 		buffer.append("<form action=\"/manage?import=1\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"return checkFile()\"><td><input type=\"submit\" value=\"导入\"></td><td><input id=\"file_select\" type=\"file\" name=\"file\"></td></form>");
 		//buffer.append("<td><input type=\"button\" value=\"清空文件\" onclick=\"clearFile();\"></td>");
@@ -630,6 +670,7 @@ public class ManageServlet extends HttpServlet {
 		buffer.append("<tr><td class=\"right notNull\">*商品详情url：</td><td><input class=\"w300\" name=\"url\" value=\"").append(item.getUrl()==null?"":item.getUrl()).append("\"></td><td class=\"left\"></td></tr>");
 		buffer.append("<tr><td class=\"right\">商品详情wap_url：</td><td><input class=\"w300\" name=\"wap_url\" value=\"").append(item.getWapurl()==null?"":item.getWapurl()).append("\"></td><td class=\"left\"></td></tr>");
 		buffer.append("<tr><td class=\"right notNull\">*商品图片url：</td><td><input class=\"w300\" name=\"img_url\" value=\"").append(item.getImg_url()==null?"":item.getImg_url()).append("\"></td><td class=\"left\"></td></tr>");
+		buffer.append("<tr><td class=\"right notNull\">*排序字段：</td><td><input class=\"w300\" name=\"sort\" value=\"").append(item.getSort()==null?"":item.getSort()).append("\"></td><td class=\"left\"></td></tr>");
 		buffer.append("<tr>");
 		buffer.append("<td class=\"empty\">").append(isNew?"<input type=\"submit\" class=\"w100\" value=\"保存并新增\" onclick=\"setSaveType(true);\">":"").append("</td>");
 		buffer.append("<td class=\"empty\"><input type=\"submit\" class=\"w100\" value=\"保存\"></td>");
@@ -646,7 +687,7 @@ public class ManageServlet extends HttpServlet {
 		buffer.append("<table class=\"gridtable\">");
 		buffer.append("共"+list.size()+"条记录");
 		buffer.append("<tr>")
-			.append("<th>sysid</th>")
+			.append("<th>排序字段</th>")
 			.append("<th>商品ID</th>")
 			.append("<th>参数代码</th>")
 			.append("<th>参数</th>")
@@ -668,7 +709,7 @@ public class ManageServlet extends HttpServlet {
 
 		for(ItemModel model : list){
 			buffer.append("<tr>");
-			buffer.append("<td><input id="+model.getId()+" name=\"checkbox\" type=\"checkbox\">").append(model.getId()).append("</td>");
+			buffer.append("<td><input id="+model.getId()+" name=\"checkbox\" type=\"checkbox\">").append(model.getSort()).append("</td>");
 			buffer.append("<td>").append(model.getIdentify()).append("</td>");
 			buffer.append("<td>").append(model.getCategory_code()).append("</td>");
 			buffer.append("<td>").append(model.getCategory_name()).append("</td>");

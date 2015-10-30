@@ -79,6 +79,7 @@ function cleanCache(){
 	}
 }
 
+//修改状态
 function setStatus(i) {
 	var num = getSelectedNum();
 	var str = i == 1 ? '启用' : '停用';
@@ -89,6 +90,19 @@ function setStatus(i) {
 		}
 	} else {
 		alert("请勾选要" + str + "的记录！");
+	}
+}
+
+//交换顺序
+function changeSort() {
+	var num = getSelectedNum();
+	if (num == 2) {
+		var ids = getSelectedIds();
+		if (confirm('确定要交换选中纪录的顺序吗?')) {
+			location.href="/manage?changeSort=true&ids=" + ids;
+		}
+	} else {
+		alert("请勾选两条要交换的记录！");
 	}
 }
 
