@@ -64,7 +64,7 @@ function checkFile(){
         return false;
     }
     else{
-    	return confirm('确定要导入【' + val + '】的内容吗？');
+    	return confirm('确定要导入【' + val + '】的内容吗？商品ID相同的记录将被覆盖！');
     }
 }
 

@@ -5,9 +5,8 @@ import java.sql.Timestamp;
 
 public class ItemModel {
 
-	private Long id;
-	private String long_title;
 	private Long identify;
+	private String long_title;
 	private String url;
 	private String wapurl;
 	private String img_url;
@@ -25,24 +24,18 @@ public class ItemModel {
 	private Timestamp created;
 	private Timestamp updated;
 	private Long sort;
-	
-	public Long getId() {
-		return id;
+
+	public Long getIdentify() {
+		return identify;
 	}
-	public void setId(Long id) {
-		this.id = id;
+	public void setIdentify(Long identify) {
+		this.identify = identify;
 	}
 	public String getLong_title() {
 		return long_title;
 	}
 	public void setLong_title(String long_title) {
 		this.long_title = long_title;
-	}
-	public Long getIdentify() {
-		return identify;
-	}
-	public void setIdentify(Long identify) {
-		this.identify = identify;
 	}
 	public String getUrl() {
 		return url;

@@ -171,7 +171,7 @@ public class ManageServlet extends HttpServlet {
 			}else{
 				int i = itemDao.update(item);
 				refreshCache();
-				buffer.append(i).append("件商品[id=").append(item.getId()).append("&title=").append(item.getLong_title()).append("]修改成功。<br>");
+				buffer.append(i).append("件商品[id=").append(item.getIdentify()).append("&title=").append(item.getLong_title()).append("]修改成功。<br>");
 				buffer.append("<span id=\"jumpTo\">3</span>秒后自动跳转到查询界面...");
 				buffer.append("<script type=\"text/javascript\">countDown(3,'/manage');</script>");
 			}
@@ -207,7 +207,7 @@ public class ManageServlet extends HttpServlet {
 		int num = doImport(req);
 		
 		if(num>0){
-			buffer.append("导入成功，已经导入").append(num).append("条记录。<br>");
+			buffer.append("导入成功，").append(msg).append("<br>");
 			buffer.append("<span id=\"jumpTo\">3</span>秒后自动跳转到查询界面...");
 			buffer.append("<script type=\"text/javascript\">countDown(3,'/manage');</script>");
 		}else{
@@ -265,12 +265,6 @@ public class ManageServlet extends HttpServlet {
 		StringBuffer errorInfo = new StringBuffer();
 		ItemModel item = new ItemModel();
 		
-		Long id = StringUtils.toLong(req.getParameter("id"));
-		item.setId(id);
-		if(!isNew&&id==null){
-			errorInfo.append("【ID】修改商品时，ID值不应为空，请联系管理员。").append("\r\n");
-		}
-		
 		Long tagId = StringUtils.toLong(req.getParameter("tagid"));
 		item.setTagid(tagId);
 		if(StringUtils.isEmpty(req.getParameter("tagid"))){
@@ -295,7 +289,7 @@ public class ManageServlet extends HttpServlet {
 			errorInfo.append("【*商品id】不可为空。").append("\r\n");
 		}else if(identify==null){
 			errorInfo.append("【*商品id】格式不正确。[").append(req.getParameter("identify")).append("]\r\n");
-		}else if(getDbIdentifySet(item.getId()==null?0:item.getId()).contains(identify)){
+		}else if(isNew&&itemDao.queryById(String.valueOf(identify))!=null){
 			errorInfo.append("【*商品id】与数据库记录有重复。[").append(req.getParameter("identify")).append("]\r\n");
 		}
 		
@@ -369,7 +363,6 @@ public class ManageServlet extends HttpServlet {
 		}else if(identify==null){
 			errorInfo.append("【*排序字段】格式不正确。[").append(req.getParameter("sort")).append("]\r\n");
 		}
-		
 		msg = errorInfo.toString();
 		return item;
 	}
@@ -385,6 +378,7 @@ public class ManageServlet extends HttpServlet {
 			if(itemList!=null&&!itemList.isEmpty()){
 				int insertNum = itemDao.insert(itemList);
 				refreshCache();
+				msg ="新增"+(itemList.size()+itemList.size()-insertNum)+"条记录，覆盖"+(insertNum-itemList.size())+"条记录。"; 
 				return insertNum;
 			}
 		}
@@ -399,7 +393,6 @@ public class ManageServlet extends HttpServlet {
 		if(sheet!=null){
 			
 			Set<Long> fileIdentifySet = new HashSet<Long>();
-			Set<Long> dbIdentifySet = getDbIdentifySet(null);
 			
 			for(int i=1;i<=sheet.getLastRowNum();i++){
 				Row row = sheet.getRow(i);
@@ -433,8 +426,6 @@ public class ManageServlet extends HttpServlet {
 					errorInfo.append("请检查单元格["+(i+1)+",C]的值：（商品id）格式不正确。").append("\r\n");
 				}else if(fileIdentifySet.contains(identify)){
 					errorInfo.append("请检查单元格["+(i+1)+",C]的值：（商品id）与文件内记录有重复。").append("\r\n");
-				}else if(dbIdentifySet.contains(identify)){
-					errorInfo.append("请检查单元格["+(i+1)+",C]的值：（商品id）与数据库记录有重复。").append("\r\n");
 				}else{
 					item.setIdentify(identify);
 					fileIdentifySet.add(identify);
@@ -559,20 +550,6 @@ public class ManageServlet extends HttpServlet {
 		return value;
 	}
 
-	private Set<Long> getDbIdentifySet(Long exceptId) throws SQLException {
-		Set<Long> dbIdentifySet = new HashSet<Long>();
-		Map<String, Object> map = null;
-		if(exceptId!=null){
-			map = new HashMap<String, Object>();
-			map.put("exceptId", exceptId);
-		}
-		List<ItemModel> list = itemDao.queryForList(map);
-		for(ItemModel item : list){
-			dbIdentifySet.add(item.getIdentify());
-		}
-		return dbIdentifySet;
-	}
-
 	private boolean checkFile(FileItem file) {
 		if(file==null){
 			msg="导入文件为空，请检查导入文件！";
@@ -621,7 +598,6 @@ public class ManageServlet extends HttpServlet {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("<table class=\"menutable\"><tr>");
 		buffer.append("<form action=\"/manage\" method=\"post\">");
-//		buffer.append("<td>id：<input class=\"val w50\" name=\"id\" value=\"").append(req.getParameter("id")==null?"":req.getParameter("id")).append("\"></td>");
 		buffer.append("<td>商品ID：<input class=\"val w100\" name=\"identify\" value=\"").append(req.getParameter("identify")==null?"":req.getParameter("identify")).append("\"></td>");
 		buffer.append("<td>参数代码：<input class=\"val w50\" name=\"category_code\" value=\"").append(req.getParameter("category_code")==null?"":req.getParameter("category_code")).append("\"></td>");
 		buffer.append("<td>tagid：<input class=\"val w50\" name=\"tagid\" value=\"").append(req.getParameter("tagid")==null?"":req.getParameter("tagid")).append("\"></td>");
@@ -641,8 +617,7 @@ public class ManageServlet extends HttpServlet {
 		buffer.append("<table class=\"edittable\">");
 		buffer.append("<form id=\"saveItem\" action=\"/manage?save=true\" method=\"post\" onsubmit=\"return checkItem()\">");
 		buffer.append("<tr><th colspan=\"3\">").append(isNew?"新增商品":"修改商品").append("</th></tr>");
-		buffer.append("<tr><td class=\"right\">SYSID：</td><td><input class=\"disabled w300\" name=\"id\" readonly=\"readonly\" value=\"").append(item.getId()==null?"":item.getId()).append("\"></td><td class=\"left\"><input type=\"hidden\" name=\"isNew\" value=\"").append(isNew).append("\"></td></tr>");
-		buffer.append("<tr><td class=\"right notNull\">*商品id：</td><td><input class=\"w300\" name=\"identify\" value=\"").append(item.getIdentify()==null?"":item.getIdentify()).append("\"></td><td class=\"left\">商品ID不能重复。</td></tr>");
+		buffer.append("<tr><td class=\"right notNull\">*商品id：</td><td><input class=\"w300").append(isNew?"\"":" disabled\" readonly=\"readonly\" ").append(" name=\"identify\" value=\"").append(item.getIdentify()==null?"":item.getIdentify()).append("\"></td><td class=\"left\">商品ID不能重复。</td></tr>");
 		buffer.append("<tr><td class=\"right notNull\">*商品标题：</td><td><input class=\"w300\" name=\"long_title\" value=\"").append(item.getLong_title()==null?"":item.getLong_title()).append("\"></td><td class=\"left\">40个字符以内。</td></tr>");
 		buffer.append("<tr><td class=\"right notNull\">*tagid：</td>");
 		buffer.append("<td><select class=\"w300\" name=\"tagid\">");
@@ -676,6 +651,7 @@ public class ManageServlet extends HttpServlet {
 		buffer.append("<td class=\"empty\"><input type=\"submit\" class=\"w100\" value=\"保存\"></td>");
 		buffer.append("<td class=\"empty\"><input type=\"button\" class=\"w100\" value=\"返回\" onclick=\"location.href='/manage'\"></td></tr>");
 		buffer.append("<input type=\"hidden\" id=\"saveType\" name=\"saveType\">");
+		buffer.append("<input type=\"hidden\" id=\"isNew\" name=\"isNew\" value=\"").append(isNew).append("\">");
 		buffer.append("</form>");
 		buffer.append("</table>");
 		
@@ -709,7 +685,7 @@ public class ManageServlet extends HttpServlet {
 
 		for(ItemModel model : list){
 			buffer.append("<tr>");
-			buffer.append("<td><input id="+model.getId()+" name=\"checkbox\" type=\"checkbox\">").append(model.getSort()).append("</td>");
+			buffer.append("<td><input id="+model.getIdentify()+" name=\"checkbox\" type=\"checkbox\">").append(model.getSort()).append("</td>");
 			buffer.append("<td>").append(model.getIdentify()).append("</td>");
 			buffer.append("<td>").append(model.getCategory_code()).append("</td>");
 			buffer.append("<td>").append(model.getCategory_name()).append("</td>");

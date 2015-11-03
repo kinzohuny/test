@@ -15,19 +15,19 @@ import model.ItemModel;
 
 public class ItemDao {
 	
-	public static String SQL_QUERY = "select si.id,si.long_title,si.identify,si.url,si.wap_url,si.img_url,si.price,si.price_new,si.cheap,si.site,si.site_url,si.tag_id,sc.tag_name,si.post,si.status,sc.category_code,sc.category_name,si.created,si.updated,si.sort"
+	public static String SQL_QUERY = "select si.identify,si.long_title,si.url,si.wap_url,si.img_url,si.price,si.price_new,si.cheap,si.site,si.site_url,si.tag_id,sc.tag_name,si.post,si.status,sc.category_code,sc.category_name,si.created,si.updated,si.sort"
 			+ " from shopchannel_item si,shopchannel_category sc"
 			+ " where si.tag_id=sc.tag_id";
 
-	public static String SQL_INSERT = "insert into shopchannel_item (long_title,identify,url,wap_url,img_url,price,price_new,cheap,site,site_url,tag_id,post,status,created,updated,sort) values";
+	public static String SQL_INSERT = "replace into shopchannel_item (identify,long_title,url,wap_url,img_url,price,price_new,cheap,site,site_url,tag_id,post,status,created,updated,sort) values";
 	
 	public static String SQL_DELETE = "delete from shopchannel_item where id in ";
 	
-	public static String SQL_UPDATE_STATUS = "update shopchannel_item set status=? where id in ";
+	public static String SQL_UPDATE_STATUS = "update shopchannel_item set status=? where identify in ";
 	
 	public static String SQL_UPDATE = "update shopchannel_item"
-			+ " set long_title=?,identify=?,url=?,wap_url=?,img_url=?,price=?,price_new=?,cheap=?,site=?,site_url=?,tag_id=?,post=?,status=?,updated=now(),sort=?"
-			+ " where id=?";
+			+ " set long_title=?,url=?,wap_url=?,img_url=?,price=?,price_new=?,cheap=?,site=?,site_url=?,tag_id=?,post=?,status=?,updated=now(),sort=?"
+			+ " where identify=?";
 	
 	public int delete(String ids) throws SQLException{
 		if(StringUtils.isNotEmpty(ids)){
@@ -48,22 +48,21 @@ public class ItemDao {
 	
 	public int update(ItemModel item) throws SQLException{
 		if(item!=null){
-			Object[] paras = new Object[15];
+			Object[] paras = new Object[14];
 			paras[0] = item.getLong_title();
-			paras[1] = item.getIdentify();
-			paras[2] = item.getUrl();
-			paras[3] = item.getWapurl();
-			paras[4] = item.getImg_url();
-			paras[5] = item.getPrice();
-			paras[6] = item.getPrice_new();
-			paras[7] = item.getCheap();
-			paras[8] = item.getSite();
-			paras[9] = item.getSite_url();
-			paras[10] = item.getTagid();
-			paras[11] = item.getPost();
-			paras[12] = item.getStatus();
-			paras[13] = item.getSort();
-			paras[14] = item.getId();
+			paras[1] = item.getUrl();
+			paras[2] = item.getWapurl();
+			paras[3] = item.getImg_url();
+			paras[4] = item.getPrice();
+			paras[5] = item.getPrice_new();
+			paras[6] = item.getCheap();
+			paras[7] = item.getSite();
+			paras[8] = item.getSite_url();
+			paras[9] = item.getTagid();
+			paras[10] = item.getPost();
+			paras[11] = item.getStatus();
+			paras[12] = item.getSort();
+			paras[13] = item.getIdentify();
 			return DatabaseManage.executeUpdate(SQL_UPDATE, paras);
 		}
 		return 0;
@@ -84,8 +83,8 @@ public class ItemDao {
 			StringBuffer buffer = new StringBuffer();;
 			for(ItemModel item : list){
 				buffer.append("(");
-				buffer.append("'").append(item.getLong_title()).append("',");
 				buffer.append(item.getIdentify()).append(",");
+				buffer.append("'").append(item.getLong_title()).append("',");
 				buffer.append("'").append(item.getUrl()).append("',");
 				buffer.append("'").append(item.getWapurl()).append("',");
 				buffer.append("'").append(item.getImg_url()).append("',");
@@ -108,10 +107,10 @@ public class ItemDao {
 		return 0;
 	}
 	
-	public ItemModel queryById(String id) throws SQLException {
+	public ItemModel queryById(String identify) throws SQLException {
 		ItemModel item  = null;
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", id);
+		map.put("identify", identify);
 		List<ItemModel> list = new ItemDao().queryForList(map);
 		if(!list.isEmpty()){
 			item = list.get(0);
@@ -136,16 +135,12 @@ public class ItemDao {
 					buffer.append(" and sc.tag_id=?");
 					paraList.add(map.get(key));
 				}
-				if("id".equalsIgnoreCase(key)){
-					buffer.append(" and si.id=?");
+				if("identify".equalsIgnoreCase(key)){
+					buffer.append(" and si.identify=?");
 					paraList.add(map.get(key));
 				}
 				if("exceptId".equalsIgnoreCase(key)){
 					buffer.append(" and si.id!=?");
-					paraList.add(map.get(key));
-				}
-				if("identify".equalsIgnoreCase(key)){
-					buffer.append(" and si.identify=?");
 					paraList.add(map.get(key));
 				}
 				if("site".equalsIgnoreCase(key)){
@@ -163,9 +158,8 @@ public class ItemDao {
 		List<ItemModel> list = new ArrayList<ItemModel>();
 		while(result.next()){
 			ItemModel item = new ItemModel();
-			item.setId(result.getLong("id"));
-			item.setLong_title(result.getString("long_title"));
 			item.setIdentify(result.getLong("identify"));
+			item.setLong_title(result.getString("long_title"));
 			item.setUrl(result.getString("url"));
 			item.setWapurl(result.getString("wap_url"));
 			item.setImg_url(result.getString("img_url"));
@@ -196,9 +190,8 @@ public class ItemDao {
 			List<ItemModel> list = new ItemDao().queryForList(map);
 			System.out.println(list.size());
 			for(ItemModel item : list){
-				System.out.println(item.getId()+"|"+
+				System.out.println(item.getIdentify()+"|"+
 						item.getLong_title()+"|"+
-						item.getIdentify()+"|"+
 						item.getUrl()+"|"+
 						item.getWapurl()+"|"+
 						item.getImg_url()+"|"+
