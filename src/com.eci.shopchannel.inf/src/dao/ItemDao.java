@@ -21,7 +21,7 @@ public class ItemDao {
 
 	public static String SQL_INSERT = "replace into shopchannel_item (identify,long_title,url,wap_url,img_url,price,price_new,cheap,site,site_url,tag_id,post,status,created,updated,sort) values";
 	
-	public static String SQL_DELETE = "delete from shopchannel_item where id in ";
+	public static String SQL_DELETE = "delete from shopchannel_item where identify in ";
 	
 	public static String SQL_UPDATE_STATUS = "update shopchannel_item set status=? where identify in ";
 	
