@@ -139,15 +139,15 @@ public class ItemDao {
 					buffer.append(" and si.identify=?");
 					paraList.add(map.get(key));
 				}
-				if("exceptId".equalsIgnoreCase(key)){
-					buffer.append(" and si.id!=?");
+				if("identifyLike".equalsIgnoreCase(key)){
+					buffer.append(" and si.identify like ?");
 					paraList.add(map.get(key));
 				}
-				if("site".equalsIgnoreCase(key)){
+				if("siteLike".equalsIgnoreCase(key)){
 					buffer.append(" and si.site like ?");
 					paraList.add(map.get(key));
 				}
-				if("long_title".equalsIgnoreCase(key)){
+				if("long_titleLike".equalsIgnoreCase(key)){
 					buffer.append(" and si.long_title like ?");
 					paraList.add(map.get(key));
 				}

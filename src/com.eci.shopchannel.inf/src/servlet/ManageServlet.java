@@ -239,10 +239,10 @@ public class ManageServlet extends HttpServlet {
 			map.put("tagid", req.getParameter("tagid"));
 		}
 		if(StringUtils.isNotEmpty(req.getParameter("long_title"))){
-			map.put("long_title", "%"+req.getParameter("long_title")+"%");
+			map.put("long_titleLike", "%"+req.getParameter("long_title")+"%");
 		}
 		if(StringUtils.isNotEmpty(req.getParameter("identify"))){
-			map.put("identify", req.getParameter("identify"));
+			map.put("identifyLike", "%"+req.getParameter("identify")+"%");
 		}
 		if(StringUtils.isNotEmpty(req.getParameter("status"))){
 			map.put("status", req.getParameter("status"));
@@ -251,7 +251,7 @@ public class ManageServlet extends HttpServlet {
 			map.put("post", req.getParameter("post"));
 		}
 		if(StringUtils.isNotEmpty(req.getParameter("site"))){
-			map.put("site", "%"+req.getParameter("site")+"%");
+			map.put("siteLike", "%"+req.getParameter("site")+"%");
 		}
 		List<ItemModel> list = itemDao.queryForList(map);
 		return getButtonPage()+getFilterPage(req)+getListPage(list);
