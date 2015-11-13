@@ -1,0 +1,81 @@
+package com.eci.youku.data.push.task;
+
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.eci.youku.data.push.dao.TBJdpTbTradeDao;
+import com.eci.youku.data.push.dao.YKShopDao;
+import com.eci.youku.data.push.dao.YKTradeDao;
+import com.eci.youku.data.push.model.TBJdpTbTradeModel;
+import com.eci.youku.data.push.model.YKShopModel;
+import com.eci.youku.data.push.model.YKTradeModel;
+import com.taobao.api.ApiException;
+import com.taobao.api.domain.Trade;
+import com.taobao.api.internal.util.TaobaoUtils;
+import com.taobao.api.response.TradeFullinfoGetResponse;
+
+public class DataFetchFromTB implements Runnable{
+	
+	private static final Logger logger = Logger.getLogger(DataFetchFromTB.class);
+	private static final int size = 100;
+
+	YKShopDao yKShopDao = new YKShopDao();
+	YKTradeDao yKTradeDao = new YKTradeDao();
+	TBJdpTbTradeDao tBJdpTbTradeDao = new TBJdpTbTradeDao();
+	
+	@Override
+	public void run() {
+
+		try {
+			List<YKShopModel> shopList = yKShopDao.getList();
+			for(YKShopModel shopModel : shopList){
+				while(true){
+					Timestamp lastTime = yKTradeDao.getLastJdpModified(shopModel.getSid());
+					List<TBJdpTbTradeModel> tBJdpTbTradeList = tBJdpTbTradeDao.queryList(shopModel.getNick(), lastTime, 0, size);
+					List<YKTradeModel> yKTradeModelList = new ArrayList<YKTradeModel>();
+					for(TBJdpTbTradeModel tBJdpTbTradeModel : tBJdpTbTradeList){
+						YKTradeModel yKTradeModel = new YKTradeModel();
+						TradeFullinfoGetResponse response = TaobaoUtils.parseResponse(tBJdpTbTradeModel.getJdp_response(), TradeFullinfoGetResponse.class);
+						Trade trade = response.getTrade();
+						yKTradeModel.setTid(trade.getTid());
+						yKTradeModel.setSid(trade.getTid());
+						yKTradeModel.setSTATUS(trade.getStatus());
+						yKTradeModel.setSeller_nick(trade.getSellerNick());
+						yKTradeModel.setSeller_title(trade.getTitle());
+						yKTradeModel.setBuyer_nick(trade.getBuyerNick());
+						yKTradeModel.setPayment(trade.getPayment());
+						yKTradeModel.setReceiver_name(trade.getReceiverName());
+						yKTradeModel.setReceiver_mobile(trade.getReceiverMobile());
+						yKTradeModel.setPay_time(new Timestamp(trade.getPayTime().getTime()));
+						yKTradeModel.setEnd_time(new Timestamp(trade.getEndTime().getTime()));
+						yKTradeModel.setTrade_created(new Timestamp(trade.getCreated().getTime()));
+						yKTradeModel.setTrade_modified(new Timestamp(trade.getModified().getTime()));
+						yKTradeModel.setJdp_created(tBJdpTbTradeModel.getJdp_created());
+						yKTradeModel.setJdp_modified(tBJdpTbTradeModel.getJdp_modified());
+						yKTradeModelList.add(yKTradeModel);
+					}
+					//TODO insert trade data
+//					yKTradeDao.
+					if(tBJdpTbTradeList.size()<100){
+						break;
+					}
+				}
+				
+				
+				
+			}
+		} catch (SQLException e) {
+			logger.error(e);
+		} catch (ApiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	
+}
