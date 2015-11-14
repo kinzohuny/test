@@ -13,6 +13,7 @@ import com.eci.youku.data.push.dao.YKTradeDao;
 import com.eci.youku.data.push.model.TBJdpTbTradeModel;
 import com.eci.youku.data.push.model.YKShopModel;
 import com.eci.youku.data.push.model.YKTradeModel;
+import com.eci.youku.data.push.utils.StringUtils;
 import com.taobao.api.ApiException;
 import com.taobao.api.domain.Trade;
 import com.taobao.api.internal.util.TaobaoUtils;
@@ -39,9 +40,9 @@ public class DataFetchFromTB implements Runnable{
 
 				logger.info("start fetch sid="+shopModel.getSid());
 				while(true){
-					Timestamp lastTime = yKTradeDao.getLastJdpModified(shopModel.getSid());
-					if(lastTime == null){
-						lastTime = Timestamp.valueOf("2015-11-09 00:00:00");
+					String lastTime = yKTradeDao.getLastJdpModified(shopModel.getSid());
+					if(StringUtils.isEmpty(lastTime)){
+						lastTime = "2015-11-09 00:00:00";
 					}
 					List<TBJdpTbTradeModel> tBJdpTbTradeList = tBJdpTbTradeDao.queryList(shopModel.getNick(), lastTime, 0, size);
 					List<YKTradeModel> yKTradeModelList = new ArrayList<YKTradeModel>();
@@ -50,7 +51,7 @@ public class DataFetchFromTB implements Runnable{
 						TradeFullinfoGetResponse response = TaobaoUtils.parseResponse(tBJdpTbTradeModel.getJdp_response(), TradeFullinfoGetResponse.class);
 						Trade trade = response.getTrade();
 						yKTradeModel.setTid(trade.getTid());
-						yKTradeModel.setSid(trade.getTid());
+						yKTradeModel.setSid(shopModel.getSid());
 						yKTradeModel.setSTATUS(trade.getStatus());
 						yKTradeModel.setSeller_nick(trade.getSellerNick());
 						yKTradeModel.setSeller_title(trade.getTitle());
@@ -58,8 +59,8 @@ public class DataFetchFromTB implements Runnable{
 						yKTradeModel.setPayment(trade.getPayment());
 						yKTradeModel.setReceiver_name(trade.getReceiverName());
 						yKTradeModel.setReceiver_mobile(trade.getReceiverMobile());
-						yKTradeModel.setPay_time(new Timestamp(trade.getPayTime().getTime()));
-						yKTradeModel.setEnd_time(new Timestamp(trade.getEndTime().getTime()));
+						yKTradeModel.setPay_time(trade.getPayTime()==null?null:new Timestamp(trade.getPayTime().getTime()));
+						yKTradeModel.setEnd_time(trade.getEndTime()==null?null:new Timestamp(trade.getEndTime().getTime()));
 						yKTradeModel.setTrade_created(new Timestamp(trade.getCreated().getTime()));
 						yKTradeModel.setTrade_modified(new Timestamp(trade.getModified().getTime()));
 						yKTradeModel.setJdp_created(tBJdpTbTradeModel.getJdp_created());
@@ -76,6 +77,8 @@ public class DataFetchFromTB implements Runnable{
 		} catch (SQLException e) {
 			logger.error(e);
 		} catch (ApiException e) {
+			logger.error(e);
+		} catch (Exception e) {
 			logger.error(e);
 		}
 		

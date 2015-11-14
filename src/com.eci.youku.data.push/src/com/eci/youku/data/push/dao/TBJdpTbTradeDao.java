@@ -1,7 +1,6 @@
 package com.eci.youku.data.push.dao;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 import com.eci.youku.data.push.model.TBJdpTbTradeModel;
@@ -15,7 +14,7 @@ public class TBJdpTbTradeDao {
 			+ " order by jdp_modified"
 			+ " LIMIT ?,?";
 	
-	public List<TBJdpTbTradeModel> queryList(String seller_nick, Timestamp lastTime, int start, int size) throws SQLException{
+	public List<TBJdpTbTradeModel> queryList(String seller_nick, String lastTime, int start, int size) throws SQLException{
 		return TBDbUtils.queryList(TBJdpTbTradeModel.class, QUERY_LIST, new Object[] {seller_nick, lastTime, start, size});
 	}
 }

@@ -10,16 +10,16 @@ import com.eci.youku.data.push.utils.YKDbUtils;
 
 public class YKTradeDao {
 
-	private static final String QUERY_LASTJDPMODIFIED = "select max(jdp_modified)"
+	private static final String QUERY_LASTJDPMODIFIED = "select date_format(max(jdp_modified),'%Y-%m-%d %H:%i:%s')"
 			+ " from trade"
 			+ " where sid = ?";
 	
 	private static final String INSERT = "insert into trade (tid,sid,STATUS,seller_nick,seller_title,buyer_nick,payment,receiver_name,receiver_mobile,pay_time,end_time,trade_created,trade_modified,jdp_created,jdp_modified,created)"
 			+ " select * from (select ? tid,? sid,? STATUS,? seller_nick,? seller_title,? buyer_nick,? payment,? receiver_name,? receiver_mobile,? pay_time,? end_time,? trade_created,? trade_modified,? jdp_created,? jdp_modified, now() created from dual) t"
-			+ " on duplicate key update sid=t.sid,STATUS=t.STATUS,seller_nick=t.seller_nick,seller_title=t.seller_title,buyer_nick=t.buyer_nick,payment=t.payment,receiver_name=t.receiver_name,receiver_mobile=t.receiver_mobile,pay_time=t.pay_time,end_time=t.end_time,trade_created=t.trade_created,trade_modified=t.trade_modified,jdp_created=t.jdp_created,jdp_modified=t.jdp_modified;";
+			+ " on duplicate key update sid=t.sid,STATUS=t.STATUS,seller_nick=t.seller_nick,seller_title=t.seller_title,buyer_nick=t.buyer_nick,payment=t.payment,receiver_name=t.receiver_name,receiver_mobile=t.receiver_mobile,pay_time=t.pay_time,end_time=t.end_time,trade_created=t.trade_created,trade_modified=t.trade_modified,jdp_created=t.jdp_created,jdp_modified=t.jdp_modified";
 	
-	public Timestamp getLastJdpModified(Long sid) throws SQLException{
-		return YKDbUtils.queryOne(Timestamp.class, QUERY_LASTJDPMODIFIED, sid);
+	public String getLastJdpModified(Long sid) throws SQLException{
+		return YKDbUtils.queryOne(String.class, QUERY_LASTJDPMODIFIED, sid);
 	}
 	
 	public int insert(List<YKTradeModel> modelList) throws SQLException{
