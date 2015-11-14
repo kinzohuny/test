@@ -31,10 +31,18 @@ public class DataFetchFromTB implements Runnable{
 	public void run() {
 
 		try {
+			logger.info("start fetch from tb...");
 			List<YKShopModel> shopList = yKShopDao.getList();
+
+			logger.info("shop count is "+shopList.size());
 			for(YKShopModel shopModel : shopList){
+
+				logger.info("start fetch sid="+shopModel.getSid());
 				while(true){
 					Timestamp lastTime = yKTradeDao.getLastJdpModified(shopModel.getSid());
+					if(lastTime == null){
+						lastTime = Timestamp.valueOf("2015-11-09 00:00:00");
+					}
 					List<TBJdpTbTradeModel> tBJdpTbTradeList = tBJdpTbTradeDao.queryList(shopModel.getNick(), lastTime, 0, size);
 					List<YKTradeModel> yKTradeModelList = new ArrayList<YKTradeModel>();
 					for(TBJdpTbTradeModel tBJdpTbTradeModel : tBJdpTbTradeList){
@@ -58,21 +66,17 @@ public class DataFetchFromTB implements Runnable{
 						yKTradeModel.setJdp_modified(tBJdpTbTradeModel.getJdp_modified());
 						yKTradeModelList.add(yKTradeModel);
 					}
-					//TODO insert trade data
-//					yKTradeDao.
+					yKTradeDao.insert(yKTradeModelList);
+					logger.info(tBJdpTbTradeList.size() + "is done!");
 					if(tBJdpTbTradeList.size()<100){
 						break;
 					}
 				}
-				
-				
-				
 			}
 		} catch (SQLException e) {
 			logger.error(e);
 		} catch (ApiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e);
 		}
 		
 	}

@@ -26,13 +26,13 @@ public class TBDbUtils {
 //	private final static String driverClassName = "com.mysql.jdbc.Driver";
 	private final static String driverClassName = "net.sf.log4jdbc.DriverSpy";
 	
-//	private final static String url = "jdbc:log4jdbc:mysql://conn0633f3a5.mysql.rds.aliyuncs.com:3306/my_db?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true";
-//	private final static String username = "usr0633f3a5";
-//	private final static String password = "poincoo123_abc";
+	private final static String url = "jdbc:log4jdbc:mysql://conn0633f3a5.mysql.rds.aliyuncs.com:3306/my_db?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true";
+	private final static String username = "usr0633f3a5";
+	private final static String password = "poincoo123_abc";
 	
-	private final static String url = "jdbc:log4jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true";
-	private final static String username = "test";
-	private final static String password = "test";
+//	private final static String url = "jdbc:log4jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true";
+//	private final static String username = "test";
+//	private final static String password = "test";
 	
 	private final static int initConn = 1;
 	private final static int incConn = 1;
@@ -121,6 +121,25 @@ public class TBDbUtils {
 		
 		try {
 			result = queryRunner.update(connection, sql, paras);
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+			throw e;
+		} finally {
+			returnConnect(connection);
+		}
+		
+		return result;
+	}
+	
+	public static int updateBatch(String sql, Object[][] paras) throws SQLException{
+		Connection connection = getConnect();
+		int result = 0;
+		
+		try {
+			int [] results = queryRunner.batch(connection, sql, paras);
+			for(int i :results){
+				result += i;
+			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 			throw e;

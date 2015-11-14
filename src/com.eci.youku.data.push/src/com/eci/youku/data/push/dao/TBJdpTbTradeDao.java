@@ -10,7 +10,7 @@ import com.eci.youku.data.push.utils.TBDbUtils;
 public class TBJdpTbTradeDao {
 
 	private static final String QUERY_LIST = "SELECT tid,STATUS,buyer_nick,created,modified,jdp_response,jdp_created,jdp_modified"
-			+ " FROM jdp_tb_trade"
+			+ " FROM sys_info.jdp_tb_trade"
 			+ " where seller_nick = ? and jdp_modified >= ?"
 			+ " order by jdp_modified"
 			+ " LIMIT ?,?";
