@@ -12,6 +12,7 @@ import com.taobao.api.internal.util.WebUtils;
 
 public class DataPushToQYGJ implements Runnable{
 
+	private static final String key = "89926b05cc3d6bcc";
 	private static final Logger logger = Logger.getLogger(DataPushToQYGJ.class);
 	YKTradeDao yKTradeDao = new YKTradeDao();
 	

@@ -22,6 +22,7 @@ import com.eci.youku.servlet.LoginServlet;
 import com.eci.youku.servlet.RandomCodeServlet;
 import com.eci.youku.servlet.ResourceServlet;
 import com.eci.youku.servlet.ShopListServlet;
+import com.eci.youku.servlet.SyncServlet;
 import com.eci.youku.util.ServerUtils;
 
 public class Start {
@@ -55,6 +56,7 @@ public class Start {
 		servletContextHandler.addServlet(ShopListServlet.class, "/shop");
 		servletContextHandler.addServlet(ItemListServlet.class, "/item");
 		servletContextHandler.addServlet(ImportServlet.class, "/import");
+		servletContextHandler.addServlet(SyncServlet.class, "/sync");
 		servletContextHandler.addServlet(DefaultServlet.class, "/*");
 		
 		//设置session管理
