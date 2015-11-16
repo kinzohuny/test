@@ -48,16 +48,18 @@ public class SyncServlet extends HttpServlet {
 				if("getMobile".equals(req.getParameter("task"))){
 					Long lastMobileUpdated = StringUtils.toLong(req.getParameter("lastMobileUpdated"));
 					if(lastMobileUpdated!=null){
-						List<MobileModel> list = mobileDao.queryListByUpdated(new Timestamp(lastMobileUpdated));
-						result = JSON.toJSONString(list);
+						List<MobileModel> mobileList = mobileDao.queryListByUpdated(new Timestamp(lastMobileUpdated));
+						result = JSON.toJSONString(mobileList);
+						logger.info("[getMobile] return mobiles size="+mobileList.size());
 					}
 				
 				//店铺同步
 				}else if("getShop".equals(req.getParameter("task"))){
 					Long lastShopUpdated = StringUtils.toLong(req.getParameter("lastShopUpdated"));
 					if(lastShopUpdated!=null){
-						List<ShopModel> mobileList = shopDao.queryListByUpdated(new Timestamp(lastShopUpdated));
-						result = JSON.toJSONString(mobileList);
+						List<ShopModel> shopList = shopDao.queryListByUpdated(new Timestamp(lastShopUpdated));
+						result = JSON.toJSONString(shopList);
+						logger.info("[getShop] return shops size="+shopList.size());
 					}
 				}else if("pushTradeData".equals(req.getParameter("task"))){
 					
@@ -87,8 +89,6 @@ public class SyncServlet extends HttpServlet {
 				}else if("pushTradeDataReady".equals(req.getParameter("task"))){
 					result = "ok";
 				}
-				
-				
 				
 			}else{
 				//无效请求
