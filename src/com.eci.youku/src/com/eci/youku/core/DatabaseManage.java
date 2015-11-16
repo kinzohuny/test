@@ -2,15 +2,15 @@ package com.eci.youku.core;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.MapListHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.apache.log4j.Logger;
 
 import com.eci.youku.constant.Constants;
@@ -21,6 +21,7 @@ public class DatabaseManage {
 	private final static Logger logger = Logger.getLogger(DatabaseManage.class);
 	
 	private static ConnectionPool connectionPool;
+	private static QueryRunner queryRunner = new QueryRunner();
 	private final static String driverClassName = "com.mysql.jdbc.Driver";
 	private final static String characterEncoding="UTF-8";
 	
@@ -56,85 +57,102 @@ public class DatabaseManage {
 
 	}
 	
-	public static List<Map<String, Object>> executeQuery(String sql,Object... paras) throws SQLException{
-		ResultSet resultSet = null;
+	public static <T> T queryOne(Class<T> clazz, String sql, Object... paras) throws SQLException{
 		Connection connection = getConnect();
-		PreparedStatement pstmt = null;
-		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+		T result;
+		
 		try {
-			pstmt = connection.prepareStatement(sql);
-			for(int i = 0;i<paras.length;i++){
-				pstmt.setObject(i+1, paras[i]);
-			}
-			logger.debug(pstmt.toString());
-			resultSet = pstmt.executeQuery();
-			ResultSetMetaData metaData = resultSet.getMetaData();
-			while(resultSet.next()){
-				Map<String,Object> map = new HashMap<String, Object>();
-				for(int i=1;i<=metaData.getColumnCount();i++){
-					map.put(metaData.getColumnLabel(i), resultSet.getObject(i));
-				}
-				result.add(map);
-			}
+			result = queryRunner.query(connection, sql, new ScalarHandler<T>(), paras);
 		} catch (SQLException e) {
-			logger.error(pstmt.toString());
+			logger.error(e.getMessage());
 			throw e;
 		} finally {
-			resultSet.close();
-			pstmt.close();
 			returnConnect(connection);
 		}
+		
 		return result;
 	}
 	
-	public static int executeUpdate(String sql,Object... paras) throws SQLException{
-		int result = 0;
+	public static <T> T queryObject(Class<T> clazz, String sql, Object... paras) throws SQLException{
 		Connection connection = getConnect();
-		PreparedStatement pstmt = null;
+		T result;
+		
 		try {
-			pstmt = connection.prepareStatement(sql);
-			for(int i = 0;i<paras.length;i++){
-				pstmt.setObject(i+1, paras[i]);
-			}
-			logger.debug(pstmt.toString());
-			result = pstmt.executeUpdate();
+			result = queryRunner.query(connection, sql, new BeanHandler<T>(clazz), paras);
 		} catch (SQLException e) {
-			logger.error(pstmt.toString());
+			logger.error(e.getMessage());
 			throw e;
 		} finally {
-			pstmt.close();
 			returnConnect(connection);
 		}
+		
 		return result;
 	}
 	
-	public static int executeBatch(String sql,Object[][] paras) throws SQLException{
-		int result = 0;
+	public static <T> List<T> queryList(Class<T> clazz, String sql, Object... paras) throws SQLException{
 		Connection connection = getConnect();
-		PreparedStatement pstmt = null;
+		List<T> resultList;
+		
 		try {
-			pstmt = connection.prepareStatement(sql);
-			int index = 1;
-			for(Object[] item : paras){
-				index = 1;
-				for(Object field : item){
-					pstmt.setObject(index++, field);
-				}
-				pstmt.addBatch();
-			}
-			logger.debug(pstmt.toString());
-			int[] resultArr = pstmt.executeBatch();
-			for (int i = 0; i < resultArr.length; i++) {
-				result += resultArr[i];
-			}
-			returnConnect(connection);
+			resultList = queryRunner.query(connection, sql, new BeanListHandler<T>(clazz), paras);
 		} catch (SQLException e) {
-			logger.error(pstmt.toString());
+			logger.error(e.getMessage());
 			throw e;
 		} finally {
-			pstmt.close();
 			returnConnect(connection);
 		}
+		
+		return resultList;
+	}
+	
+	public static List<Map<String, Object>> queryMapList(String sql, Object... paras) throws SQLException{
+		Connection connection = getConnect();
+		List<Map<String, Object>> resultList;
+		
+		try {
+			resultList = queryRunner.query(connection, sql, new MapListHandler(), paras);
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+			throw e;
+		} finally {
+			returnConnect(connection);
+		}
+		
+		return resultList;
+	}
+	
+	public static int update(String sql, Object... paras) throws SQLException{
+		Connection connection = getConnect();
+		int result = 0;
+		
+		try {
+			result = queryRunner.update(connection, sql, paras);
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+			throw e;
+		} finally {
+			returnConnect(connection);
+		}
+		
+		return result;
+	}
+	
+	public static int updateBatch(String sql, Object[][] paras) throws SQLException{
+		Connection connection = getConnect();
+		int result = 0;
+		
+		try {
+			int [] results = queryRunner.batch(connection, sql, paras);
+			for(int i :results){
+				result += i;
+			}
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+			throw e;
+		} finally {
+			returnConnect(connection);
+		}
+		
 		return result;
 	}
 	

@@ -33,7 +33,7 @@ public class ItemDao {
 	public int delete(String ids) throws SQLException{
 		if(StringUtils.isNotEmpty(ids)){
 			Object[] paras = ids.split(",");
-			return DatabaseManage.executeUpdate(SQL_DELETE+getInSql(paras.length), paras);
+			return DatabaseManage.update(SQL_DELETE+getInSql(paras.length), paras);
 		}
 		return 0;
 	}
@@ -42,7 +42,7 @@ public class ItemDao {
 		if(StringUtils.isNotEmpty(ids)){
 			Object[] idArr = ids.split(",");
 			Object[] paras = (status+","+ids).split(",");
-			return DatabaseManage.executeUpdate(SQL_UPDATE_STATUS+getInSql(idArr.length), paras);
+			return DatabaseManage.update(SQL_UPDATE_STATUS+getInSql(idArr.length), paras);
 		}
 		return 0;
 	}
@@ -59,7 +59,7 @@ public class ItemDao {
 			paras[6] = model.getSort();
 			paras[7] = model.getStatus();
 			paras[8] = model.getIid();
-			return DatabaseManage.executeUpdate(SQL_UPDATE, paras);
+			return DatabaseManage.update(SQL_UPDATE, paras);
 		}
 		return 0;
 	}
@@ -92,7 +92,7 @@ public class ItemDao {
 				buffer.append("),");
 			}
 			buffer.setLength(buffer.length()-1);
-			return DatabaseManage.executeUpdate(SQL_INSERT+buffer.toString());
+			return DatabaseManage.update(SQL_INSERT+buffer.toString());
 		}
 		return 0;
 	}
@@ -148,7 +148,7 @@ public class ItemDao {
 			}
 		}
 		buffer.append(" order by s.status desc,s.sort,i.status desc,i.sort");
-		List<Map<String, Object>> resultList = DatabaseManage.executeQuery(SQL_QUERY+buffer.toString(), paraList.toArray());
+		List<Map<String, Object>> resultList = DatabaseManage.queryMapList(SQL_QUERY+buffer.toString(), paraList.toArray());
 		List<ItemModel> list = new ArrayList<ItemModel>();
 		for(Map<String, Object> result : resultList){
 			ItemModel model = new ItemModel();

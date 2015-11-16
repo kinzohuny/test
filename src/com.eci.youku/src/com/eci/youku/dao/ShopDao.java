@@ -29,10 +29,19 @@ public class ShopDao {
 			+ " set title=?,url=?,tk_url=?,logo_url=?,pic_url=?,sort=?,status=?,updated=now()"
 			+ " where sid=?";
 	
+	private static String QUERY_LIST_BYUPDATED = "select sid, title, nick, status, created, updated"
+			+ " from youku_shop"
+			+ " where updated >= ?"
+			+ " order by updated";
+	
+	public List<ShopModel> queryListByUpdated(Timestamp lastUpdate) throws SQLException{
+		return DatabaseManage.queryList(ShopModel.class, QUERY_LIST_BYUPDATED, lastUpdate);
+	}
+	
 	public int delete(String ids) throws SQLException{
 		if(StringUtils.isNotEmpty(ids)){
 			Object[] paras = ids.split(",");
-			return DatabaseManage.executeUpdate(SQL_DELETE+getInSql(paras.length), paras);
+			return DatabaseManage.update(SQL_DELETE+getInSql(paras.length), paras);
 		}
 		return 0;
 	}
@@ -41,7 +50,7 @@ public class ShopDao {
 		if(StringUtils.isNotEmpty(ids)){
 			Object[] idArr = ids.split(",");
 			Object[] paras = (status+","+ids).split(",");
-			return DatabaseManage.executeUpdate(SQL_UPDATE_STATUS+getInSql(idArr.length), paras);
+			return DatabaseManage.update(SQL_UPDATE_STATUS+getInSql(idArr.length), paras);
 		}
 		return 0;
 	}
@@ -57,7 +66,7 @@ public class ShopDao {
 			paras[5] = model.getSort();
 			paras[6] = model.getStatus();
 			paras[7] = model.getSid();
-			return DatabaseManage.executeUpdate(SQL_UPDATE, paras);
+			return DatabaseManage.update(SQL_UPDATE, paras);
 		}
 		return 0;
 	}
@@ -90,7 +99,7 @@ public class ShopDao {
 				buffer.append("),");
 			}
 			buffer.setLength(buffer.length()-1);
-			return DatabaseManage.executeUpdate(SQL_INSERT+buffer.toString());
+			return DatabaseManage.update(SQL_INSERT+buffer.toString());
 		}
 		return 0;
 	}
@@ -130,7 +139,7 @@ public class ShopDao {
 			}
 		}
 		buffer.append(" group by s.sid order by s.status desc,s.sort");
-		List<Map<String, Object>> resultList = DatabaseManage.executeQuery(SQL_QUERY+buffer.toString(), paraList.toArray());
+		List<Map<String, Object>> resultList = DatabaseManage.queryMapList(SQL_QUERY+buffer.toString(), paraList.toArray());
 		List<ShopModel> list = new ArrayList<ShopModel>();
 		for(Map<String, Object> result : resultList){
 			ShopModel model = new ShopModel();

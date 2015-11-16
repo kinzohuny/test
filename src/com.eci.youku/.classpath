@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="lib/poi-3.13-20150929.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/taobao-sdk-java-auto_1445005002414-20151016.jar"/>
+	<classpathentry kind="lib" path="lib/commons-dbutils-1.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
