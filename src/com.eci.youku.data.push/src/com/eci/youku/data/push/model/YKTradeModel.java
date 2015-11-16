@@ -19,6 +19,8 @@ public class YKTradeModel {
 	private Timestamp trade_modified;
 	private Timestamp jdp_created;
 	private Timestamp jdp_modified;
+	private Timestamp created;
+	private Timestamp updated;
 	
 	public Long getTid() {
 		return tid;
@@ -109,6 +111,18 @@ public class YKTradeModel {
 	}
 	public void setJdp_modified(Timestamp jdp_modified) {
 		this.jdp_modified = jdp_modified;
+	}
+	public Timestamp getCreated() {
+		return created;
+	}
+	public void setCreated(Timestamp created) {
+		this.created = created;
+	}
+	public Timestamp getUpdated() {
+		return updated;
+	}
+	public void setUpdated(Timestamp updated) {
+		this.updated = updated;
 	}
 	
 	
