@@ -68,12 +68,14 @@ public class DataFetchFromTB implements Runnable{
 						yKTradeModelList.add(yKTradeModel);
 					}
 					yKTradeDao.insert(yKTradeModelList);
-					logger.info(tBJdpTbTradeList.size() + "is done!");
+					logger.info(tBJdpTbTradeList.size() + " is done!");
 					if(tBJdpTbTradeList.size()<100){
 						break;
 					}
 				}
 			}
+
+			logger.info("fetch from tb is done!");
 		} catch (SQLException e) {
 			logger.error(e);
 		} catch (ApiException e) {

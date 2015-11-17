@@ -13,7 +13,7 @@ import com.eci.youku.data.push.dao.YKTradeDao;
 import com.eci.youku.data.push.model.YKMobileModel;
 import com.eci.youku.data.push.model.YKTradeModel;
 import com.eci.youku.data.push.utils.StringUtils;
-import com.taobao.api.internal.util.WebUtils;
+import com.eci.youku.data.push.utils.WebUtils;
 
 public class DataPushToQYGJ implements Runnable{
 
@@ -68,6 +68,7 @@ public class DataPushToQYGJ implements Runnable{
 					}
 				}
 			}
+			logger.info("[pushTradeDataReady] all done!");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
