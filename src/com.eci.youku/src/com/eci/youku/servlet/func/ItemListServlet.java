@@ -1,4 +1,4 @@
-package com.eci.youku.servlet;
+package com.eci.youku.servlet.func;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -86,7 +86,7 @@ public class ItemListServlet extends HttpServlet {
 			resp.getWriter().println("<link href=\"/resource/main.css\" rel=\"stylesheet\" type=\"text/css\"></link>");
 			resp.getWriter().println("<script src=\"/resource/main.js\" type=\"text/javascript\"></script>");
 			resp.getWriter().println("<script src=\"/resource/jquery-1.11.1.js\" type=\"text/javascript\"></script>");
-			resp.getWriter().println("<body>"+page+"</body>");
+			resp.getWriter().println("<body>商品管理<br>"+page+"</body>");
 			resp.getWriter().flush();
 			resp.getWriter().close();
 		}
@@ -309,11 +309,10 @@ public class ItemListServlet extends HttpServlet {
 	private String getButtonPage(){
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("<table class=\"menutable\"><tr>");
-		buffer.append("<td><input type=\"button\" value=\"店铺管理\" onclick=\"location.href='shop'\"></td>");
 		buffer.append("<td><input type=\"button\" value=\"全选\" onclick=\"selectAll();\"></td>");
 		buffer.append("<td><input type=\"button\" value=\"全清\" onclick=\"selectNone();\"></td>");
-		buffer.append("<td><input type=\"button\" value=\"启用\" onclick=\"setStatus(1);\"></td>");
-		buffer.append("<td><input type=\"button\" value=\"停用\" onclick=\"setStatus(0);\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"启用\" onclick=\"setStatus(1,'启动');\"></td>");
+		buffer.append("<td><input type=\"button\" value=\"停用\" onclick=\"setStatus(0,'停用');\"></td>");
 		buffer.append("<td><input type=\"button\" value=\"交换顺序\" onclick=\"changeSort();\"></td>");
 		buffer.append("<td><input type=\"button\" value=\"新增\" onclick=\"location.href='/item?edit=false'\"></td>");
 		buffer.append("<td><input type=\"button\" value=\"修改\" onclick=\"editItem();\"></td>");
@@ -322,7 +321,6 @@ public class ItemListServlet extends HttpServlet {
 		//buffer.append("<td><input type=\"button\" value=\"下载导入模板\" onclick=\"location.href='/download/import_demo.xls'\"></td>");
 		//buffer.append("<form action=\"?import=1\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"return checkFile()\"><td><input type=\"submit\" value=\"导入\"></td><td><input id=\"file_select\" type=\"file\" name=\"file\"></td></form>");
 		//buffer.append("<td><input type=\"button\" value=\"清空文件\" onclick=\"clearFile();\"></td>");
-		buffer.append("<td><input type=\"button\" value=\"退出\" onclick=\"location.href='/login?logout=true'\"></td>");
 		buffer.append("</tr></table>");
 		
 		return buffer.toString();

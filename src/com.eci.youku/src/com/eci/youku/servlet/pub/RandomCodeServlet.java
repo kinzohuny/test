@@ -1,4 +1,4 @@
-package com.eci.youku.servlet;
+package com.eci.youku.servlet.pub;
 
 import java.awt.Color;
 import java.awt.Font;

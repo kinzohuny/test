@@ -1,4 +1,4 @@
-package com.eci.youku.servlet;
+package com.eci.youku.servlet.assist;
 
 import java.io.IOException;
 import java.math.BigDecimal;

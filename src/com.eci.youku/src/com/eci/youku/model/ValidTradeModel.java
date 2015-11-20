@@ -2,10 +2,11 @@ package com.eci.youku.model;
 
 import java.sql.Timestamp;
 
-public class TradeModel {
+public class ValidTradeModel {
 
 	private Long tid;
 	private Long sid;
+	private Integer vip_status;
 	private String status;
 	private String seller_nick;
 	private String seller_title;
@@ -31,6 +32,12 @@ public class TradeModel {
 	}
 	public void setSid(Long sid) {
 		this.sid = sid;
+	}
+	public Integer getVip_status() {
+		return vip_status;
+	}
+	public void setVip_status(Integer vip_status) {
+		this.vip_status = vip_status;
 	}
 	public String getStatus() {
 		return status;

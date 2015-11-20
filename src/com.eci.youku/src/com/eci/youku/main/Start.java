@@ -14,15 +14,21 @@ import com.eci.youku.constant.Constants;
 import com.eci.youku.core.CacheManage;
 import com.eci.youku.core.DatabaseManage;
 import com.eci.youku.core.PropertiesManage;
-import com.eci.youku.servlet.DefaultServlet;
-import com.eci.youku.servlet.DownloadServlet;
-import com.eci.youku.servlet.ImportServlet;
-import com.eci.youku.servlet.ItemListServlet;
-import com.eci.youku.servlet.LoginServlet;
-import com.eci.youku.servlet.RandomCodeServlet;
-import com.eci.youku.servlet.ResourceServlet;
-import com.eci.youku.servlet.ShopListServlet;
-import com.eci.youku.servlet.SyncServlet;
+import com.eci.youku.runner.TaskRunner;
+import com.eci.youku.servlet.assist.ImportServlet;
+import com.eci.youku.servlet.func.ItemListServlet;
+import com.eci.youku.servlet.func.ShopListServlet;
+import com.eci.youku.servlet.func.VipRecServlet;
+import com.eci.youku.servlet.func.YoukuVipManualServlet;
+import com.eci.youku.servlet.func.YoukuVipVerifyServlet;
+import com.eci.youku.servlet.index.IndexServlet;
+import com.eci.youku.servlet.index.LoginServlet;
+import com.eci.youku.servlet.index.MenuServlet;
+import com.eci.youku.servlet.intf.SyncServlet;
+import com.eci.youku.servlet.pub.DefaultServlet;
+import com.eci.youku.servlet.pub.DownloadServlet;
+import com.eci.youku.servlet.pub.RandomCodeServlet;
+import com.eci.youku.servlet.pub.ResourceServlet;
 import com.eci.youku.util.ServerUtils;
 
 public class Start {
@@ -48,15 +54,31 @@ public class Start {
 		threadPool.setMaxQueued(MAX_QUEUED);
 		server.setThreadPool(threadPool);
 		//设置servlet
+		
+		//公共资源
 		servletContextHandler.addServlet(RandomCodeServlet.class, "/randomcode");
 		servletContextHandler.addServlet(ResourceServlet.class, "/resource/*");
 		servletContextHandler.addServlet(DownloadServlet.class, "/download/*");
 		
+		//主页面
 		servletContextHandler.addServlet(LoginServlet.class, "/login");
+		servletContextHandler.addServlet(IndexServlet.class, "/index");
+		servletContextHandler.addServlet(MenuServlet.class, "/menu");
+		
+		//功能页面
 		servletContextHandler.addServlet(ShopListServlet.class, "/shop");
 		servletContextHandler.addServlet(ItemListServlet.class, "/item");
+		servletContextHandler.addServlet(YoukuVipVerifyServlet.class, "/youkuvipverify");
+		servletContextHandler.addServlet(VipRecServlet.class, "/viprec");
+		servletContextHandler.addServlet(YoukuVipManualServlet.class, "/youkuvipmanual");
+		
+		//辅助页面
 		servletContextHandler.addServlet(ImportServlet.class, "/import");
+		
+		//对外接口
 		servletContextHandler.addServlet(SyncServlet.class, "/sync");
+		
+		//默认页面 404
 		servletContextHandler.addServlet(DefaultServlet.class, "/*");
 		
 		//设置session管理
@@ -74,6 +96,9 @@ public class Start {
 		
 		server.start();
 		logger.info("Server is started at "+ ServerUtils.getIp() + ":" + PORT);
+		
+		new TaskRunner().start();
+		logger.info("YoukuVipTaskRunner is started!");
 		
 		server.join();
 		

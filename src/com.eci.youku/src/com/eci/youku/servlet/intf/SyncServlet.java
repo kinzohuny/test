@@ -1,4 +1,4 @@
-package com.eci.youku.servlet;
+package com.eci.youku.servlet.intf;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -96,7 +96,7 @@ public class SyncServlet extends HttpServlet {
 			}
 		} catch (SQLException e) {
 			result = "exception";
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 		}
 		
 		resp.setStatus(200);

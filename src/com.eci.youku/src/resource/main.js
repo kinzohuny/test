@@ -80,17 +80,24 @@ function cleanCache(){
 }
 
 //修改状态
-function setStatus(i) {
+function setStatus(i, str) {
 	var num = getSelectedNum();
-	var str = i == 1 ? '启用' : '停用';
 	if (num > 0) {
 		var ids = getSelectedIds();
 		if (confirm('确定要' + str + '选中的' + num + '条纪录吗?')) {
-			location.href="?changeStatus=" + (i==1?1:0) + "&ids=" + ids;
+			location.href="?changeStatus=" + i + "&ids=" + ids + (null==getToken()?"":("&token="+getToken()));
 		}
 	} else {
 		alert("请勾选要" + str + "的记录！");
 	}
+}
+
+function getToken(){
+	var token = document.getElementById("token");
+	if(token!=null){
+		return token.value;
+	}
+	return null;
 }
 
 //交换顺序

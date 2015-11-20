@@ -6,6 +6,7 @@ public class YoukuVipResult {
 	private String cost;
 	private String password;
 	private String mobile;
+	private String errmsg;
 	
 	public String getError() {
 		return error;
@@ -30,6 +31,12 @@ public class YoukuVipResult {
 	}
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+	public String getErrmsg() {
+		return errmsg;
+	}
+	public void setErrmsg(String errmsg) {
+		this.errmsg = errmsg;
 	}
 	
 }

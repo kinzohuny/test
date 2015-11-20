@@ -74,6 +74,10 @@ input.disabled{
 	color:#ACA899;
 }
 
+td.yellow { 
+	background:#FF0
+}
+
 .w50 {
 	width: 50px;
 }

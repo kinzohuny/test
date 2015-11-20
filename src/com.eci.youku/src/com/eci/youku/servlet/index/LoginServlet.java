@@ -1,4 +1,4 @@
-package com.eci.youku.servlet;
+package com.eci.youku.servlet.index;
 
 import java.io.IOException;
 
@@ -48,7 +48,7 @@ public class LoginServlet extends HttpServlet {
 			resp.getWriter().println("<script src=\"/resource/md5.js\" type=\"text/javascript\"></script>");
 			resp.getWriter().println("<script src=\"/resource/jquery-1.11.1.js\" type=\"text/javascript\"></script>");
 			//body
-			resp.getWriter().println("<form id=\"login\" method=\"post\" onsubmit=\"document.getElementById('password').value=hex_md5(document.getElementById('password').value);\">");
+			resp.getWriter().println("<form target=\"_top\" id=\"login\" method=\"post\" onsubmit=\"document.getElementById('password').value=hex_md5(document.getElementById('password').value);\">");
 			resp.getWriter().println("<span>账　号：</span><input name=\"name\"></input><br>");
 			resp.getWriter().println("<span>密　码：</span><input id=\"password\" type=\"password\" name=\"password\"></input><br>");
 			resp.getWriter().println("<span>验证码：</span><input name=\"random\"></input><br>");
@@ -63,7 +63,7 @@ public class LoginServlet extends HttpServlet {
 			session.setAttribute(Constants.SESSION_IS_LOGIN, null);
 			resp.sendRedirect("/login");
 		}else{
-			resp.sendRedirect("/shop");
+			resp.sendRedirect("/index");
 		}
 		
 	}
