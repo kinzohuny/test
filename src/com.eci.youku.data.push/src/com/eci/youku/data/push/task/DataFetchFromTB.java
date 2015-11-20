@@ -77,11 +77,11 @@ public class DataFetchFromTB implements Runnable{
 
 			logger.info("fetch from tb is done!");
 		} catch (SQLException e) {
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 		} catch (ApiException e) {
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 		}
 		
 	}
