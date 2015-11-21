@@ -1,4 +1,5 @@
-package com.btw.server.servlet;
+
+package com.btw.server.servlet.func;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,12 +15,12 @@ import org.apache.log4j.Logger;
 import com.btw.server.dao.PcDao;
 import com.btw.server.model.PcModel;
 
-public class ManageServlet extends HttpServlet {
+public class ServerIpListServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(ManageServlet.class);
+	private static final Logger logger = Logger.getLogger(ServerIpListServlet.class);
 
-	public void service(HttpServletRequest req, HttpServletResponse resp)
+	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
 	    HttpSession session = req.getSession();
@@ -31,7 +32,7 @@ public class ManageServlet extends HttpServlet {
 	      resp.getWriter().println("<title>IP LIST</title>");
 	      List<PcModel> list = null;
 	      try {
-	        list = PcDao.queryForList(null);
+	        list = PcDao.queryForList();
 	      } catch (Exception e) {
 	        logger.error("query ip list error!", e);
 	      }
@@ -59,5 +60,11 @@ public class ManageServlet extends HttpServlet {
 	      resp.getWriter().close();
 	    }
 	
+	}
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		doPost(req, resp);
 	}
 }

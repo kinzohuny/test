@@ -1,4 +1,4 @@
-package com.btw.server.servlet;
+package com.btw.server.servlet.intf;
 
 import java.io.IOException;
 
@@ -21,7 +21,7 @@ public class IpSyncServlet extends HttpServlet {
 	private static final Logger logger = Logger.getLogger(IpSyncServlet.class);
 
 	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse resp)
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
 		String result = "";

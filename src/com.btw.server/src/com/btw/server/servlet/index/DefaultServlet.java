@@ -1,4 +1,4 @@
-package com.btw.server.servlet;
+package com.btw.server.servlet.index;
 
 import java.io.IOException;
 

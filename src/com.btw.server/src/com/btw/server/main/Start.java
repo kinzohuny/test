@@ -11,16 +11,19 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 import com.btw.server.constant.Constants;
-import com.btw.server.core.CacheManage;
+import com.btw.server.core.CachePool;
 import com.btw.server.core.DatabaseManage;
 import com.btw.server.core.PropertiesManage;
-import com.btw.server.servlet.DefaultServlet;
-import com.btw.server.servlet.IpServlet;
-import com.btw.server.servlet.IpSyncServlet;
-import com.btw.server.servlet.LoginServlet;
-import com.btw.server.servlet.ManageServlet;
-import com.btw.server.servlet.RandomCodeServlet;
-import com.btw.server.servlet.ResourceServlet;
+import com.btw.server.servlet.func.BlackIpManageServlet;
+import com.btw.server.servlet.func.ServerIpListServlet;
+import com.btw.server.servlet.index.DefaultServlet;
+import com.btw.server.servlet.index.IndexServlet;
+import com.btw.server.servlet.index.LoginServlet;
+import com.btw.server.servlet.index.MenuServlet;
+import com.btw.server.servlet.intf.IpServlet;
+import com.btw.server.servlet.intf.IpSyncServlet;
+import com.btw.server.servlet.pub.RandomCodeServlet;
+import com.btw.server.servlet.pub.ResourceServlet;
 import com.btw.server.util.ServerUtils;
 
 public class Start {
@@ -46,12 +49,26 @@ public class Start {
 		threadPool.setMaxQueued(MAX_QUEUED);
 		server.setThreadPool(threadPool);
 		//设置servlet
+		
+		//index
+	    servletContextHandler.addServlet(LoginServlet.class, "/login");
+	    servletContextHandler.addServlet(IndexServlet.class, "/index");
+	    servletContextHandler.addServlet(MenuServlet.class, "/menu");
+	    servletContextHandler.addServlet(IndexServlet.class, "/index");
+		
+		
+		//func
+	    servletContextHandler.addServlet(ServerIpListServlet.class, "/serveriplist");
+	    servletContextHandler.addServlet(BlackIpManageServlet.class, "/blackipmanage");
+		
+		//intf
 	    servletContextHandler.addServlet(IpSyncServlet.class, "/ip-sync");
 	    servletContextHandler.addServlet(IpServlet.class, "/ip");
-	    servletContextHandler.addServlet(LoginServlet.class, "/login");
+		
+		
+		//pub
 	    servletContextHandler.addServlet(RandomCodeServlet.class, "/randomcode");
 		servletContextHandler.addServlet(ResourceServlet.class, "/resource/*");
-	    servletContextHandler.addServlet(ManageServlet.class, "/manage");
 	    servletContextHandler.addServlet(DefaultServlet.class, "/*");
 		
 		//设置session管理
@@ -106,7 +123,7 @@ public class Start {
 	
 	private static void initCache(){
 		try {
-			CacheManage.initCache();
+			CachePool.getInstance();
 		} catch (Exception e) {
 			logger.fatal("cache init failed!", e);
 			System.exit(1);

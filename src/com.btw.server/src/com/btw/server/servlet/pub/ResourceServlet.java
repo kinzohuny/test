@@ -1,4 +1,4 @@
-package com.btw.server.servlet;
+package com.btw.server.servlet.pub;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -2,8 +2,6 @@ package com.btw.server.dao;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Map;
 
 import com.btw.server.core.DatabaseManage;
 
@@ -15,17 +13,11 @@ public class ManagerDao {
 
 	public static long verify(String username, String password)
 			throws SQLException {
-		List<Map<String, Object>> result = DatabaseManage.executeQuery(
-				SQL_VERIFY, new Object[] { username, password });
-		if (result != null && !result.isEmpty()) {
-			return (Long) result.get(0).get("num");
-		}
-		return -1;
+		return DatabaseManage.queryOne(Long.class, SQL_VERIFY, username, password);
 	}
 
 	public static int updateLoginTime(String username, Timestamp time, String ip)
 			throws SQLException {
-		return DatabaseManage.executeUpdate(SQL_UPDATE, new Object[] { time,
-				ip, username });
+		return DatabaseManage.update(SQL_UPDATE, time, ip, username);
 	}
 }
