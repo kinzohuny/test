@@ -16,7 +16,7 @@ public class MobileDao {
 
 	private static String QUERY_ISEXIST = "select count(0)"
 			+ " from youku_mobile"
-			+ " where mobile = ?";
+			+ " where mobile = ? or shop_mobile = ?";
 	
 	public List<MobileModel> queryListByUpdated(Timestamp lastUpdated) throws SQLException{
 		
@@ -24,7 +24,7 @@ public class MobileDao {
 	}
 	
 	public boolean isExist(String mobile) throws SQLException{
-		Long count = DatabaseManage.queryOne(Long.class, QUERY_ISEXIST, mobile);
+		Long count = DatabaseManage.queryOne(Long.class, QUERY_ISEXIST, mobile, mobile);
 		if(count!=null && count > 0){
 			return true;
 		}
