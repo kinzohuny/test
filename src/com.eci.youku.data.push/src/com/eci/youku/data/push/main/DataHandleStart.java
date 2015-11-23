@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import com.eci.youku.data.push.task.DataFetchFromTB;
 import com.eci.youku.data.push.task.DataPushToQYGJ;
 import com.eci.youku.data.push.task.FullDataPushToQYGJ;
-import com.taobao.api.internal.util.WebUtils;
 
 public class DataHandleStart {
 
@@ -50,7 +49,6 @@ public class DataHandleStart {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		System.out.println(WebUtils.doPost("http://server.sfinx.cn/ip", null, 3000, 3000));
 		DataHandleStart handle = new DataHandleStart();
 		handle.startFetchFromTB();
 		handle.startPushToQYGJ();
