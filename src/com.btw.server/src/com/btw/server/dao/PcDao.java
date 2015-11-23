@@ -1,10 +1,7 @@
 package com.btw.server.dao;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.btw.server.core.DatabaseManage;
 import com.btw.server.model.PcModel;
@@ -17,31 +14,16 @@ public class PcDao {
 	  		+ "values (?,?,now()) "
 	  		+ "on duplicate key update server_ip=?,updated=now();";
 
-	  public static List<PcModel> queryForList(Map<String, Object> map)
-	    throws SQLException
-	  {
-		List<Map<String, Object>> resultList = DatabaseManage.executeQuery(SQL_QUERY);
-	    List<PcModel> list = new ArrayList<PcModel>();
-	    if(!resultList.isEmpty()){
-	    	for(Map<String, Object> result : resultList){
-	  	      PcModel item = new PcModel();
-		      item.setId((Integer)result.get("id"));
-		      item.setServer_name((String)result.get("server_name"));
-		      item.setServer_ip((String)result.get("server_ip"));
-		      item.setCreated((Timestamp)result.get("created"));
-		      item.setUpdated((Timestamp)result.get("updated"));
-		      list.add(item);
-	    	}
-	    }
-	    
-	    return list;
+	  public static List<PcModel> queryForList() throws SQLException {
+		 
+		  return DatabaseManage.queryList(PcModel.class, SQL_QUERY);
 	  }
 
 	  public static int insertUpdatePc(PcModel model) throws SQLException{
-		  return DatabaseManage.executeUpdate(SQL_INSERT_UPDATE, new Object[] { model.getServer_name(), model.getServer_ip(), model.getServer_ip() });
+		  return DatabaseManage.update(SQL_INSERT_UPDATE, model.getServer_name(), model.getServer_ip(), model.getServer_ip());
 	  }
 	  
 	  public static int updatePc(PcModel model) throws SQLException {
-	    return DatabaseManage.executeUpdate(SQL_UPDATE, new Object[] { model.getServer_ip(), model.getServer_name() });
+	    return DatabaseManage.update(SQL_UPDATE, model.getServer_ip(), model.getServer_name() );
 	  }
 }

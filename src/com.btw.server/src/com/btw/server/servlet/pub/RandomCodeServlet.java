@@ -1,4 +1,4 @@
-package com.btw.server.servlet;
+package com.btw.server.servlet.pub;
 
 import java.awt.Color;
 import java.awt.Font;

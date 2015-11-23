@@ -1,6 +1,8 @@
-package com.btw.server.servlet;
+package com.btw.server.servlet.index;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +13,9 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import com.btw.server.constant.Constants;
+import com.btw.server.core.CachePool;
 import com.btw.server.dao.ManagerDao;
+import com.btw.server.util.ServerUtils;
 import com.btw.server.util.StringUtils;
 
 public class LoginServlet extends HttpServlet {
@@ -22,7 +26,7 @@ public class LoginServlet extends HttpServlet {
 
 	String msg;
 	
-	protected void service(HttpServletRequest req, HttpServletResponse resp)
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
 		HttpSession session = req.getSession();
@@ -33,7 +37,7 @@ public class LoginServlet extends HttpServlet {
 		String password = req.getParameter("password");
 		
 		if(StringUtils.isNotEmpty(random)&&StringUtils.isNotEmpty(name)&&StringUtils.isNotEmpty(password)){
-			if(verifyLogin(session, random, name, password)){
+			if(verifyLogin(req, random, name, password)){
 				session.setAttribute(Constants.SESSION_IS_LOGIN, true);
 			}
 		}else if(!"nullnullnull".equals(random+name+password)){
@@ -48,7 +52,7 @@ public class LoginServlet extends HttpServlet {
 			resp.getWriter().println("<script src=\"/resource/md5.js\" type=\"text/javascript\"></script>");
 			resp.getWriter().println("<script src=\"/resource/jquery-1.11.1.js\" type=\"text/javascript\"></script>");
 			//body
-			resp.getWriter().println("<form id=\"login\" method=\"post\" onsubmit=\"document.getElementById('password').value=hex_md5(document.getElementById('password').value);\">");
+			resp.getWriter().println("<form target=\"_top\" id=\"login\" method=\"post\" onsubmit=\"document.getElementById('password').value=hex_md5(document.getElementById('password').value);\">");
 			resp.getWriter().println("<span>账　号：</span><input name=\"name\"></input><br>");
 			resp.getWriter().println("<span>密　码：</span><input id=\"password\" type=\"password\" name=\"password\"></input><br>");
 			resp.getWriter().println("<span>验证码：</span><input name=\"random\"></input><br>");
@@ -59,15 +63,18 @@ public class LoginServlet extends HttpServlet {
 			
 			resp.getWriter().flush();
 			resp.getWriter().close();
+		}else if(StringUtils.isNotEmpty(req.getParameter("logout"))){
+			session.setAttribute(Constants.SESSION_IS_LOGIN, null);
+			resp.sendRedirect("/login");
 		}else{
-			resp.sendRedirect("/manage");
+			resp.sendRedirect("/index");
 		}
 		
 	}
-
-	private boolean verifyLogin(HttpSession session, String random,
+	
+	private boolean verifyLogin(HttpServletRequest req, String random,
 			String name, String password) {
-		if(!random.equalsIgnoreCase((String)session.getAttribute(Constants.SESSION_RANDOM))){
+		if(!random.equalsIgnoreCase((String)req.getSession().getAttribute(Constants.SESSION_RANDOM))){
 			msg = "验证码不正确！";
 			return false;
 		}
@@ -80,13 +87,57 @@ public class LoginServlet extends HttpServlet {
 			msg = "未知的系统异常，请联系管理员！";
 			return false;
 		}
-		
-		if(user_num < 1){
-			msg = "用户名或密码不正确！";
+
+		String ip = ServerUtils.getRemoteIp(req);
+		if(isForbid(ip)){
+			msg = "该IP禁止登录！";
 			return false;
 		}
 		
+		if(user_num < 1){
+			msg = "用户名或密码不正确！";
+			addForbid(ip);
+			return false;
+		}
+		
+		removeForbid(ip);
 		return true;
 	}
+	
+	private void removeForbid(String ip) {
+		getBlackIpMap().remove(ip);
+	}
 
+	private void addForbid(String ip) {
+		getBlackIpMap().put(ip, System.currentTimeMillis());
+	}
+
+	public final static String BLACK_IP_MAP = "BLACK_IP_MAP";
+	
+	@SuppressWarnings("unchecked")
+	private Map<String, Long> getBlackIpMap(){
+		CachePool cachePool = CachePool.getInstance();
+		if(null == cachePool.get(BLACK_IP_MAP)){
+			cachePool.add(BLACK_IP_MAP, new HashMap<String, Long>());
+		}
+		return (Map<String, Long>)cachePool.get(BLACK_IP_MAP);
+	}
+	
+	private boolean isForbid(String ip){
+		Map<String, Long> blackIpMap = getBlackIpMap();
+		if(blackIpMap.get(ip)==null){
+			return false;
+		}else if(System.currentTimeMillis()-blackIpMap.get(ip) >= 1000*60*60){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		this.doPost(req, resp);
+	}
+	
 }
