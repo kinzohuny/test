@@ -10,11 +10,9 @@ import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
-import com.btw.server.constant.Constants;
-import com.btw.server.core.CachePool;
+import com.btw.server.core.CacheManage;
 import com.btw.server.core.DatabaseManage;
 import com.btw.server.core.PropertiesManage;
-import com.btw.server.servlet.func.BlackIpManageServlet;
 import com.btw.server.servlet.func.ServerIpListServlet;
 import com.btw.server.servlet.index.DefaultServlet;
 import com.btw.server.servlet.index.IndexServlet;
@@ -59,7 +57,6 @@ public class Start {
 		
 		//func
 	    servletContextHandler.addServlet(ServerIpListServlet.class, "/serveriplist");
-	    servletContextHandler.addServlet(BlackIpManageServlet.class, "/blackipmanage");
 		
 		//intf
 	    servletContextHandler.addServlet(IpSyncServlet.class, "/ip-sync");
@@ -99,22 +96,16 @@ public class Start {
 	}
 	
 	private static void initConfigue(){
-		try {
-			PropertiesManage.initProperties();
-			PORT = Integer.valueOf(PropertiesManage.getProperties(Constants.PROPERTIES_SERVER_PORT));
-			TIME_OUT_S = Integer.valueOf(PropertiesManage.getProperties(Constants.PROPERTIES_SERVER_TIME_OUT_S));
-			INIT_THREADS = Integer.valueOf(PropertiesManage.getProperties(Constants.PROPERTIES_SERVER_INIT_THREADS));
-			MAX_THREADS = Integer.valueOf(PropertiesManage.getProperties(Constants.PROPERTIES_SERVER_MAX_THREADS));
-			MAX_QUEUED = Integer.valueOf(PropertiesManage.getProperties(Constants.PROPERTIES_SERVER_MAX_QUEUED));
-		} catch (Exception e) {
-			logger.fatal("properties init failed!", e);
-			System.exit(1);
-		}
+			PORT = Integer.valueOf(PropertiesManage.getProperties(PropertiesManage.SERVER_PORT));
+			TIME_OUT_S = Integer.valueOf(PropertiesManage.getProperties(PropertiesManage.SERVER_TIME_OUT_S));
+			INIT_THREADS = Integer.valueOf(PropertiesManage.getProperties(PropertiesManage.SERVER_INIT_THREADS));
+			MAX_THREADS = Integer.valueOf(PropertiesManage.getProperties(PropertiesManage.SERVER_MAX_THREADS));
+			MAX_QUEUED = Integer.valueOf(PropertiesManage.getProperties(PropertiesManage.SERVER_MAX_QUEUED));
 	}
 	
 	private static void initDatabase(){
 		try {
-			DatabaseManage.initDatabase();
+			DatabaseManage.queryOne(Object.class, "select 1");
 		} catch (Exception e) {
 			logger.fatal("database init failed!", e);
 			System.exit(1);
@@ -123,7 +114,7 @@ public class Start {
 	
 	private static void initCache(){
 		try {
-			CachePool.getInstance();
+			CacheManage.get("init");
 		} catch (Exception e) {
 			logger.fatal("cache init failed!", e);
 			System.exit(1);

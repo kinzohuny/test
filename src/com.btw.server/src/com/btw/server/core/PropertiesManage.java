@@ -1,62 +1,62 @@
 package com.btw.server.core;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import com.btw.server.constant.Constants;
-
 public class PropertiesManage {
 
 	private final static Logger logger = Logger.getLogger(PropertiesManage.class);
-	private final static String propertiesPath = "server.properties";
-	private static Map<String, String> map = new HashMap<String, String>();
-	private static boolean isReady=false;
+	
+	public static final String MYSQL_IP = "MYSQL_IP";
+	public static final String MYSQL_PORT = "MYSQL_PORT";
+	public static final String MYSQL_DATABASE = "MYSQL_DATABASE";
+	public static final String MYSQL_USERNAME = "MYSQL_USERNAME";
+	public static final String MYSQL_PASSWORD = "MYSQL_PASSWORD";
+	public static final String MYSQL_INIT_CONNECTIONS = "MYSQL_INIT_CONNECTIONS";
+	public static final String MYSQL_INC_CONNECTIONS = "MYSQL_INC_CONNECTIONS";
+	public static final String MYSQL_MAX_CONNECTIONS = "MYSQL_MAX_CONNECTIONS";
+	
 
-	public static void initProperties() throws IOException {
+	public static final String SERVER_PORT = "SERVER_PORT";
+	public static final String SERVER_TIME_OUT_S = "SERVER_TIME_OUT_S";
+	public static final String SERVER_INIT_THREADS = "SERVER_INIT_THREADS";
+	public static final String SERVER_MAX_THREADS = "SERVER_MAX_THREADS";
+	public static final String SERVER_MAX_QUEUED = "SERVER_MAX_QUEUED";
+	
+	private static Properties properties;
 
-		logger.info("properties init start...");
-		InputStreamReader reader = new InputStreamReader(
-				PropertiesManage.class.getResourceAsStream("/"+propertiesPath),
-				"utf-8");
-		Properties props = new Properties();
-		props.load(reader);
-
-		setProperties(props, Constants.PROPERTIES_SERVER_PORT);
-		setProperties(props, Constants.PROPERTIES_SERVER_TIME_OUT_S);
-		setProperties(props, Constants.PROPERTIES_SERVER_INIT_THREADS);
-		setProperties(props, Constants.PROPERTIES_SERVER_MAX_THREADS);
-		setProperties(props, Constants.PROPERTIES_SERVER_MAX_QUEUED);
+	private PropertiesManage(){
 		
-		setProperties(props, Constants.PROPERTIES_MYSQL_IP);
-		setProperties(props, Constants.PROPERTIES_MYSQL_PORT);
-		setProperties(props, Constants.PROPERTIES_MYSQL_DATABASE);
-		setProperties(props, Constants.PROPERTIES_MYSQL_USERNAME);
-		setProperties(props, Constants.PROPERTIES_MYSQL_PASSWORD);
-		setProperties(props, Constants.PROPERTIES_MYSQL_INIT_CONNECTIONS);
-		setProperties(props, Constants.PROPERTIES_MYSQL_INC_CONNECTIONS);
-		setProperties(props, Constants.PROPERTIES_MYSQL_MAX_CONNECTIONS);
+	}
+	
+	static {
+		logger.info("load system properties start...");
 		
-		isReady = true;
-
-		logger.info("properties init success!");
+		properties = new Properties();
+		InputStream inputStream = null;
+		try {
+			inputStream = ClassLoader.getSystemResourceAsStream("config/properties/server.properties");
+			properties.load(inputStream);
+		} catch (IOException e) {
+			logger.fatal("load system properties error! system exit!", e);
+			System.exit(1);
+		} finally {
+			if(inputStream!=null){
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage());
+				}
+			}
+		}
+		
+		logger.info("load system properties success!");
 	}
 	
 	public static String getProperties(String key){
-		return map.get(key);
-	}
-	
-	public static Boolean isReady(){
-		return isReady;
-	}
-	
-	private static void setProperties(Properties props, String propertiesName){
-		String value = props.getProperty(propertiesName);
-		map.put(propertiesName, value==null?"":value);
-		logger.debug("  "+propertiesName+"="+value);
+		return properties.getProperty(key);
 	}
 }

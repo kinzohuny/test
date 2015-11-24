@@ -1,8 +1,6 @@
 package com.btw.server.servlet.index;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import com.btw.server.constant.Constants;
-import com.btw.server.core.CachePool;
+import com.btw.server.core.CacheManage;
 import com.btw.server.dao.ManagerDao;
 import com.btw.server.util.ServerUtils;
 import com.btw.server.util.StringUtils;
@@ -94,7 +92,7 @@ public class LoginServlet extends HttpServlet {
 			return false;
 		}
 		
-		if(user_num < 1){
+		if(user_num < 3){
 			msg = "用户名或密码不正确！";
 			addForbid(ip);
 			return false;
@@ -104,30 +102,25 @@ public class LoginServlet extends HttpServlet {
 		return true;
 	}
 	
+	private final static int CLEAN_TIME = 60*60*24;
+	
 	private void removeForbid(String ip) {
-		getBlackIpMap().remove(ip);
+		CacheManage.remove(ip);
 	}
 
 	private void addForbid(String ip) {
-		getBlackIpMap().put(ip, System.currentTimeMillis());
-	}
-
-	public final static String BLACK_IP_MAP = "BLACK_IP_MAP";
-	
-	@SuppressWarnings("unchecked")
-	private Map<String, Long> getBlackIpMap(){
-		CachePool cachePool = CachePool.getInstance();
-		if(null == cachePool.get(BLACK_IP_MAP)){
-			cachePool.add(BLACK_IP_MAP, new HashMap<String, Long>());
+		
+		if(CacheManage.get(ip)==null){
+			CacheManage.put(ip, 0, 0, CLEAN_TIME);
+		}else{
+			CacheManage.put(ip, (Integer)CacheManage.get(ip)+1, 0, CLEAN_TIME);
 		}
-		return (Map<String, Long>)cachePool.get(BLACK_IP_MAP);
 	}
 	
 	private boolean isForbid(String ip){
-		Map<String, Long> blackIpMap = getBlackIpMap();
-		if(blackIpMap.get(ip)==null){
+		if(CacheManage.get(ip)==null){
 			return false;
-		}else if(System.currentTimeMillis()-blackIpMap.get(ip) >= 1000*60*60){
+		}else if((Integer)CacheManage.get(ip) < 2){
 			return false;
 		}else{
 			return true;

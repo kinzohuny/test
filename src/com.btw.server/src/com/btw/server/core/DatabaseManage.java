@@ -1,11 +1,16 @@
 package com.btw.server.core;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp2.BasicDataSourceFactory;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -13,48 +18,40 @@ import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.apache.log4j.Logger;
 
-import com.btw.server.constant.Constants;
-import com.btw.server.util.StringUtils;
-
 public class DatabaseManage {
 	
 	private final static Logger logger = Logger.getLogger(DatabaseManage.class);
 	
-	private static ConnectionPool connectionPool;
-	private final static String driverClassName = "com.mysql.jdbc.Driver";
-	private final static String characterEncoding="UTF-8";
+	private static DataSource dataSource = null;
 	private final static QueryRunner queryRunner = new QueryRunner();
 	
-	private static String url;
-	private static String username;
-	private static String password;
-	private static int initConn;
-	private static int incConn;
-	private static int maxConn;
+	private DatabaseManage(){
+		
+	}
 	
-	public static void initDatabase() throws IOException, SQLException {
-
-		logger.info("database init start...");
-		if(!PropertiesManage.isReady()){
-			PropertiesManage.initProperties();
+	static {
+		logger.info("dataSource init start...");
+		
+		InputStream inputStream = null;
+		Properties properties = new Properties();
+		try {
+			inputStream = ClassLoader.getSystemResourceAsStream("config/properties/database.properties");
+			properties.load(inputStream);
+			dataSource = BasicDataSourceFactory.createDataSource(properties);
+		} catch (Exception e) {
+			logger.fatal("dataSource init error! system exit", e);
+			System.exit(1);
+		} finally {
+			if(inputStream!=null){
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage());
+				}
+			}
 		}
-		url = "jdbc:mysql://"+PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_IP)
-				+":"+PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_PORT)
-				+"/"+PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_DATABASE)
-				+"?useUnicode=true&characterEncoding="+characterEncoding;
-		username = PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_USERNAME);
-		password = PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_PASSWORD);
-		initConn = StringUtils.toInt(PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_INIT_CONNECTIONS));
-		incConn = StringUtils.toInt(PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_INC_CONNECTIONS));
-		maxConn = StringUtils.toInt(PropertiesManage.getProperties(Constants.PROPERTIES_MYSQL_MAX_CONNECTIONS));
-		Connection connect = getConnect();
-		if(connect!=null){
-			returnConnect(connect);
-			logger.info("database init success!");
-		}else{
-			throw new RuntimeException("can not connect to "+url);
-		}
 
+		logger.info("dataSource init success!");
 	}
 	
 	public static <T> T queryOne(Class<T> clazz, String sql, Object... paras) throws SQLException{
@@ -67,7 +64,7 @@ public class DatabaseManage {
 			logger.error(e.getMessage());
 			throw e;
 		} finally {
-			returnConnect(connection);
+			connection.close();
 		}
 		
 		return result;
@@ -83,7 +80,7 @@ public class DatabaseManage {
 			logger.error(e.getMessage());
 			throw e;
 		} finally {
-			returnConnect(connection);
+			connection.close();
 		}
 		
 		return result;
@@ -99,7 +96,7 @@ public class DatabaseManage {
 			logger.error(e.getMessage());
 			throw e;
 		} finally {
-			returnConnect(connection);
+			connection.close();
 		}
 		
 		return resultList;
@@ -115,7 +112,7 @@ public class DatabaseManage {
 			logger.error(e.getMessage());
 			throw e;
 		} finally {
-			returnConnect(connection);
+			connection.close();
 		}
 		
 		return resultList;
@@ -131,7 +128,7 @@ public class DatabaseManage {
 			logger.error(e.getMessage());
 			throw e;
 		} finally {
-			returnConnect(connection);
+			connection.close();
 		}
 		
 		return result;
@@ -150,48 +147,14 @@ public class DatabaseManage {
 			logger.error(e.getMessage());
 			throw e;
 		} finally {
-			returnConnect(connection);
+			connection.close();
 		}
 		
 		return result;
 	}
 	
-	private synchronized static void returnConnect(Connection connection) {
-		if(connectionPool==null){
-			connectionPool = new ConnectionPool(driverClassName, url, username, password);
-			connectionPool.setTestTable("dual");
-			if(initConn>0&&incConn>0&&maxConn>0&&maxConn>initConn){
-				connectionPool.setInitialConnections(initConn);
-				connectionPool.setIncrementalConnections(incConn);;
-				connectionPool.setMaxConnections(maxConn);;
-			}
-			try {
-				connectionPool.createPool();
-			} catch (Exception e) {
-				logger.fatal("can not create connection pool!system will exit..", e);
-				System.exit(1);
-			}
-		} 
-		connectionPool.returnConnection(connection);;
-	}
-	
 	private synchronized static Connection getConnect() throws SQLException {
-		if(connectionPool==null){
-			connectionPool = new ConnectionPool(driverClassName, url, username, password);
-			connectionPool.setTestTable("dual");
-			if(initConn>0&&incConn>0&&maxConn>0&&maxConn>initConn){
-				connectionPool.setInitialConnections(initConn);
-				connectionPool.setIncrementalConnections(incConn);;
-				connectionPool.setMaxConnections(maxConn);;
-			}
-			try {
-				connectionPool.createPool();
-			} catch (Exception e) {
-				logger.fatal("can not create connection pool!system will exit..", e);
-				System.exit(1);
-			}
-		} 
-		return connectionPool.getConnection();
+		return dataSource.getConnection();
 	}
 	
 }
