@@ -76,6 +76,12 @@ public class LoginServlet extends HttpServlet {
 			msg = "验证码不正确！";
 			return false;
 		}
+
+		String ip = ServerUtils.getRemoteIp(req);
+		if(isForbid(ip)){
+			msg = "该IP禁止登录！";
+			return false;
+		}
 		
 		long user_num = 0;
 		try {
@@ -85,14 +91,8 @@ public class LoginServlet extends HttpServlet {
 			msg = "未知的系统异常，请联系管理员！";
 			return false;
 		}
-
-		String ip = ServerUtils.getRemoteIp(req);
-		if(isForbid(ip)){
-			msg = "该IP禁止登录！";
-			return false;
-		}
 		
-		if(user_num < 3){
+		if(user_num < 1){
 			msg = "用户名或密码不正确！";
 			addForbid(ip);
 			return false;
