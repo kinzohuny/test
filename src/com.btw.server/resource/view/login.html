@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<title>Login</title>
+		<link href="/css/main.css" rel="stylesheet" type="text/css"></link>
+		<script src="/js/md5.js" type="text/javascript"></script>
+		<script src="/js/jquery-1.11.1.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<form target="_top" action="" id="login" method="post" onsubmit="document.getElementById('password').value=hex_md5(document.getElementById('password').value);">
+			<span>账　号：</span><input name="name"></input><br>
+			<span>密　码：</span><input id="password" type="password" name="password"></input><br>
+			<span>验证码：</span><input name="random"></input><br>
+			<img src="/randomcode" onclick="this.src='/randomcode?temp='+Math.random();" />
+			<input type="submit" value="登录" />
+		</form>
+<em class="error"></em>
+	</body>

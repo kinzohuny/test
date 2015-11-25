@@ -43,12 +43,16 @@ public class LoginServlet extends HttpServlet {
 		}
 		
 		if(session.getAttribute(Constants.SESSION_IS_LOGIN)==null){
+//			req.getRequestDispatcher("/view/Login.html").forward(req, resp);
+			
 			resp.setContentType("text/html;charset=utf-8");
 			resp.setStatus(HttpServletResponse.SC_OK);
 			resp.getWriter().println("<title>Login</title>");
-			resp.getWriter().println("<link href=\"/resource/main.css\" rel=\"stylesheet\" type=\"text/css\"></link>");
-			resp.getWriter().println("<script src=\"/resource/md5.js\" type=\"text/javascript\"></script>");
-			resp.getWriter().println("<script src=\"/resource/jquery-1.11.1.js\" type=\"text/javascript\"></script>");
+			resp.getWriter().println("<link rel=\"icon\" href=\"/image/favicon.ico\" mce_href=\"/image/favicon.ico\" type=\"image/x-icon\">");
+			resp.getWriter().println("<link rel=\"shortcut icon\" href=\"/image/favicon.ico\" mce_href=\"/image/favicon.ico\" type=\"image/x-icon\">");
+			resp.getWriter().println("<link href=\"/css/main.css\" rel=\"stylesheet\" type=\"text/css\"></link>");
+			resp.getWriter().println("<script src=\"/js/md5.js\" type=\"text/javascript\"></script>");
+			resp.getWriter().println("<script src=\"/js/jquery-1.11.1.js\" type=\"text/javascript\"></script>");
 			//body
 			resp.getWriter().println("<form target=\"_top\" id=\"login\" method=\"post\" onsubmit=\"document.getElementById('password').value=hex_md5(document.getElementById('password').value);\">");
 			resp.getWriter().println("<span>账　号：</span><input name=\"name\"></input><br>");

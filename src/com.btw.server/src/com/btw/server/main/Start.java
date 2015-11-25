@@ -5,23 +5,21 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.server.session.HashSessionManager;
-import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 import com.btw.server.core.CacheManage;
 import com.btw.server.core.DatabaseManage;
 import com.btw.server.core.PropertiesManage;
+import com.btw.server.self.SelfResourceHandler;
 import com.btw.server.servlet.func.ServerIpListServlet;
-import com.btw.server.servlet.index.DefaultServlet;
+import com.btw.server.servlet.index.ErrorServlet;
 import com.btw.server.servlet.index.IndexServlet;
 import com.btw.server.servlet.index.LoginServlet;
 import com.btw.server.servlet.index.MenuServlet;
 import com.btw.server.servlet.intf.IpServlet;
 import com.btw.server.servlet.intf.IpSyncServlet;
 import com.btw.server.servlet.pub.RandomCodeServlet;
-import com.btw.server.servlet.pub.ResourceServlet;
 import com.btw.server.util.ServerUtils;
 
 public class Start {
@@ -40,20 +38,25 @@ public class Start {
 		init();
 		
 		Server server = new Server(PORT);
-		ServletContextHandler servletContextHandler = new ServletContextHandler(server, "/");
 		//设置线程池
 		QueuedThreadPool threadPool = new QueuedThreadPool(MAX_THREADS);
 		threadPool.setMinThreads(INIT_THREADS);
 		threadPool.setMaxQueued(MAX_QUEUED);
 		server.setThreadPool(threadPool);
+
+		//设置资源管理 - 使用自定义资源处理器
+		ResourceHandler resourceHandler = new SelfResourceHandler();
+//		//resourceHandler.setDirectoriesListed(true);  //会显示一个列表
+//		//resourceHandler.setWelcomeFiles(new String[]{"index.html"});
+		resourceHandler.setResourceBase("resource");
+		
 		//设置servlet
+		ServletContextHandler servletContextHandler = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
 		
 		//index
+	    servletContextHandler.addServlet(IndexServlet.class, "/index");
 	    servletContextHandler.addServlet(LoginServlet.class, "/login");
-	    servletContextHandler.addServlet(IndexServlet.class, "/index");
 	    servletContextHandler.addServlet(MenuServlet.class, "/menu");
-	    servletContextHandler.addServlet(IndexServlet.class, "/index");
-		
 		
 		//func
 	    servletContextHandler.addServlet(ServerIpListServlet.class, "/serveriplist");
@@ -61,25 +64,23 @@ public class Start {
 		//intf
 	    servletContextHandler.addServlet(IpSyncServlet.class, "/ip-sync");
 	    servletContextHandler.addServlet(IpServlet.class, "/ip");
-		
-		
+	    
 		//pub
 	    servletContextHandler.addServlet(RandomCodeServlet.class, "/randomcode");
-		servletContextHandler.addServlet(ResourceServlet.class, "/resource/*");
-	    servletContextHandler.addServlet(DefaultServlet.class, "/*");
+	    servletContextHandler.addServlet(ErrorServlet.class, "/");
 		
 		//设置session管理
-		HashSessionManager hashSessionManager = new HashSessionManager();
-		hashSessionManager.setMaxInactiveInterval(TIME_OUT_S);
-		servletContextHandler.setSessionHandler(new SessionHandler(hashSessionManager));
-
-		//设置
-		ResourceHandler resourceHandler = new ResourceHandler();
-		resourceHandler.setResourceBase(".");
+	    servletContextHandler.getSessionHandler().getSessionManager().setMaxInactiveInterval(TIME_OUT_S);;
 		
-		HandlerList handlers = new HandlerList();
-		handlers.setHandlers(new Handler[] { servletContextHandler, resourceHandler });
-		server.setHandler(handlers);
+		//只要有一个Handler将请求标记为已处理，或抛出异常，Handler的调用就到此结束。
+		HandlerList handlerList = new HandlerList();
+		handlerList.setHandlers(new Handler[] { resourceHandler, servletContextHandler });
+		server.setHandler(handlerList);
+		
+		//不会结束，一直调用到最后一个Handler。注意人工避免冲突
+//		HandlerCollection handlerCollection = new HandlerCollection();
+//		handlerCollection.setHandlers(new Handler[] { resourceHandler, servletContextHandler });
+//		server.setHandler(handlerCollection);
 		
 		server.start();
 		logger.info("Server is started at "+ ServerUtils.getIp() + ":" + PORT);

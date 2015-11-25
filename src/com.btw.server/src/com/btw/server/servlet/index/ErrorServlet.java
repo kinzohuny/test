@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class DefaultServlet extends HttpServlet {
+public class ErrorServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -8693978090360750531L;
 
@@ -16,11 +16,11 @@ public class DefaultServlet extends HttpServlet {
 
 		resp.setContentType("text/html;charset=utf-8");
 		resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-		resp.getWriter().println("<title>404 Not Found</title>");
+		resp.getWriter().println("<title>Error</title>");
 		resp.getWriter().println("<html>");
-		resp.getWriter().println("<head><title>404 Not Found</title></head>");
-		resp.getWriter().println("<body bgcolor=\"white\">");
-		resp.getWriter().println("<center><h1>404 Not Found</h1></center>");
+		resp.getWriter().println("<head><title>Error</title></head>");
+		resp.getWriter().println("<body bgcolor=\"black\">");
+		resp.getWriter().println("<center><h1><font color=\"white\">Whoops, looks like something went wrong.<font></h1></center>");
 		resp.getWriter().println("<hr>");
 		resp.getWriter().println("</body>");
 		resp.getWriter().println("</html>");

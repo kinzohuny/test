@@ -22,13 +22,25 @@ public class IndexServlet extends HttpServlet {
 		}else{
 			resp.setContentType("text/html;charset=utf-8");
 			resp.setStatus(HttpServletResponse.SC_OK);
-			resp.getWriter().println("<title>后台管理</title>");
+			resp.getWriter().println(getHead());
 			resp.getWriter().println(getBody());
 			resp.getWriter().flush();
 			resp.getWriter().close();
 		}
 	}
 
+	private String getHead(){
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("<head>");
+		
+		buffer.append("<title>后台管理</title>");
+		buffer.append("<link rel=\"icon\" href=\"/image/favicon.ico\" mce_href=\"/image/favicon.ico\" type=\"image/x-icon\">");
+		buffer.append("<link rel=\"shortcut icon\" href=\"/image/favicon.ico\" mce_href=\"/image/favicon.ico\" type=\"image/x-icon\">");
+		
+		buffer.append("</head>");
+		return buffer.toString();
+	}
+	
 	private String getBody(){
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("<frameset rows=\"30,*\">");
