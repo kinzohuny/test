@@ -11,9 +11,9 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import com.btw.server.core.CacheManage;
 import com.btw.server.core.DatabaseManage;
 import com.btw.server.core.PropertiesManage;
+import com.btw.server.self.SelfErrorHandler;
 import com.btw.server.self.SelfResourceHandler;
 import com.btw.server.servlet.func.ServerIpListServlet;
-import com.btw.server.servlet.index.ErrorServlet;
 import com.btw.server.servlet.index.IndexServlet;
 import com.btw.server.servlet.index.LoginServlet;
 import com.btw.server.servlet.index.MenuServlet;
@@ -24,25 +24,23 @@ import com.btw.server.util.ServerUtils;
 
 public class Start {
 	
-	static Logger logger = Logger.getLogger(Start.class);
+	private final static Logger logger = Logger.getLogger(Start.class);
 
-	public static String IP = "";
-	public static int PORT = 80;
-	public static int TIME_OUT_S = 1800;
-	public static int INIT_THREADS = 20;
-	public static int MAX_THREADS = 100;
-	public static int MAX_QUEUED = 300;
+	private static int PORT = 80;
+	private static int TIME_OUT_S = 1800;
+	private static int INIT_THREADS = 20;
+	private static int MAX_THREADS = 100;
 
 	public static void main(String[] args) throws Exception {
+		
 		logger.info("Server is starting...");
 		init();
 		
 		Server server = new Server(PORT);
 		//设置线程池
-		QueuedThreadPool threadPool = new QueuedThreadPool(MAX_THREADS);
-		threadPool.setMinThreads(INIT_THREADS);
-		threadPool.setMaxQueued(MAX_QUEUED);
-		server.setThreadPool(threadPool);
+		server.addBean(new QueuedThreadPool(MAX_THREADS, INIT_THREADS));
+		//设置错误界面
+		server.addBean(new SelfErrorHandler(false));
 
 		//设置资源管理 - 使用自定义资源处理器
 		ResourceHandler resourceHandler = new SelfResourceHandler();
@@ -54,6 +52,7 @@ public class Start {
 		ServletContextHandler servletContextHandler = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
 		
 		//index
+	    servletContextHandler.addServlet(IndexServlet.class, "");
 	    servletContextHandler.addServlet(IndexServlet.class, "/index");
 	    servletContextHandler.addServlet(LoginServlet.class, "/login");
 	    servletContextHandler.addServlet(MenuServlet.class, "/menu");
@@ -67,7 +66,7 @@ public class Start {
 	    
 		//pub
 	    servletContextHandler.addServlet(RandomCodeServlet.class, "/randomcode");
-	    servletContextHandler.addServlet(ErrorServlet.class, "/");
+//	    servletContextHandler.addServlet(ErrorServlet.class, "/");
 		
 		//设置session管理
 	    servletContextHandler.getSessionHandler().getSessionManager().setMaxInactiveInterval(TIME_OUT_S);;
@@ -81,8 +80,12 @@ public class Start {
 //		HandlerCollection handlerCollection = new HandlerCollection();
 //		handlerCollection.setHandlers(new Handler[] { resourceHandler, servletContextHandler });
 //		server.setHandler(handlerCollection);
-		
-		server.start();
+		try {
+			server.start();
+		} catch (Exception e) {
+			logger.fatal("server start failed!", e);
+			System.exit(1);
+		}
 		logger.info("Server is started at "+ ServerUtils.getIp() + ":" + PORT);
 		
 		server.join();
@@ -101,7 +104,6 @@ public class Start {
 			TIME_OUT_S = Integer.valueOf(PropertiesManage.getProperties(PropertiesManage.SERVER_TIME_OUT_S));
 			INIT_THREADS = Integer.valueOf(PropertiesManage.getProperties(PropertiesManage.SERVER_INIT_THREADS));
 			MAX_THREADS = Integer.valueOf(PropertiesManage.getProperties(PropertiesManage.SERVER_MAX_THREADS));
-			MAX_QUEUED = Integer.valueOf(PropertiesManage.getProperties(PropertiesManage.SERVER_MAX_QUEUED));
 	}
 	
 	private static void initDatabase(){

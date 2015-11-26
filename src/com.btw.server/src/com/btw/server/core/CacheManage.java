@@ -1,9 +1,12 @@
 package com.btw.server.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.log4j.Logger;
+
+import com.btw.server.util.ServerUtils;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -24,7 +27,8 @@ public final class CacheManage {
 		
 		InputStream inputStream = null;
 		try {
-			inputStream = ClassLoader.getSystemResourceAsStream("config/properties/ehcache.xml");
+			inputStream = ServerUtils.getFileInputStream("conf"+File.separator+"ehcache.xml");
+			//inputStream = ClassLoader.getSystemResourceAsStream("config/properties/ehcache.xml");
 			CacheManager cacheManager = CacheManager.create(inputStream);  
 		    //根据配置文件获得Cache实例  
 			commonCache = cacheManager.getCache("COMMON_CACHE");  

@@ -1,10 +1,13 @@
 package com.btw.server.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+
+import com.btw.server.util.ServerUtils;
 
 public class PropertiesManage {
 
@@ -38,7 +41,8 @@ public class PropertiesManage {
 		properties = new Properties();
 		InputStream inputStream = null;
 		try {
-			inputStream = ClassLoader.getSystemResourceAsStream("config/properties/server.properties");
+			inputStream = ServerUtils.getFileInputStream("conf"+File.separator+"server.properties");
+			//inputStream = ClassLoader.getSystemResourceAsStream("config/properties/server.properties");
 			properties.load(inputStream);
 		} catch (IOException e) {
 			logger.fatal("load system properties error! system exit!", e);

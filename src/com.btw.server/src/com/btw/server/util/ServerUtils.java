@@ -1,5 +1,9 @@
 package com.btw.server.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -8,6 +12,19 @@ import javax.servlet.http.HttpServletRequest;
 public class ServerUtils {
 
 	private static String ip;
+	
+	//返回工程路径下文件的绝对路径
+	public static String getAbsolutePath(String path){
+		StringBuilder builder = new StringBuilder(System.getProperty("user.dir"));
+		builder.append(File.separator);
+		builder.append(path);
+		return builder.toString();
+	}
+	
+	//返回工程路径下文件流
+	public static InputStream getFileInputStream(String path) throws FileNotFoundException{
+		return new FileInputStream(getAbsolutePath(path));
+	}
 	
 	public static String getIp() {
 		if (ip == null) {

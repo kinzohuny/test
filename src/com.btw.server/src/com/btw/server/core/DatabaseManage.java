@@ -1,5 +1,6 @@
 package com.btw.server.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -18,6 +19,8 @@ import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.apache.log4j.Logger;
 
+import com.btw.server.util.ServerUtils;
+
 public class DatabaseManage {
 	
 	private final static Logger logger = Logger.getLogger(DatabaseManage.class);
@@ -30,12 +33,14 @@ public class DatabaseManage {
 	}
 	
 	static {
+		
 		logger.info("dataSource init start...");
 		
 		InputStream inputStream = null;
 		Properties properties = new Properties();
 		try {
-			inputStream = ClassLoader.getSystemResourceAsStream("config/properties/database.properties");
+			inputStream = ServerUtils.getFileInputStream("conf"+File.separator+"database.properties");
+			//inputStream = ClassLoader.getSystemResourceAsStream("config/properties/database.properties");
 			properties.load(inputStream);
 			dataSource = BasicDataSourceFactory.createDataSource(properties);
 		} catch (Exception e) {

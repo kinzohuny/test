@@ -15,8 +15,9 @@ import org.eclipse.jetty.server.handler.ErrorHandler;
  */
 public class SelfErrorHandler extends ErrorHandler{
 	
-	public SelfErrorHandler() {
+	public SelfErrorHandler(boolean isShowStacks) {
 		super();
+		setShowStacks(isShowStacks);
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class SelfErrorHandler extends ErrorHandler{
 		writer.write(Integer.toString(code));
 		writer.write("</h2>\n<p>Problem accessing ");
 		write(writer, uri);
-		writer.write(". Reason:\n<pre>    ");
+		writer.write(". <br>Reason:\n<pre>    ");
 		write(writer, message);
 		writer.write("</pre></p>");
 	}
