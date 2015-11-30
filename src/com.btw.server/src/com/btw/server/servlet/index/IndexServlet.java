@@ -34,8 +34,14 @@ public class IndexServlet extends HttpServlet {
 		buffer.append("<head>");
 		
 		buffer.append("<title>后台管理</title>");
-		buffer.append("<link rel=\"icon\" href=\"/image/favicon.ico\" mce_href=\"/image/favicon.ico\" type=\"image/x-icon\">");
-		buffer.append("<link rel=\"shortcut icon\" href=\"/image/favicon.ico\" mce_href=\"/image/favicon.ico\" type=\"image/x-icon\">");
+		
+		//网站图标
+//		buffer.append("<link rel=\"icon\" href=\"/image/favicon.ico\" mce_href=\"/image/favicon.ico\" type=\"image/x-icon\">");
+//		buffer.append("<link rel=\"shortcut icon\" href=\"/image/favicon.ico\" mce_href=\"/image/favicon.ico\" type=\"image/x-icon\">");
+		
+		//网站动态图标
+		buffer.append("<link rel=\"shortcut icon\" href=\"/image/favicon.ico\" >");
+		buffer.append("<link rel=\"icon\" href=\"/image/favicon.gif\" type=\"image/gif\" >");
 		
 		buffer.append("</head>");
 		return buffer.toString();

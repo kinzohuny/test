@@ -48,8 +48,15 @@ public class LoginServlet extends HttpServlet {
 			resp.setContentType("text/html;charset=utf-8");
 			resp.setStatus(HttpServletResponse.SC_OK);
 			resp.getWriter().println("<title>Login</title>");
-			resp.getWriter().println("<link rel=\"icon\" href=\"/image/favicon.ico\" mce_href=\"/image/favicon.ico\" type=\"image/x-icon\">");
-			resp.getWriter().println("<link rel=\"shortcut icon\" href=\"/image/favicon.ico\" mce_href=\"/image/favicon.ico\" type=\"image/x-icon\">");
+
+			//网站图标
+//			resp.getWriter().println("<link rel=\"icon\" href=\"/image/favicon.ico\" mce_href=\"/image/favicon.ico\" type=\"image/x-icon\">");
+//			resp.getWriter().println("<link rel=\"shortcut icon\" href=\"/image/favicon.ico\" mce_href=\"/image/favicon.ico\" type=\"image/x-icon\">");
+			
+			//网站动态图标
+			resp.getWriter().println("<link rel=\"shortcut icon\" href=\"/image/favicon.ico\" >");
+			resp.getWriter().println("<link rel=\"icon\" href=\"/image/favicon.gif\" type=\"image/gif\" >");
+			
 			resp.getWriter().println("<link href=\"/css/main.css\" rel=\"stylesheet\" type=\"text/css\"></link>");
 			resp.getWriter().println("<script src=\"/js/md5.js\" type=\"text/javascript\"></script>");
 			resp.getWriter().println("<script src=\"/js/jquery-1.11.1.js\" type=\"text/javascript\"></script>");

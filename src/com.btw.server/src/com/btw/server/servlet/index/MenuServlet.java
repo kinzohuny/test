@@ -32,10 +32,7 @@ public class MenuServlet extends HttpServlet {
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		stringBuilder.append("<a target=\"body\" href=\"serveriplist\">IP列表</a> &nbsp;&nbsp;");
-		stringBuilder.append("<a target=\"body\" href=\"blackipmanage\">IP黑名单管理</a> &nbsp;&nbsp;");
-//		stringBuilder.append("<a target=\"body\" href=\"youkuvipverify\">会员权益审核</a> &nbsp;&nbsp;");
-//		stringBuilder.append("<a target=\"body\" href=\"viprec\">权益发放记录</a> &nbsp;&nbsp;");
-//		stringBuilder.append("<a target=\"body\" href=\"youkuvipmanual\">人工发放权益</a> &nbsp;&nbsp;");
+		stringBuilder.append("<a target=\"body\" href=\"view/static/baidu_map.html\">百度地图</a> &nbsp;&nbsp;");
 		stringBuilder.append("<a target=\"_top\" href=\"login?logout=true\">注销</a> &nbsp;&nbsp;");
 		
 		return stringBuilder.toString();
