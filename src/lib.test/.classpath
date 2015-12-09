@@ -25,5 +25,11 @@
 	<classpathentry kind="lib" path="jetty/jetty-xml-7.6.17.v20150415.jar"/>
 	<classpathentry kind="lib" path="jetty/log4j-1.2.17.jar"/>
 	<classpathentry kind="lib" path="jetty/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="poi/poi-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="poi/poi-examples-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="poi/poi-excelant-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="poi/poi-ooxml-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="poi/poi-ooxml-schemas-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="poi/poi-scratchpad-3.13-20150929.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
