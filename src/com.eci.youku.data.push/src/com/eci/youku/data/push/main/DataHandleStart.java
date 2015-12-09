@@ -35,7 +35,7 @@ public class DataHandleStart {
 	}
 	
 	/**
-	 * 订单数据全量推送，如果不考虑先下单后注册的手机的情况，可以不运行此任务 。
+	 * 计算距离指定整点时间的分钟数 。
 	 */
 	private long getMinuteToHour(int hour){
 		Calendar now = Calendar.getInstance();

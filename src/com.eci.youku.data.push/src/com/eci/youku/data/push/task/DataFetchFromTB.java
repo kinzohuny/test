@@ -41,10 +41,11 @@ public class DataFetchFromTB implements Runnable{
 				logger.info("start fetch sid="+shopModel.getSid());
 				while(true){
 					String lastTime = yKTradeDao.getLastJdpModified(shopModel.getSid());
+					String minCreated = "2015-12-09 00:00:00";
 					if(StringUtils.isEmpty(lastTime)){
-						lastTime = "2015-11-09 00:00:00";
+						lastTime = minCreated;
 					}
-					List<TBJdpTbTradeModel> tBJdpTbTradeList = tBJdpTbTradeDao.queryList(shopModel.getNick(), lastTime, 0, size);
+					List<TBJdpTbTradeModel> tBJdpTbTradeList = tBJdpTbTradeDao.queryList(shopModel.getNick(), lastTime, minCreated, 0, size);
 					List<YKTradeModel> yKTradeModelList = new ArrayList<YKTradeModel>();
 					for(TBJdpTbTradeModel tBJdpTbTradeModel : tBJdpTbTradeList){
 						YKTradeModel yKTradeModel = new YKTradeModel();
