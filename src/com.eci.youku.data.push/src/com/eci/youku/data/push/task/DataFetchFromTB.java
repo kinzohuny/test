@@ -13,6 +13,7 @@ import com.eci.youku.data.push.dao.YKTradeDao;
 import com.eci.youku.data.push.model.TBJdpTbTradeModel;
 import com.eci.youku.data.push.model.YKShopModel;
 import com.eci.youku.data.push.model.YKTradeModel;
+import com.eci.youku.data.push.utils.DateUtils;
 import com.eci.youku.data.push.utils.StringUtils;
 import com.taobao.api.ApiException;
 import com.taobao.api.domain.Trade;
@@ -21,9 +22,17 @@ import com.taobao.api.response.TradeFullinfoGetResponse;
 
 public class DataFetchFromTB implements Runnable{
 	
+	public DataFetchFromTB(String minCreated){
+		if(minCreated == null){
+			minCreated = DateUtils.getNow();
+		}
+		this.minCreated = minCreated;
+	}
+	
 	private static final Logger logger = Logger.getLogger(DataFetchFromTB.class);
 	private static final int size = 100;
 
+	String minCreated;
 	YKShopDao yKShopDao = new YKShopDao();
 	YKTradeDao yKTradeDao = new YKTradeDao();
 	TBJdpTbTradeDao tBJdpTbTradeDao = new TBJdpTbTradeDao();
@@ -41,7 +50,6 @@ public class DataFetchFromTB implements Runnable{
 				logger.info("start fetch sid="+shopModel.getSid());
 				while(true){
 					String lastTime = yKTradeDao.getLastJdpModified(shopModel.getSid());
-					String minCreated = "2015-12-09 00:00:00";
 					if(StringUtils.isEmpty(lastTime)){
 						lastTime = minCreated;
 					}

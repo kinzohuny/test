@@ -11,10 +11,10 @@ import com.eci.youku.data.push.task.FullDataPushToQYGJ;
 
 public class DataHandleStart {
 
-	public void startFetchFromTB(){
+	public void startFetchFromTB(String minCreated){
 		
 		Executors.newScheduledThreadPool(1)
-			.scheduleAtFixedRate(new DataFetchFromTB(), 0, 5, TimeUnit.MINUTES);
+			.scheduleAtFixedRate(new DataFetchFromTB(minCreated), 0, 5, TimeUnit.MINUTES);
 	}
 	
 	public void startPushToQYGJ(){
@@ -50,7 +50,11 @@ public class DataHandleStart {
 	
 	public static void main(String[] args) throws IOException {
 		DataHandleStart handle = new DataHandleStart();
-		handle.startFetchFromTB();
+		String minCreated = null;
+		if(args!=null && args.length>0){
+			minCreated = args[0];
+		}
+		handle.startFetchFromTB(minCreated);
 		handle.startPushToQYGJ();
 		handle.startFullPushToQYGJ();
 	}
