@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import com.eci.youku.data.push.task.DataFetchFromTB;
 import com.eci.youku.data.push.task.DataPushToQYGJ;
 import com.eci.youku.data.push.task.FullDataPushToQYGJ;
+import com.eci.youku.data.push.utils.StringUtils;
 
 public class DataHandleStart {
 
@@ -51,11 +52,45 @@ public class DataHandleStart {
 	public static void main(String[] args) throws IOException {
 		DataHandleStart handle = new DataHandleStart();
 		String minCreated = null;
+		Long sid = null;
 		if(args!=null && args.length>0){
-			minCreated = args[0];
+			for(int i=0;i<args.length;i++){
+				String arg = args[i];
+				if("-m".equals(arg) && i<args.length-1){
+					minCreated = args[++i];
+					if(!StringUtils.isDate(minCreated)){
+						minCreated = null;
+						errorParam("-m must before a string format yyyy-MM-dd!");
+					}
+				}else if("-s".equals(arg) && i<args.length-1){
+					sid = StringUtils.toLong(args[++i]);
+					if(sid==null){
+						errorParam("-s must before a Long num as sid!");
+					}
+				}else{
+					showTag();
+				}
+			}
 		}
-		handle.startFetchFromTB(minCreated);
-		handle.startPushToQYGJ();
-		handle.startFullPushToQYGJ();
+		if(sid!=null){
+			new DataFetchFromTB(minCreated).runOne(sid);
+			System.exit(0);
+		}else{
+			handle.startFetchFromTB(minCreated);
+			handle.startPushToQYGJ();
+			handle.startFullPushToQYGJ();
+		}
 	}
+	
+	private static void errorParam(String reason){
+		System.out.println(reason);
+		showTag();
+	}
+	
+	private static void showTag(){
+		System.out.println(TAG);
+		System.exit(1);
+	}
+	
+	private final static String TAG="-m:minCreated(eg:-m 2015-12-12)\n -s:sid(eg:-s 75358663)";
 }

@@ -169,4 +169,11 @@ public class StringUtils {
 		return true;
 	}
 	
+	public static boolean isDate(String date) {
+		return date.matches("^[12][0-9]{3}-[01][0-9]-[0-3][0-9]$");
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(isDate("2015-11-12"));
+	}
 }
