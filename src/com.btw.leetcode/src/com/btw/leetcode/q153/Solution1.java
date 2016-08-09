@@ -3,7 +3,7 @@ package com.btw.leetcode.q153;
 
 public class Solution1 {
     public int findMin(int[] nums) {
-    	return findMin(nums, 0, nums.length);
+    	return findMin(nums, 0, nums.length-1);
     }
     
     public int findMin(int[] nums, int left, int right){
