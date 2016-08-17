@@ -1,4 +1,4 @@
-package com.btw.leetcode.q153;
+package com.btw.leetcode.medium.q154;
 
 public class Solution {
     public int findMin(int[] nums) {

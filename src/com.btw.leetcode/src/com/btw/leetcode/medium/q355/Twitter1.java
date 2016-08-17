@@ -1,26 +1,31 @@
-package com.btw.leetcode.q355;
+package com.btw.leetcode.medium.q355;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Twitter {
+public class Twitter1 {
 
-    public List<Tweet> tweetList; 
+    public Map<Integer, Map<Integer, Integer>> tweetMap; 
     public Map<Integer, Set<Integer>> followMap;
-	
+	public int sort=0;
+    
     /** Initialize your data structure here. */
-    public Twitter() {
-        tweetList = new ArrayList<Twitter.Tweet>(); 
+    public Twitter1() {
+        tweetMap = new HashMap<Integer, Map<Integer, Integer>>(); 
         followMap = new HashMap<Integer, Set<Integer>>();
     }
     
     /** Compose a new tweet. */
     public void postTweet(int userId, int tweetId) {
-    	tweetList.add(new Tweet(userId, tweetId));
+    	if(tweetMap.get(userId)==null){
+    		tweetMap.put(userId, new HashMap<Integer, Integer>());
+    	}
+    	tweetMap.get(userId).put(getSort(), tweetId);
     }
     
     /** Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. */
@@ -31,10 +36,16 @@ public class Twitter {
     	if(followMap.get(userId)!=null){
     		set.addAll(followMap.get(userId));
     	}
-    	for(int i=tweetList.size()-1;i>=0;i--){
-    		if(set.contains(tweetList.get(i).userId)){
-    			list.add(tweetList.get(i).tweetId);
+    	Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+    	for(Integer uid : set){
+    		if(tweetMap.get(uid)!=null){
+    			map.putAll(tweetMap.get(uid));
     		}
+    	}
+    	List<Integer> keys = new ArrayList<Integer>(map.keySet());
+    	Collections.sort(keys);
+    	for(int i=keys.size()-1;i>=0;i--){
+    		list.add(map.get(keys.get(i)));
     		if(list.size()>=10){
     			break;
     		}
@@ -58,12 +69,7 @@ public class Twitter {
        	followMap.get(followerId).remove(followeeId);
     }
     
-	public class Tweet {
-		int userId;
-		int tweetId;
-		Tweet(int userId, int tweetId){
-			this.userId = userId;
-			this.tweetId = tweetId;
-		}
-	}
+    public int getSort(){
+    	return sort++;
+    }
 }

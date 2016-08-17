@@ -1,4 +1,4 @@
-package com.btw.test.md5.util;
+package com.btw.test.md5.demo1;
 
 public class Md5 {
 

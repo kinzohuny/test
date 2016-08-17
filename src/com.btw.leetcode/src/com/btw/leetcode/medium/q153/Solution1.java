@@ -1,4 +1,4 @@
-package com.btw.leetcode.q153;
+package com.btw.leetcode.medium.q153;
 
 
 public class Solution1 {

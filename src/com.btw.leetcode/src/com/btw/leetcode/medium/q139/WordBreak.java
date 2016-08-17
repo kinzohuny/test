@@ -1,10 +1,12 @@
-package com.btw.leetcode.q139;
+package com.btw.leetcode.medium.q139;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
+ *  https://leetcode.com/problems/word-break/
+ *  
  *	Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
  *
  *	For example, given
