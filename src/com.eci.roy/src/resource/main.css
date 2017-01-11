@@ -30,11 +30,10 @@ em.error {
 	font-size: 16px;
 }
 
-table.edittable {
+input {
 	font-family: verdana, arial, sans-serif;
-	font-size: 16px;
-	border-spacing: 0;
-	border: 0;
+	font-size: 24px;
+	padding: 4px 16px;
 }
 
 table.edittable th, table.edittable td {

@@ -22,7 +22,7 @@ public class IndexServlet extends HttpServlet {
 		}else{
 			resp.setContentType("text/html;charset=utf-8");
 			resp.setStatus(HttpServletResponse.SC_OK);
-			resp.getWriter().println("<title>品客互动后台管理</title>");
+			resp.getWriter().println("<title>品客互动-计算机远程启动管理</title>");
 			resp.getWriter().println(getBody());
 			resp.getWriter().flush();
 			resp.getWriter().close();

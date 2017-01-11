@@ -60,8 +60,12 @@ public class LogServlet extends HttpServlet {
 	}
 
 	private String defaultHandle(HttpServletRequest req) throws SQLException {
+		if(1L==(Long)req.getSession().getAttribute(Constants.SESSION_USER_ID)){
+			List<LogModel> list = LogDao.queryLog();
+			return getButtonPage()+getListPage(list, true);
+		}
 		List<LogModel> list = LogDao.queryLogByUserId((Long)req.getSession().getAttribute(Constants.SESSION_USER_ID));
-		return getButtonPage()+getListPage(list);
+		return getButtonPage()+getListPage(list, false);
 	}
 
 	private String getButtonPage(){
@@ -73,20 +77,28 @@ public class LogServlet extends HttpServlet {
 		return buffer.toString();
 	}
 	
-	private String getListPage(List<LogModel> list){
+	private String getListPage(List<LogModel> list, boolean isAdmin){
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("<table class=\"gridtable\">");
 		buffer.append("最近"+list.size()+"条操作记录");
-		buffer.append("<tr>")
-			.append("<th>id</th>")
-			.append("<th>time</th>")
-			.append("<th>content</th>")
-			.append("</tr>");
+		buffer.append("<tr>");
+		buffer.append("<th>id</th>");
+		buffer.append("<th>time</th>");
+		if(isAdmin){
+			buffer.append("<th>userid</th>");
+			buffer.append("<th>username</th>");
+		}
+		buffer.append("<th>content</th>");
+		buffer.append("</tr>");
 
 		for(LogModel model : list){
 			buffer.append("<tr>");
 			buffer.append("<td>").append(model.getId()).append("</td>");
 			buffer.append("<td>").append(model.getTimeStr()).append("</td>");
+			if(isAdmin){
+				buffer.append("<td>").append(model.getUser_id()).append("</td>");
+				buffer.append("<td>").append(model.getUser_name()).append("</td>");
+			}
 			buffer.append("<td>").append(model.getContent()).append("</td>");
 			buffer.append("</tr>");
 		}

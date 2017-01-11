@@ -66,7 +66,7 @@ public class MachineServlet extends HttpServlet {
 		}
 	}
 
-	private String wakeupHandle(HttpServletRequest req) throws SQLException, IOException {
+	private String wakeupHandle(HttpServletRequest req) throws SQLException, IOException, InterruptedException {
 		StringBuffer buffer = new StringBuffer();
 		List<MachineModel> list = MachineDao.queryMachineByUserId((Long)req.getSession().getAttribute(Constants.SESSION_USER_ID));
 		for(MachineModel model : list){

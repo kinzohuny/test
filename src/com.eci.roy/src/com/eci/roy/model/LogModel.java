@@ -11,6 +11,8 @@ public class LogModel {
 	private Long user_id;
 	private String content;
 	
+	private String user_name;
+	
 	public Long getId() {
 		return id;
 	}
@@ -37,5 +39,11 @@ public class LogModel {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public String getUser_name() {
+		return user_name;
+	}
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
 	}
 }
