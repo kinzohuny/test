@@ -1,0 +1,108 @@
+@CHARSET "UTF-8";
+<style type ="text/css">
+
+table.gridtable {
+	font-family: verdana, arial, sans-serif;
+	/* table-layout: fixed;*/
+	font-size: 12px;
+	color: #333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+
+table.gridtable th,table.gridtable td {
+	border-width: 1px;
+	font-size: 12px;
+	padding: 2px 10px 2px 10px;
+	border-style: solid;
+	border-color: #666666;
+	word-break: keep-all;
+	white-space: nowrap;
+}
+
+table.gridtable th {
+	background-color: #dedede;
+}
+
+em.error {
+	color: red;
+	font-size: 16px;
+}
+
+table.edittable {
+	font-family: verdana, arial, sans-serif;
+	font-size: 16px;
+	border-spacing: 0;
+	border: 0;
+}
+
+table.edittable th, table.edittable td {
+	border-width: 1px;
+	padding: 2px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #eeeeee;
+	word-break: keep-all;
+	white-space: nowrap;
+	text-align: center;
+}
+
+table.edittable th {
+	font-size: 20px;
+}
+
+table.edittable td.right {
+	text-align: right;
+}
+
+table.edittable td.notNull {
+	color: red;
+}
+
+table.edittable td.left {
+	text-align: left;
+}
+
+table.menutable td {
+	font-size: 14px;
+}
+
+input.disabled{
+	border:1px solid #DDD;
+	background-color:#F5F5F5;
+	color:#ACA899;
+}
+
+td.yellow { 
+	background:#FF0
+}
+
+.w50 {
+	width: 50px;
+}
+
+.w100 {
+	width: 100px;
+}
+
+.w150 {
+	width: 100px;
+}
+
+.w150 {
+	width: 100px;
+}
+
+.w200 {
+	width: 200px;
+}
+
+.w250 {
+	width: 250px;
+}
+
+.w300 {
+	width: 300px;
+}
+</style>
