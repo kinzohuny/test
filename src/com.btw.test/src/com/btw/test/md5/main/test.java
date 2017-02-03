@@ -10,17 +10,17 @@ import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.util.Date;
 
-import com.btw.jdbc.mysql.MysqlDriver;
+import com.btw.test.jdbc.MysqlDriver;
 import com.btw.test.md5.util.MD5Util;
 
 public class test {
 	public static void main(String[] args) {
 		long start = new Date().getTime();
-		System.out.println("¿ªÊ¼³¢ÊÔ...");
+		System.out.println("ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½...");
 		String src = getLastStr();
 		creatMd5Str(src, 90000L);
 		long stop = new Date().getTime();
-		System.out.println("±¾´ÎÉú³ÉºÄÊ±"+(Math.floor(stop-start)/1000)+"Ãë");
+		System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éºï¿½Ê±"+(Math.floor(stop-start)/1000)+"ï¿½ï¿½");
 	}
 	
 	private static String getLastStr() {
@@ -43,33 +43,33 @@ public class test {
 		for(long j=0;j<l;j++){
 			String md5 = MD5Util.getMD5String(string);
 			if(string.equals(md5)){
-				System.out.println("¾­¹ý"+l+"´Î³¢ÊÔ£¬ÖÕÓÚ³É¹¦À²£¡,½á¹ûÎª"+string);
+				System.out.println("ï¿½ï¿½ï¿½ï¿½"+l+"ï¿½Î³ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½Ú³É¹ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Îª"+string);
 				return;
 			}else{
 				driver.executeUpdate("insert into MD5 values(null,?, ?)",string,md5);
 				string = md5;
 			}
 			if((j+1)%(k)==0){
-				System.out.println("½ø¶È£º"+Math.floor((j+1)/k)+"%");
+				System.out.println("ï¿½ï¿½ï¿½È£ï¿½"+Math.floor((j+1)/k)+"%");
 			}
 		}
-		System.out.println("Ô­Ê¼Éú³É×Ö·û´®Îª\""+srcStr+"\"¹²³¢ÊÔ"+l+"´Î£¬Ã»ÓÐ³É¹¦£¡");
+		System.out.println("Ô­Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½Îª\""+srcStr+"\"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"+l+"ï¿½Î£ï¿½Ã»ï¿½Ð³É¹ï¿½ï¿½ï¿½");
 	}
 
 	public static void writeFile(File f, String md5) throws IOException {
 
-		f.createNewFile(); // ´´½¨ÐÂÎÄ¼þ
+		f.createNewFile(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 		BufferedWriter out = new BufferedWriter(new FileWriter(f));
-		out.write(md5); // \r\n¼´Îª»»ÐÐ
-		out.flush(); // °Ñ»º´æÇøÄÚÈÝÑ¹ÈëÎÄ¼þ
+		out.write(md5); // \r\nï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½
+		out.flush(); // ï¿½Ñ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½Ä¼ï¿½
 		out.close();
 	}
 
 	@SuppressWarnings("resource")
 	public static String readFile(File f) throws IOException {
 
-		InputStreamReader reader = new InputStreamReader(new FileInputStream(f)); // ½¨Á¢Ò»¸öÊäÈëÁ÷¶ÔÏóreader
-		BufferedReader br = new BufferedReader(reader); // ½¨Á¢Ò»¸ö¶ÔÏó£¬Ëü°ÑÎÄ¼þÄÚÈÝ×ª³É¼ÆËã»úÄÜ¶Á¶®µÄÓïÑÔ
+		InputStreamReader reader = new InputStreamReader(new FileInputStream(f)); // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½reader
+		BufferedReader br = new BufferedReader(reader); // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½É¼ï¿½ï¿½ï¿½ï¿½ï¿½Ü¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		String line = "";
 		line = br.readLine();
 		return line;

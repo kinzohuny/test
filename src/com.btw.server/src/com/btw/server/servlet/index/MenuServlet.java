@@ -31,8 +31,10 @@ public class MenuServlet extends HttpServlet {
 	private String getMenu(){
 		StringBuilder stringBuilder = new StringBuilder();
 		
-		stringBuilder.append("<a target=\"body\" href=\"serveriplist\">IP列表</a> &nbsp;&nbsp;");
+		//stringBuilder.append("<a target=\"body\" href=\"serveriplist\">IP列表</a> &nbsp;&nbsp;");
 		stringBuilder.append("<a target=\"body\" href=\"view/static/baidu_map.html\">百度地图</a> &nbsp;&nbsp;");
+		stringBuilder.append("<a target=\"body\" href=\"SmsSendServlet\">短信发送</a> &nbsp;&nbsp;");
+		stringBuilder.append("<a target=\"body\" href=\"smslist\">短信列表</a> &nbsp;&nbsp;");
 		stringBuilder.append("<a target=\"_top\" href=\"login?logout=true\">注销</a> &nbsp;&nbsp;");
 		
 		return stringBuilder.toString();

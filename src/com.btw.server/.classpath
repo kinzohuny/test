@@ -22,5 +22,6 @@
 	<classpathentry kind="lib" path="lib/jetty-util-9.3.6.v20151106.jar"/>
 	<classpathentry kind="lib" path="lib/jetty-webapp-9.3.6.v20151106.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/taobao-sdk-java-auto_1447819254084-20151118.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

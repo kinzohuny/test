@@ -54,7 +54,7 @@ public class IndexServlet extends HttpServlet {
 		//菜单
 		buffer.append("<frame name=\"head\" id=\"frame_head\" src=\"menu\" noresize=\"noresize\" frameborder=\"0\">");
 		//内容
-		buffer.append("<frame name=\"body\" id=\"frame_body\" src=\"serveriplist\" noresize=\"noresize\" frameborder=\"0\">");
+		buffer.append("<frame name=\"body\" id=\"frame_body\" src=\"\" noresize=\"noresize\" frameborder=\"0\">");
 
 		buffer.append("	</frameset>");
 
