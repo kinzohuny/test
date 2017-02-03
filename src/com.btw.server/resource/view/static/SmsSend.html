@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>短信发送</title>
+		<style type="text/css">
+			#sms_content { background: #FFF0AC; color: #A23400}
+			#sms_content input {width: 40px}
+		</style>
+	</head>
+	<body>
+		<form action="smssend" method="post" onsubmit="setArgs();return confirm('确定发送短信吗？');"> 
+		    <label><input name="tid" type="radio" value="932" onClick="show932()" autocomplete="off" checked="checked"/>提醒 </label> 
+		    <label><input name="tid" type="radio" value="930" onClick="show930()" autocomplete="off"/>祝福 </label> 
+		    <br /><br />
+		    <label>发送时间：</label><input name="send_time" placeholder="yyyy-MM-dd HH:mm:ss" onblur="this.placeholder='yyyy-MM-dd HH:mm:ss'" onfocus="this.placeholder=''"></input>
+		    <br />
+		    <label>手机号码：</label><input name="mobile" placeholder="numbers and length is 11" onblur="this.placeholder='numbers and length is 11'" onfocus="this.placeholder=''"></input>
+		    <br /><label>短信内容：</label><label id="sms_content"></label>
+		    <br />
+		    <input type="submit" value="提交">
+	    </form> 
+	    <script>
+	    	show932();
+	    	function show932(){
+	    		//提醒：${date}${time}你有一项${do}${thing}的日程安排。请您及时处理。
+	    		var content = '提醒：'
+	    			+'<input name="date" placeholder="date">'
+	    			+'<input name="time" placeholder="time">'
+	    			+'你有一项'
+	    			+'<input name="do" placeholder="do">'
+	    			+'<input name="thing" placeholder="thing">'
+	    			+'的日程安排。请您及时处理。';
+	    		document.getElementById('sms_content').innerHTML=content;
+	    	}
+	    	
+	    	function show930(){
+	    		//亲爱的${name},今天是${date}${fest},${who}祝您${bles1}${bles2}${bles3}${bles4}!
+	    		var content = '亲爱的<input name="name" placeholder="name">,今天是<input name="date" placeholder="date"><input name="fest" placeholder="fest">,<input name="who" placeholder="who">祝您<input name="bles1" placeholder="bles1"><input name="bles2" placeholder="bles2"><input name="bles3" placeholder="bles3"><input name="bles4" placeholder="bles4">!';
+	    		document.getElementById('sms_content').innerHTML=content;
+	    	}
+	    	
+	    	function setArgs(){
+	    		var args = "";
+	    	}
+		</script>
+	</body>
+</html>
