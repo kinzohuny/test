@@ -1,5 +1,8 @@
 package com.btw.utils.web;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,8 +43,6 @@ public abstract class WebUtils {
 	private static final String METHOD_POST = "POST";
 	private static final String METHOD_GET = "GET";
 
-
-
 	public static class TrustAllTrustManager implements X509TrustManager {
 		public X509Certificate[] getAcceptedIssuers() {
 			return null;
@@ -55,6 +56,17 @@ public abstract class WebUtils {
 	}
 
 	private WebUtils() {
+	}
+
+	/**
+	 * 执行HTTP POST请求。
+	 * 
+	 * @param url 请求地址
+	 * @param params 请求参数
+	 * @return 响应字符串
+	 */
+	public static String doPost(String url, Map<String, String> params) throws IOException {
+		return doPost(url, params, DEFAULT_CHARSET, 0, 0);
 	}
 
 	/**
@@ -255,6 +267,17 @@ public abstract class WebUtils {
 		entry.append(mimeType);
 		entry.append("\r\n\r\n");
 		return entry.toString().getBytes(charset);
+	}
+
+	/**
+	 * 执行HTTP GET请求。
+	 * 
+	 * @param url 请求地址
+	 * @param params 请求参数
+	 * @return 响应字符串
+	 */
+	public static String doGet(String url) throws IOException {
+		return doGet(url, null);
 	}
 
 	/**
@@ -593,5 +616,143 @@ public abstract class WebUtils {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * 文件元数据。
+	 * 
+	 * @author carver.gu
+	 * @since 1.0, Sep 12, 2009
+	 */
+	public class FileItem {
+
+		private String fileName;
+		private String mimeType;
+		private byte[] content;
+		private File file;
+
+		/**
+		 * 基于本地文件的构造器。
+		 * 
+		 * @param file 本地文件
+		 */
+		public FileItem(File file) {
+			this.file = file;
+		}
+
+		/**
+		 * 基于文件绝对路径的构造器。
+		 * 
+		 * @param filePath 文件绝对路径
+		 */
+		public FileItem(String filePath) {
+			this(new File(filePath));
+		}
+
+		/**
+		 * 基于文件名和字节流的构造器。
+		 * 
+		 * @param fileName 文件名
+		 * @param content 文件字节流
+		 */
+		public FileItem(String fileName, byte[] content) {
+			this.fileName = fileName;
+			this.content = content;
+		}
+
+		/**
+		 * 基于文件名、字节流和媒体类型的构造器。
+		 * 
+		 * @param fileName 文件名
+		 * @param content 文件字节流
+		 * @param mimeType 媒体类型
+		 */
+		public FileItem(String fileName, byte[] content, String mimeType) {
+			this(fileName, content);
+			this.mimeType = mimeType;
+		}
+
+		public String getFileName() {
+			if (this.fileName == null && this.file != null && this.file.exists()) {
+				this.fileName = file.getName();
+			}
+			return this.fileName;
+		}
+
+		public String getMimeType() throws IOException {
+			if (this.mimeType == null) {
+				this.mimeType = getMimeType(getContent());
+			}
+			return this.mimeType;
+		}
+
+		public byte[] getContent() throws IOException {
+			if (this.content == null && this.file != null && this.file.exists()) {
+				InputStream in = null;
+				ByteArrayOutputStream out = null;
+
+				try {
+					in = new FileInputStream(this.file);
+					out = new ByteArrayOutputStream();
+					int ch;
+					while ((ch = in.read()) != -1) {
+						out.write(ch);
+					}
+					this.content = out.toByteArray();
+				} finally {
+					if (out != null) {
+						out.close();
+					}
+					if (in != null) {
+						in.close();
+					}
+				}
+			}
+			return this.content;
+		}
+		
+		public String getFileSuffix(byte[] bytes) {
+			if (bytes == null || bytes.length < 10) {
+				return null;
+			}
+
+			if (bytes[0] == 'G' && bytes[1] == 'I' && bytes[2] == 'F') {
+				return "GIF";
+			} else if (bytes[1] == 'P' && bytes[2] == 'N' && bytes[3] == 'G') {
+				return "PNG";
+			} else if (bytes[6] == 'J' && bytes[7] == 'F' && bytes[8] == 'I' && bytes[9] == 'F') {
+				return "JPG";
+			} else if (bytes[0] == 'B' && bytes[1] == 'M') {
+				return "BMP";
+			} else {
+				return null;
+			}
+		}
+
+		/**
+		 * 获取文件的真实媒体类型。目前只支持JPG, GIF, PNG, BMP四种图片文件。
+		 * 
+		 * @param bytes 文件字节流
+		 * @return 媒体类型(MEME-TYPE)
+		 */
+		public String getMimeType(byte[] bytes) {
+			String suffix = getFileSuffix(bytes);
+			String mimeType;
+
+			if ("JPG".equals(suffix)) {
+				mimeType = "image/jpeg";
+			} else if ("GIF".equals(suffix)) {
+				mimeType = "image/gif";
+			} else if ("PNG".equals(suffix)) {
+				mimeType = "image/png";
+			} else if ("BMP".equals(suffix)) {
+				mimeType = "image/bmp";
+			}else {
+				mimeType = "application/octet-stream";
+			}
+
+			return mimeType;
+		}
+
 	}
 }

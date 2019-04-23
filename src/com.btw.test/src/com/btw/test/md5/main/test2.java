@@ -3,7 +3,7 @@ package com.btw.test.md5.main;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.btw.jdbc.mysql.MysqlDriver;
+import com.btw.test.jdbc.MysqlDriver;
 
 public class test2 {
 	public static void main(String[] args) {
@@ -14,7 +14,7 @@ public class test2 {
 		}
 
 		;
-		System.out.println(driver.executeUpdate("delete from MD5")+"Ìõ¼ÇÂ¼±»É¾³ý!");
+		System.out.println(driver.executeUpdate("delete from MD5")+"ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½É¾ï¿½ï¿½!");
 		
 		ResultSet rs = driver.executeQuery("select * from MD5");
 		try {

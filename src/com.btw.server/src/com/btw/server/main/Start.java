@@ -14,12 +14,14 @@ import com.btw.server.core.PropertiesManage;
 import com.btw.server.self.SelfErrorHandler;
 import com.btw.server.self.SelfResourceHandler;
 import com.btw.server.servlet.func.ServerIpListServlet;
+import com.btw.server.servlet.func.SmsListServlet;
 import com.btw.server.servlet.index.IndexServlet;
 import com.btw.server.servlet.index.LoginServlet;
 import com.btw.server.servlet.index.MenuServlet;
 import com.btw.server.servlet.intf.IpServlet;
 import com.btw.server.servlet.intf.IpSyncServlet;
 import com.btw.server.servlet.pub.RandomCodeServlet;
+import com.btw.server.task.AutoSmsSendTask;
 import com.btw.server.util.ServerUtils;
 
 public class Start {
@@ -35,6 +37,7 @@ public class Start {
 		
 		logger.info("Server is starting...");
 		init();
+		startTask();
 		
 		Server server = new Server(PORT);
 		//设置线程池
@@ -59,6 +62,7 @@ public class Start {
 		
 		//func
 	    servletContextHandler.addServlet(ServerIpListServlet.class, "/serveriplist");
+	    servletContextHandler.addServlet(SmsListServlet.class, "/smslist");
 		
 		//intf
 	    servletContextHandler.addServlet(IpSyncServlet.class, "/ip-sync");
@@ -91,6 +95,11 @@ public class Start {
 		server.join();
 		
 
+	}
+
+	private static void startTask() {
+		
+		new AutoSmsSendTask().start();
 	}
 
 	private static void init() {

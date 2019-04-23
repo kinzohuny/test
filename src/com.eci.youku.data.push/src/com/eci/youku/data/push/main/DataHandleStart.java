@@ -8,13 +8,14 @@ import java.util.concurrent.TimeUnit;
 import com.eci.youku.data.push.task.DataFetchFromTB;
 import com.eci.youku.data.push.task.DataPushToQYGJ;
 import com.eci.youku.data.push.task.FullDataPushToQYGJ;
+import com.eci.youku.data.push.utils.StringUtils;
 
 public class DataHandleStart {
 
-	public void startFetchFromTB(){
+	public void startFetchFromTB(String minCreated){
 		
 		Executors.newScheduledThreadPool(1)
-			.scheduleAtFixedRate(new DataFetchFromTB(), 0, 5, TimeUnit.MINUTES);
+			.scheduleAtFixedRate(new DataFetchFromTB(minCreated), 0, 5, TimeUnit.MINUTES);
 	}
 	
 	public void startPushToQYGJ(){
@@ -35,7 +36,7 @@ public class DataHandleStart {
 	}
 	
 	/**
-	 * 订单数据全量推送，如果不考虑先下单后注册的手机的情况，可以不运行此任务 。
+	 * 计算距离指定整点时间的分钟数 。
 	 */
 	private long getMinuteToHour(int hour){
 		Calendar now = Calendar.getInstance();
@@ -50,8 +51,46 @@ public class DataHandleStart {
 	
 	public static void main(String[] args) throws IOException {
 		DataHandleStart handle = new DataHandleStart();
-		handle.startFetchFromTB();
-		handle.startPushToQYGJ();
-		handle.startFullPushToQYGJ();
+		String minCreated = null;
+		Long sid = null;
+		if(args!=null && args.length>0){
+			for(int i=0;i<args.length;i++){
+				String arg = args[i];
+				if("-m".equals(arg) && i<args.length-1){
+					minCreated = args[++i];
+					if(!StringUtils.isDate(minCreated)){
+						minCreated = null;
+						errorParam("-m must before a string format yyyy-MM-dd!");
+					}
+				}else if("-s".equals(arg) && i<args.length-1){
+					sid = StringUtils.toLong(args[++i]);
+					if(sid==null){
+						errorParam("-s must before a Long num as sid!");
+					}
+				}else{
+					showTag();
+				}
+			}
+		}
+		if(sid!=null){
+			new DataFetchFromTB(minCreated).runOne(sid);
+			System.exit(0);
+		}else{
+			handle.startFetchFromTB(minCreated);
+			handle.startPushToQYGJ();
+			handle.startFullPushToQYGJ();
+		}
 	}
+	
+	private static void errorParam(String reason){
+		System.out.println(reason);
+		showTag();
+	}
+	
+	private static void showTag(){
+		System.out.println(TAG);
+		System.exit(1);
+	}
+	
+	private final static String TAG="-m:minCreated(eg:-m 2015-12-12)\n -s:sid(eg:-s 75358663)";
 }
