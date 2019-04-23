@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Launcher Plug-in
-Bundle-SymbolicName: com.jiuqi.dna.launcher
-Bundle-Version: 1.0.0
-Bundle-Vendor: JIUQI
-Export-Package: org.eclipse.equinox.launcher
-Main-Class: org.eclipse.core.launcher.Main
-Bundle-RequiredExecutionEnvironment: J2SE-1.5

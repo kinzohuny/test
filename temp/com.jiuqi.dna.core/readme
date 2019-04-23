@@ -1,6 +1,0 @@
-格式化规范：
-Preferences->Java->Code Style->Formatter
-Function Calls、Expressions都全部Do not wrap。
-
-编译检查规范：
-Preferences->Java->Compiler->Errors/Warnings
